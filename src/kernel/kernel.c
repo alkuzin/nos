@@ -23,38 +23,17 @@ SOFTWARE.
 */
 
 #include <kernel/kernel.h>
+#include <libk/stdint.h>
+#include <libk/stddef.h>
+#include <kernel/tty.h>
 
-static int video_memory_pos = 0;
-
-void tty_clear(void)
-{
-	unsigned short *video_memory = (unsigned short *)VIDEO_MEMORY;
-	int i;
-
-	i = 0;
-	while(i < SCREEN_WIDTH * SCREEN_HEIGHT) {
-		video_memory[i] = (video_memory[i] & 0xFF00) | ' ';
-		i++;
-	}
-}
-
-void tty_puts(const char *str)
-{
-	unsigned short *video_memory = (unsigned short *)VIDEO_MEMORY;
-	int i;
-
-	i = 0;
-	while(str[i]) {
-		video_memory[video_memory_pos] = (video_memory[i] & 0xFF00) | str[i];
-		video_memory_pos++;
-		i++;
-	}
-}
 
 extern void kmain(void)
 {
 	tty_clear();
-	tty_puts("simple-os 0.0.1v @alkuzin - 2024");	
-	
+	tty_print("================================\n\n");	
+	tty_print("simple-os " __OS_VERSION__ " @alkuzin - 2024\n\n");	
+	tty_print("================================\n\n");	
+
 	for(;;);
 }

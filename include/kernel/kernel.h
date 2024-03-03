@@ -28,16 +28,6 @@ SOFTWARE.
 #define __OS_NAME__    "simple-os"
 #define __OS_VERSION__ "0.0.1v"
 
-#define VIDEO_MEMORY  0xB8000
-#define SCREEN_WIDTH  80
-#define SCREEN_HEIGHT 25
-
-/* clear screen */
-void tty_clear(void);
-
-/* print text to screen */
-void tty_puts(const char *str);
-
 /* kernel main function */
 extern void kmain(void);
 
