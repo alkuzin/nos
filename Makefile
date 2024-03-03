@@ -17,8 +17,8 @@ INCLUDE_DIR = include
 #SRCS_PREFIXED = $(addprefix $(SRC_DIR)/, $(SRCS))
 #OBJS_PREFIXED = $(addprefix $(OBJS_DIR)/, $(OBJS))
 
-SRCS_PREFIXED = $(SRC_DIR)/kernel/kernel.c
-OBJS_PREFIXED = $(OBJS_DIR)/kernel.o $(OBJS_DIR)/boot.o
+SRCS_PREFIXED = $(SRC_DIR)/kernel/kernel.c $(SRC_DIR)/kernel/tty.c
+OBJS_PREFIXED = $(OBJS_DIR)/kernel.o $(OBJS_DIR)/boot.o $(OBJS_DIR)/tty.o
 
 CFLAGS   = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
 ASMFLAGS = -f elf
