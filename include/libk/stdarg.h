@@ -38,7 +38,7 @@ the calling function knows the type.
 Because the address of  this  argument  may  be  used  in  the
 va_start()  macro,  it  should  not  be declared as a register
 variable, or as a function or an array type.*/
-#define va_start(ap, last_arg) ((ap) = (char*)&(last_arg) + sizeof(last_arg))
+#define va_start(v,l) __builtin_va_start(v,l)
 
 /*
 The va_arg() macro expands to an expression that has the  type
@@ -61,7 +61,14 @@ occur.
 If  ap is passed to a function that uses va_arg(ap,type), then
 the value of ap is undefined after the return  of  that  func‐
 tion.*/
-#define va_arg(ap, type) (*(type*)(ap += sizeof(type)))
+#define va_arg(v,l)   __builtin_va_arg(v,l)
+
+/*
+The va_copy() macro copies the (previously initialized)  variable  argument
+list  src  to  dest.  The behavior is as if va_start() were applied to dest
+with the same last argument, followed by the same number of va_arg()  invo‐
+cations that was used to reach the current state of src.*/
+#define va_copy(d,s)  __builtin_va_copy(d,s)
 
 /*
 Each invocation of va_start() must be matched by a correspond‐
@@ -70,8 +77,8 @@ call va_end(ap) the variable ap is undefined.   Multiple  tra‐
 versals of the list, each bracketed by va_start() and va_end()
 are possible.  va_end() may be a macro or a function.
 */
-#define va_end(ap) (ap = NULL)
+#define va_end(v)     __builtin_va_end(v)
 
-typedef char* va_list;
+typedef __builtin_va_list va_list;
 
 #endif /* _LIBK_STDARG_H_ */
