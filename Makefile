@@ -29,6 +29,7 @@ all: $(NAME)
 clean:
 	$(MAKE) -C $(KERNEL_DIR) fclean
 	$(MAKE) -C $(BOOT_DIR) fclean
+	$(MAKE) -C $(LIBK_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)
