@@ -29,15 +29,21 @@ SOFTWARE.
 #define SCREEN_WIDTH   80
 #define SCREEN_HEIGHT  25
 
+/* for NULL pointer in tty_printf */
+#define __NIL__ "(nil)"
+
 #include <kernel/tty_printf.h>
 
-/* clear screen */
-void tty_clear(void);
+/* The tty_printf() formats and prints data */
+void tty_printf(const char *fmt, ...);
 
 /* print text to screen */
 void tty_print(const char *str);
 
 /* print character to screen */
 void tty_putchar(const int c);
+
+/* clear screen */
+void tty_clear(void);
 
 #endif /* _KERNEL_TTY_H_ */
