@@ -1,44 +1,34 @@
 CC = gcc
-ASM = nasm
 
 SRC_DIR     = src
 OBJS_DIR    = objs
 BUILD_DIR   = build
 BOOT_DIR    = $(SRC_DIR)/boot
 INCLUDE_DIR = include
+KERNEL_DIR  = $(SRC_DIR)/kernel
+LIBK_DIR    = $(SRC_DIR)/libk
 
-#SRC_KERNEL = kernel
-#SRCS_KERNEL= $(addprefix kernel/, $(addsuffix .c, $(SRC_KERNEL)))
-#OBJS_KERNEL= $(addprefix kernel/, $(addsuffix .o, $(SRC_KERNEL)))
+KERNEL_LIB  = $(LIBK_DIR)/libk.a
 
-#SRCS = $(addsuffix .c, $(SRC))
-#OBJS = $(addsuffix .o, $(SRC))
+NAME   = $(BUILD_DIR)/simple_os.bin
+LFLAGS = -z noexecstack -m elf_i386 -T
 
-#SRCS_PREFIXED = $(addprefix $(SRC_DIR)/, $(SRCS))
-#OBJS_PREFIXED = $(addprefix $(OBJS_DIR)/, $(OBJS))
+OBJS = $(KERNEL_DIR)/_kernel.o \
+       $(BOOT_DIR)/_boot.o
 
-SRCS_PREFIXED = $(SRC_DIR)/kernel/kernel.c $(SRC_DIR)/kernel/tty.c
-OBJS_PREFIXED = $(OBJS_DIR)/kernel.o $(OBJS_DIR)/boot.o $(OBJS_DIR)/tty.o
+$(OBJS):
+	$(MAKE) -C $(BOOT_DIR) all
+	$(MAKE) -C $(KERNEL_DIR) all
+	$(MAKE) -C $(LIBK_DIR) all
 
-CFLAGS   = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
-ASMFLAGS = -f elf
-LFLAGS   = -z noexecstack -m elf_i386 -T
-
-NAME = $(BUILD_DIR)/simple_os.bin
-
-$(OBJS_PREFIXED): $(SRCS_PREFIXED)
-	mkdir -p $(OBJS_DIR)
-	$(CC) $(CFLAGS) -c $(SRCS_PREFIXED)
-	mv *.o $(OBJS_DIR)
-
-$(NAME): $(OBJS_PREFIXED)
-	$(ASM) $(ASMFLAGS) -o $(OBJS_DIR)/boot.o $(BOOT_DIR)/boot.s
-	ld $(LFLAGS) linker.ld -o $(NAME) $(OBJS_PREFIXED)
+$(NAME): $(OBJS)
+	ld $(LFLAGS) linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
 
 all: $(NAME)
 
 clean:
-	rm -rf $(OBJS_DIR)
+	$(MAKE) -C $(KERNEL_DIR) fclean
+	$(MAKE) -C $(BOOT_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)
