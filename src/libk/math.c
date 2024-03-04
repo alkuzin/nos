@@ -24,19 +24,6 @@ SOFTWARE.
 
 #include <libk/math.h>
 
-union double_long_u {
- 	double d;
-	unsigned long l;
-};
-
-double inf(void)
-{
-   union double_long_u u;
-
-   u.l = 0x7FF0000000000000ULL;
-   return u.d;
-}
-
 double log(double x)
 {
     double result, term, square;
@@ -71,9 +58,6 @@ double pow(double x, double y)
     if(y == 0)
         return 1;
 
-    if(x == 0 && y < 0)
-        return _INF;
-
     if(y == 1 || y == -1)
         return x;
 
@@ -87,9 +71,6 @@ double exp(double x)
 
     if(x == 1)
         return E;
-
-    if(x >= 65)
-        return _INF;
 
     if(x <= -15.0)
         return 0;
@@ -110,15 +91,12 @@ double exp(double x)
 }
 
 double sqrt(double x) {
-    return ft_pow(x, 0.5);
+    return pow(x, 0.5);
 }
 
 uint64_t factorial(uint32_t n)
 {
     uint64_t result;
-
-    if(n > 20)
-        return _INF;
 
     if(n == 0)
         return 1;

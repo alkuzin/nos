@@ -29,15 +29,11 @@ SOFTWARE.
 #define PI 3.141592653589793
 #define E  2.718281828459045
 
-#define _INF inf()
 #define _NAN (0.0f / 0.0f)
 
 #define abs(x) ((x) < 0 ? -(x) : (x))
 
 #include <libk/stdint.h>
-
-/* the inf() return infinity */
-double inf(void);
 
 /* the log() calculates natural logarithm */
 double log(double x);
