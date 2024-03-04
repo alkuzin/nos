@@ -3,3 +3,4 @@ build/*
 *.bin
 *.o
 src/kernel/tty_printf/
+*.a
