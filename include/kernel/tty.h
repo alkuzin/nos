@@ -32,8 +32,6 @@ SOFTWARE.
 /* for NULL pointer in tty_printf */
 #define __NIL__ "(nil)"
 
-#include <kernel/tty_printf.h>
-
 /* The tty_printf() formats and prints data */
 void tty_printf(const char *fmt, ...);
 
