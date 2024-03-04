@@ -70,7 +70,7 @@ call va_end(ap) the variable ap is undefined.   Multiple  tra‐
 versals of the list, each bracketed by va_start() and va_end()
 are possible.  va_end() may be a macro or a function.
 */
-#define va_end(ap) NULL
+#define va_end(ap) (ap = NULL)
 
 typedef char* va_list;
 
