@@ -70,8 +70,8 @@ size_t strlcat(char *dest, const char *src, size_t size)
     if (!dest || !src)
         return 0;
 
-    dest_len = ft_strlen(dest);
-    src_len = ft_strlen(src);
+    dest_len = strlen(dest);
+    src_len = strlen(src);
     i = 0;
 
     if(size <= (size_t)src_len)
@@ -133,7 +133,7 @@ char *strnstr(const char *big, const char *little, size_t len)
        return ((char *)(big));
 
     i = 0;
-    little_len = ft_strlen(little);
+    little_len = strlen(little);
 
     while(big[i] && i < len) {
         if(big[i] == little[0]) {
