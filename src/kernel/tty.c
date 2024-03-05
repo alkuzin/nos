@@ -28,7 +28,7 @@ SOFTWARE.
 static uint16_t *video_memory    = (uint16_t *)VIDEO_MEMORY;
 static uint32_t cursor_pos = 0;
 
-void tty_clear(void)
+void __kclear(void)
 {
 	uint32_t i;
 
@@ -39,7 +39,7 @@ void tty_clear(void)
 	}
 }
 
-void tty_print(const char *str)
+void kprint(const char *str)
 {
 	uint32_t i;
 
@@ -58,14 +58,14 @@ void tty_print(const char *str)
 				continue;
 
 			default:
-				tty_putchar((video_memory[i] & 0xFF00) | str[i]);
+				kputchar((video_memory[i] & 0xFF00) | str[i]);
 				i++;
 				break;
 		};
 	}
 }
 
-void tty_putchar(const int c)
+void kputchar(const int c)
 {
 	switch(c) {
 		case '\n':

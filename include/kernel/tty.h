@@ -29,19 +29,19 @@ SOFTWARE.
 #define SCREEN_WIDTH   80
 #define SCREEN_HEIGHT  25
 
-/* for NULL pointer in tty_printf */
+/* for NULL pointer in kprintf */
 #define __NIL__ "(nil)"
 
-/* The tty_printf() formats and prints data */
-void tty_printf(const char *fmt, ...);
+/* The kprintf() formats and prints data */
+void kprintf(const char *fmt, ...);
 
 /* print text to screen */
-void tty_print(const char *str);
+void kprint(const char *str);
 
 /* print character to screen */
-void tty_putchar(const int c);
+void kputchar(const int c);
 
 /* clear screen */
-void tty_clear(void);
+void __kclear(void);
 
 #endif /* _KERNEL_TTY_H_ */
