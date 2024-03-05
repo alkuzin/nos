@@ -129,12 +129,18 @@ static void __tty_printf_pointer(uint64_t p)
 	int count, i;
 		
 	if(p == 0) {
-		tty_print(__NIL__);
+		i = 0;
+		
+		while(__NIL__[i]) {
+			tty_printf_append(__NIL__[i]);
+			i++;
+		}
+		
 		return;
 	}
 	
-	tty_putchar('0');
-	tty_putchar('x');
+	tty_printf_append('0');
+	tty_printf_append('x');
 	
 	count = 0;
 	i = (sizeof(p) << 3) - 4;	
@@ -144,7 +150,7 @@ static void __tty_printf_pointer(uint64_t p)
 		i -= 4;
 	
 	while(i >= 0) {
-		tty_putchar(__tty_dtoh((p >> i) & 0xf));
+		tty_printf_append(__tty_dtoh((p >> i) & 0xf));
 		i -= 4;
 		count++;
 	}
