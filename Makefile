@@ -36,5 +36,9 @@ fclean: clean
 
 re: clean all
 
+build-img: all $(NAME)
+	cp $(NAME) $(BUILD_DIR)/simple_os.img
+	truncate -s 1440k $(BUILD_DIR)/simple_os.img
+
 init:
 	qemu-system-i386 -kernel $(NAME)
