@@ -30,10 +30,12 @@ SOFTWARE.
 
 extern void kmain(void)
 {
-	tty_clear();
-	tty_print("================================\n\n");	
-	tty_print("simple-os " __OS_VERSION__ " @alkuzin - 2024\n\n");	
-	tty_print("================================\n\n");	
+	__kclear();
+	kprint("---------------------------------------------\n");	
+	kprintf("%s 2024 [%s] @alkuzin\n", __OS_NAME__, __OS_VERSION__);	
+	kprint("---------------------------------------------\n");	
+
+	kprintf("\nvideo memory address: <%p>\n", VIDEO_MEMORY);	
 
 	for(;;);
 }
