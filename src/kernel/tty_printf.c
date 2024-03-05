@@ -25,13 +25,22 @@ SOFTWARE.
 #include <libk/string.h>
 #include <libk/stddef.h> 
 #include <libk/stdarg.h> 
+#include <libk/memory.h>
 #include <libk/ctype.h> 
 #include <kernel/tty.h>
 #include <libk/math.h>
 
+static int prefix_flag = 0;
+
+#define TTY_PRINTF_BUFFER_SIZE 1024
+
+static char tty_printf_buffer[TTY_PRINTF_BUFFER_SIZE] = {0};
+static int  tty_printf_pos = 0;
+
+static void tty_printf_append(char c);
 
 /* %x %X options (hexadecimal) */
-static void   __tty_printf_hex(uint32_t n, int is_upper);
+static void   __tty_printf_hex(uint64_t n, int is_upper);
 
 /* hexadecimal to alphanumeric lenght */
 static int    __tty_xtoa_len(uint32_t n);
@@ -60,6 +69,11 @@ static void   __tty_print_args(char type, va_list args);
 /* parse tty_printf arguments */
 static void   __tty_parse(const char* str, va_list args);
 
+static void tty_printf_append(char c)
+{
+	tty_printf_buffer[tty_printf_pos] = c;
+	tty_printf_pos++;
+}
 
 /* tty_printf unsigned int */
 static size_t __tty_utoa_len(uint32_t n)
@@ -192,7 +206,7 @@ static int __tty_xtoa_len(uint32_t n)
 	return (int)(log(n) / log(16)) + 1;
 }
 
-static void __tty_printf_hex(uint32_t n, int is_upper)
+static void __tty_printf_hex(uint64_t n, int is_upper)
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
@@ -202,6 +216,17 @@ static void __tty_printf_hex(uint32_t n, int is_upper)
 	i = __tty_xtoa_len(n);
 	char hex[i + 1];
 	
+	if(prefix_flag) {
+		tty_printf_append('0');
+		tty_printf_append('x');
+		prefix_flag = 0;
+	}
+	
+	if(n == 0) {
+		tty_printf_append('0');
+		return;
+	}
+
 	if(is_upper) 
 		digits = digits_upper;
 	else
@@ -213,18 +238,15 @@ static void __tty_printf_hex(uint32_t n, int is_upper)
 		n >>= 4;
 		--i;
 	}
-	hex[i] = '\0';
-	
-	i = 0;
-	
-	if(n == 0)
-		tty_putchar(hex[0]);
 
+	hex[i] = '\0';
+	i = 0;
+		
 	while(hex[i] && hex[i] == '0')
 		i++;
 
 	while(hex[i]) {
-		tty_putchar(hex[i]);
+		tty_printf_append(hex[i]);
 		i++;
 	}
 }
@@ -233,15 +255,24 @@ static void __tty_print_args(char type, va_list args)
 {
 	switch(type) {
 		case '%':
-        	tty_putchar(type);
+			tty_printf_append(type);
 			break;
 
 		case 'c':
-        	tty_putchar(va_arg(args, int));
+			tty_printf_append(va_arg(args, int));
 			break;
 
 		case 's':
-			tty_print(va_arg(args, char *));
+			char *str;
+			int i;
+			
+			i = 0;
+			str = va_arg(args, char *);
+			
+			while(str[i]) {
+				tty_printf_append(str[i]);
+				i++;
+			}
 			break;
 
 		case 'p':
@@ -257,7 +288,7 @@ static void __tty_print_args(char type, va_list args)
 			break;
 
 		case 'x': case 'X':
-			__tty_printf_hex(va_arg(args, unsigned int), isupper(type));
+			__tty_printf_hex(va_arg(args, uint64_t), isupper(type));
 			break;
 	};
 }
@@ -268,24 +299,37 @@ static void __tty_parse(const char* str, va_list args)
 
     i = -1;
     while(str[++i]) {
+		
         if(str[i] == '%' && str[i + 1] != '\0') {
-            __tty_print_args(str[i + 1], args);
+			if(str[i + 1] == '#' && str[i + 1] != '\0') {
+				prefix_flag = 1;
+				i++;
+            	__tty_print_args(str[i + 1], args);
+			}
+			else
+            	__tty_print_args(str[i + 1], args);
             i++;
         }
         else
-            tty_putchar(str[i]);
+			tty_printf_append(str[i]);
     }
 }
 
-void tty_printf(const char *format, ...)
+void tty_printf(const char *fmt, ...)
 {
     va_list args;
-	char buffer[1024] = {0};
 
-    if(!format || *format == '\0')
-        return;
+    if(!fmt || *fmt == '\0')
+		tty_print("tty_printf: incorrect format\n");
+	
+	prefix_flag = 0;
+	
+	bzero(tty_printf_buffer, TTY_PRINTF_BUFFER_SIZE);
+	tty_printf_pos = 0;
 
-    va_start(args, format);
-    __tty_parse(buffer, args);
+    va_start(args, fmt);
+    __tty_parse(fmt, args);
     va_end(args);
+
+	tty_print(tty_printf_buffer);
 }
