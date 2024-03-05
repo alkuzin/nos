@@ -95,24 +95,29 @@ static size_t __tty_utoa_len(uint32_t n)
 
 static void __tty_printf_uint(uint32_t n)
 {
-	size_t length, temp_len;
+	size_t length, i;
 
-	temp_len = __tty_utoa_len(n);
-	length   = temp_len;
+	i = __tty_utoa_len(n);
+	length   = i;
 
-	char buffer[temp_len];
+	char buffer[i];
 
-	temp_len--;
-	while (temp_len) {
-		buffer[temp_len] = (n % 10) + '0';
+	i--;
+	while (i) {
+		buffer[i] = (n % 10) + '0';
 		n /= 10;
-		temp_len--;
+		i--;
 	}
 
 	buffer[0] = (n % 10) + '0';
 	buffer[length] = '\0';
 
-	tty_print(buffer);
+	i = 0;
+
+	while (buffer[i]) {
+		tty_printf_append(buffer[i]);
+		i++;
+	}
 }
 
 /* tty_printf pointer */
