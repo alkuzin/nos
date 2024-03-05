@@ -30,53 +30,53 @@ SOFTWARE.
 #include <kernel/tty.h>
 #include <libk/math.h>
 
-static int prefix_flag = 0;
+#define K_PRINTF_BUFFER_SIZE 1024
 
-#define TTY_PRINTF_BUFFER_SIZE 1024
+static char kprintf_buffer[K_PRINTF_BUFFER_SIZE] = {0};
+static int  kprintf_pos = 0;
+static int  prefix_flag    = 0;
 
-static char tty_printf_buffer[TTY_PRINTF_BUFFER_SIZE] = {0};
-static int  tty_printf_pos = 0;
-
-static void tty_printf_append(char c);
+static void kprintf_append(char c);
 
 /* %x %X options (hexadecimal) */
-static void   __tty_printf_hex(uint64_t n, int is_upper);
+static void   __kprintf_hex(uint64_t n, int is_upper);
 
 /* hexadecimal to alphanumeric lenght */
-static int    __tty_xtoa_len(uint32_t n);
+static int    __kxtoa_len(uint32_t n);
 
 /* %i %d options (int) */
-static void   __tty_printf_int(int n);
+static void   __kprintf_int(int n);
 
 /* int to alphanumeric lenght */
-static size_t __tty_itoa_len(int n);
+static size_t __kitoa_len(int n);
 
 /* %p option (pointer) */
-static void   __tty_printf_pointer(uint64_t p);
+static void   __kprintf_pointer(uint64_t p);
 
 /* digit to hex */
-static char   __tty_dtoh(int v);
+static char   __kdtoh(int v);
 
 /* %u option (unsigned int) */
-static void   __tty_printf_uint(uint32_t n);
+static void   __kprintf_uint(uint32_t n);
 
 /* unsigned int to alphanumeric lenght */
-static size_t __tty_utoa_len(uint32_t n);
+static size_t __kutoa_len(uint32_t n);
 
-/* print tty_printf arguments */
-static void   __tty_print_args(char type, va_list args);
+/* print kprintf arguments */
+static void   __kprint_args(char type, va_list * args);
 
-/* parse tty_printf arguments */
-static void   __tty_parse(const char* str, va_list args);
+/* parse kprintf arguments */
+static void   __kparse(const char* str, va_list * args);
 
-static void tty_printf_append(char c)
+
+static void kprintf_append(char c)
 {
-	tty_printf_buffer[tty_printf_pos] = c;
-	tty_printf_pos++;
+	kprintf_buffer[kprintf_pos] = c;
+	kprintf_pos++;
 }
 
-/* tty_printf unsigned int */
-static size_t __tty_utoa_len(uint32_t n)
+/* kprintf unsigned int */
+static size_t __kutoa_len(uint32_t n)
 {
 	size_t len;
 
@@ -93,11 +93,11 @@ static size_t __tty_utoa_len(uint32_t n)
 	return len;
 }
 
-static void __tty_printf_uint(uint32_t n)
+static void __kprintf_uint(uint32_t n)
 {
 	size_t length, i;
 
-	i = __tty_utoa_len(n);
+	i = __kutoa_len(n);
 	length   = i;
 
 	char buffer[i];
@@ -115,13 +115,13 @@ static void __tty_printf_uint(uint32_t n)
 	i = 0;
 
 	while (buffer[i]) {
-		tty_printf_append(buffer[i]);
+		kprintf_append(buffer[i]);
 		i++;
 	}
 }
 
-/* tty_printf pointer */
-static char __tty_dtoh(int v) 
+/* kprintf pointer */
+static char __kdtoh(int v) 
 {
    if (v >= 0 && v < 10)
        return '0' + v;
@@ -129,7 +129,7 @@ static char __tty_dtoh(int v)
        return 'a' + v - 10;
 }
 
-static void __tty_printf_pointer(uint64_t p)
+static void __kprintf_pointer(uint64_t p)
 {
 	int count, i;
 		
@@ -137,32 +137,32 @@ static void __tty_printf_pointer(uint64_t p)
 		i = 0;
 		
 		while(__NIL__[i]) {
-			tty_printf_append(__NIL__[i]);
+			kprintf_append(__NIL__[i]);
 			i++;
 		}
 		
 		return;
 	}
 	
-	tty_printf_append('0');
-	tty_printf_append('x');
+	kprintf_append('0');
+	kprintf_append('x');
 	
 	count = 0;
 	i = (sizeof(p) << 3) - 4;	
 
 	/* skip first zeros */
-	while(i >= 0 && ((__tty_dtoh((p >> i) & 0xf) == '0')))
+	while(i >= 0 && ((__kdtoh((p >> i) & 0xf) == '0')))
 		i -= 4;
 	
 	while(i >= 0) {
-		tty_printf_append(__tty_dtoh((p >> i) & 0xf));
+		kprintf_append(__kdtoh((p >> i) & 0xf));
 		i -= 4;
 		count++;
 	}
 }
 
-/* tty_printf int */
-static size_t __tty_itoa_len(int n)
+/* kprintf int */
+static size_t __kitoa_len(int n)
 {
 	size_t len;
 
@@ -184,11 +184,11 @@ static size_t __tty_itoa_len(int n)
 	return len;
 }
 
-static void __tty_printf_int(int n)
+static void __kprintf_int(int n)
 {
 	size_t length, i;
 
-	i = __tty_itoa_len(n);
+	i = __kitoa_len(n);
 	length = i;
 
 	char buffer[length];
@@ -211,13 +211,13 @@ static void __tty_printf_int(int n)
 	buffer[length] = '\0';
 	
 	while (buffer[i]) {
-		tty_printf_append(buffer[i]);
+		kprintf_append(buffer[i]);
 		i++;
 	}
 }
 
-/* tty_printf hex */
-static int __tty_xtoa_len(uint32_t n)
+/* kprintf hex */
+static int __kxtoa_len(uint32_t n)
 {
 	if (n == 0)
 	   return 1;
@@ -225,24 +225,24 @@ static int __tty_xtoa_len(uint32_t n)
 	return (int)(log(n) / log(16)) + 1;
 }
 
-static void __tty_printf_hex(uint64_t n, int is_upper)
+static void __kprintf_hex(uint64_t n, int is_upper)
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
 	static const char *digits = NULL;
 	int i;
 	
-	i = __tty_xtoa_len(n);
+	i = __kxtoa_len(n);
 	char hex[i + 1];
 	
 	if(prefix_flag) {
-		tty_printf_append('0');
-		tty_printf_append('x');
+		kprintf_append('0');
+		kprintf_append('x');
 		prefix_flag = 0;
 	}
 	
 	if(n == 0) {
-		tty_printf_append('0');
+		kprintf_append('0');
 		return;
 	}
 
@@ -258,27 +258,27 @@ static void __tty_printf_hex(uint64_t n, int is_upper)
 		--i;
 	}
 
-	hex[i] = '\0';
+	hex[8] = '\0';
 	i = 0;
 		
-	while(hex[i] && hex[i] == '0')
+	while(hex[i] == '0')
 		i++;
 
 	while(hex[i]) {
-		tty_printf_append(hex[i]);
+		kprintf_append(hex[i]);
 		i++;
 	}
 }
 
-static void __tty_print_args(char type, va_list args)
+static void __kprint_args(char type, va_list *args)
 {
 	switch(type) {
 		case '%':
-			tty_printf_append(type);
+			kprintf_append(type);
 			break;
 
 		case 'c':
-			tty_printf_append(va_arg(args, int));
+			kprintf_append(va_arg(*args, int));
 			break;
 
 		case 's':
@@ -286,33 +286,33 @@ static void __tty_print_args(char type, va_list args)
 			int i;
 			
 			i = 0;
-			str = va_arg(args, char *);
+			str = va_arg(*args, char *);
 			
 			while(str[i]) {
-				tty_printf_append(str[i]);
+				kprintf_append(str[i]);
 				i++;
 			}
 			break;
 
 		case 'p':
-			__tty_printf_pointer((uint64_t)va_arg(args, void *));
+			__kprintf_pointer((uint64_t)va_arg(*args, void *));
 			break;
 
 		case 'd': case 'i':
-			__tty_printf_int(va_arg(args, int));
+			__kprintf_int(va_arg(*args, int));
 			break;
 
 		case 'u':
-			__tty_printf_uint(va_arg(args, uint32_t));
+			__kprintf_uint(va_arg(*args, uint32_t));
 			break;
 
 		case 'x': case 'X':
-			__tty_printf_hex(va_arg(args, uint64_t), isupper(type));
+			__kprintf_hex(va_arg(*args, uint64_t), isupper(type));
 			break;
 	};
 }
 
-static void __tty_parse(const char* str, va_list args)
+static void __kparse(const char* str, va_list *args)
 {
     int i;
 
@@ -323,32 +323,32 @@ static void __tty_parse(const char* str, va_list args)
 			if(str[i + 1] == '#' && str[i + 1] != '\0') {
 				prefix_flag = 1;
 				i++;
-            	__tty_print_args(str[i + 1], args);
+            	__kprint_args(str[i + 1], args);
 			}
 			else
-            	__tty_print_args(str[i + 1], args);
+            	__kprint_args(str[i + 1], args);
             i++;
         }
         else
-			tty_printf_append(str[i]);
+			kprintf_append(str[i]);
     }
 }
 
-void tty_printf(const char *fmt, ...)
+void kprintf(const char *fmt, ...)
 {
     va_list args;
 
     if(!fmt || *fmt == '\0')
-		tty_print("tty_printf: incorrect format\n");
+		kprint("kprintf: incorrect format\n");
 	
 	prefix_flag = 0;
 	
-	bzero(tty_printf_buffer, TTY_PRINTF_BUFFER_SIZE);
-	tty_printf_pos = 0;
+	bzero(kprintf_buffer, K_PRINTF_BUFFER_SIZE);
+	kprintf_pos = 0;
 
     va_start(args, fmt);
-    __tty_parse(fmt, args);
+    __kparse(fmt, &args);
     va_end(args);
 
-	tty_print(tty_printf_buffer);
+	kprint(kprintf_buffer);
 }
