@@ -33,6 +33,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(BUILD_DIR)/simple_os.img
 
 re: clean all
 
