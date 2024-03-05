@@ -159,6 +159,11 @@ static size_t __tty_itoa_len(int n)
 
 	if (n == 0)
 		return 1;
+	
+	if (n < 0) {
+		n = -n;
+		len++;
+	}
 
 	while (n >= 1) {
 		len++;
@@ -170,31 +175,34 @@ static size_t __tty_itoa_len(int n)
 
 static void __tty_printf_int(int n)
 {
-	size_t length, temp_len;
+	size_t length, i;
 
-	temp_len = __tty_itoa_len(n);
-	length   = temp_len;
+	i = __tty_itoa_len(n);
+	length = i;
 
-	char buffer[temp_len];
-
-	temp_len--;
+	char buffer[length];
+	i--;
 
 	if (n < 0) {
 		buffer[0] = '-';
 		n = -n;
 	}
 
-	while (temp_len) {
-		buffer[temp_len] = (n % 10) + '0';
+	while (i) {
+		buffer[i] = (n % 10) + '0';
 		n /= 10;
-		temp_len--;
+		i--;
 	}
 	
 	if (buffer[0] != '-')
 		buffer[0] = (n % 10) + '0';
 
 	buffer[length] = '\0';
-	tty_print(buffer);
+	
+	while (buffer[i]) {
+		tty_printf_append(buffer[i]);
+		i++;
+	}
 }
 
 /* tty_printf hex */
