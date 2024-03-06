@@ -40,3 +40,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Updates history
+
+> simple-os (v0.0.1):
+- added `kmain()`
+- added kernel library `libk` (`<string.h>`, `<ctype.h>`, `<stddef.h>`, `<stdint.h>`)
+- added text output to VGA
+
+> simple-os (v0.0.2):
+- added `kprintf()` function (*%#xXidpusc* options of standard C library printf)
+- added to libk `<stdarg.h>`, `<memory.h>`, `<math.h> `
