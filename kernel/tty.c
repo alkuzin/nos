@@ -82,3 +82,33 @@ void kputchar(const int c)
 			break;
 	};
 }
+
+// Function to print colored text
+void kprintc(const char* str, enum vga_color fg, enum vga_color bg) 
+{
+    uint8_t color;
+	int i;
+
+    color = vga_entry_color(fg, bg);
+	i = 0;
+
+    while (str[i]) {
+		switch(str[i]) {
+			case '\n':
+    			cursor_pos = (cursor_pos / VGA_SCREEN_WIDTH + 1) * VGA_SCREEN_WIDTH;
+				i++;
+				return;
+		
+			case '\v':
+				cursor_pos += VGA_SCREEN_WIDTH;
+				i++;
+				return;
+		
+			default:
+				video_memory[cursor_pos] = vga_entry(str[i], color);
+				cursor_pos++;
+				i++;
+				break;
+    	}
+	}
+}

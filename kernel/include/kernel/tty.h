@@ -33,6 +33,9 @@ SOFTWARE.
 /* The kprintf() formats and prints data */
 void kprintf(const char *fmt, ...);
 
+/* print colored text to screen */
+void kprintc(const char* str, enum vga_color fg, enum vga_color bg);
+
 /* print text to screen */
 void kprint(const char *str);
 
