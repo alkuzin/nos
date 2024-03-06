@@ -21,10 +21,10 @@ $(OBJS):
 	$(MAKE) -C $(LIBK_DIR) all
 
 $(NAME): $(OBJS)
+	mkdir -p $(BUILD_DIR)
 	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
 
 all: $(NAME)
-	mkdir -p $(BUILD_DIR)
 
 clean:
 	$(MAKE) -C $(KERNEL_DIR) fclean
