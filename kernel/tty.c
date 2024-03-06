@@ -25,7 +25,7 @@ VGA_SOFTWARE.
 #include <libk/stdint.h>
 #include <kernel/tty.h>
 
-static uint16_t *video_memory    = (uint16_t *)VIDEO_MEMORY;
+static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
 static uint32_t cursor_pos = 0;
 
 void __kclear(void)

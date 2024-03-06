@@ -34,8 +34,9 @@ SOFTWARE.
 
 static char kprintf_buffer[K_PRINTF_BUFFER_SIZE] = {0};
 static int  kprintf_pos = 0;
-static int  prefix_flag    = 0;
+static int  prefix_flag = 0; /* '#' prefix flag */
 
+/* append character to kprintf buffer */
 static void kprintf_append(char c);
 
 /* %x %X options (hexadecimal) */
@@ -69,6 +70,7 @@ static void   __kprint_args(char type, va_list * args);
 static void   __kparse(const char* str, va_list * args);
 
 
+/* append character to kprintf buffer */
 static void kprintf_append(char c)
 {
 	kprintf_buffer[kprintf_pos] = c;
@@ -341,10 +343,9 @@ void kprintf(const char *fmt, ...)
     if(!fmt || *fmt == '\0')
 		kprint("kprintf: incorrect format\n");
 	
-	prefix_flag = 0;
-	
-	bzero(kprintf_buffer, K_PRINTF_BUFFER_SIZE);
 	kprintf_pos = 0;
+	prefix_flag = 0;
+	bzero(kprintf_buffer, K_PRINTF_BUFFER_SIZE);
 
     va_start(args, fmt);
     __kparse(fmt, &args);

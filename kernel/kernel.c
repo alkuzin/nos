@@ -23,19 +23,19 @@ SOFTWARE.
 */
 
 #include <kernel/kernel.h>
-#include <libk/stdint.h>
-#include <libk/stddef.h>
 #include <kernel/tty.h>
 
-
+/* kernel entry point */
 extern void kmain(void)
 {
-	__kclear();
+	__kclear(); /* clear screen */
+	
+	/* display kernel info */
 	kprint("---------------------------------------------\n");	
 	kprintf("%s [%s] @alkuzin - 2024\n", __OS_NAME__, __OS_VERSION__);	
 	kprint("---------------------------------------------\n");	
 
 	kprintf("\nvideo memory address: <%p>\n", VIDEO_MEMORY);	
 
-	for(;;);
+	for(;;); /* infinite loop for halting CPU */
 }
