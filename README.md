@@ -55,3 +55,5 @@ SOFTWARE.
 > simple-os (v0.0.3):
 - added vga driver
 - added color printing function `kprintc()` with 16 colors
+
+<img src="res/simple-os-vga-output.png">
