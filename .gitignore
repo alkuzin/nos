@@ -1,6 +1,5 @@
-build/*
 *.swp
-*.bin
 *.o
 src/kernel/tty_printf/
 *.a
+.vscode/
