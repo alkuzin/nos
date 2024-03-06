@@ -26,7 +26,7 @@ SOFTWARE.
 #define _KERNEL_H_
 
 #define __OS_NAME__    "simple-os"
-#define __OS_VERSION__ "v0.0.2"
+#define __OS_VERSION__ "v0.0.3"
 
 /* kernel main function */
 extern void kmain(void);
