@@ -21,7 +21,7 @@ $(OBJS):
 	$(MAKE) -C $(LIBK_DIR) all
 
 $(NAME): $(OBJS)
-	ld $(LFLAGS) linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
+	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
 
 all: $(NAME)
 	mkdir -p $(BUILD_DIR)
