@@ -25,6 +25,21 @@ SOFTWARE.
 #include <kernel/kernel.h>
 #include <kernel/tty.h>
 
+
+void __ksleep(uint32_t microsec)
+{
+	uint32_t i;
+
+	for (i = 0; i < microsec * 10000; i++) {
+		for (i = 0; i < microsec * 10000; i++)
+			__asm__ volatile ("nop"); /* do nothing */
+	}
+}
+
+void ksleep(uint32_t sec) {
+	__ksleep(sec * 10000);
+}
+
 /* kernel entry point */
 extern void kmain(void)
 {

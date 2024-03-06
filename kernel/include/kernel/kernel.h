@@ -28,6 +28,14 @@ SOFTWARE.
 #define __OS_NAME__    "simple-os"
 #define __OS_VERSION__ "v0.0.3"
 
+#include <libk/stdint.h>
+
+/* kernel time delay in microseconds */
+void __ksleep(uint32_t microsec);
+
+/* kernel time delay in seconds */
+void ksleep(uint32_t sec);
+
 /* kernel main function */
 extern void kmain(void);
 
