@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(IN
 
 NAME = _kernel.o
 
-SRC  = kernel tty kprintf
+SRC  = kernel tty kprintf vga
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
