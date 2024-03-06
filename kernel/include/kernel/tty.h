@@ -25,9 +25,7 @@ SOFTWARE.
 #ifndef _KERNEL_TTY_H_
 #define _KERNEL_TTY_H_ 
 
-#define VIDEO_MEMORY   0xB8000
-#define SCREEN_WIDTH   80
-#define SCREEN_HEIGHT  25
+#include <kernel/vga.h>
 
 /* for NULL pointer in kprintf */
 #define __NIL__ "(nil)"
