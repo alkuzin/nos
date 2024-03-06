@@ -51,3 +51,7 @@ SOFTWARE.
 > simple-os (v0.0.2):
 - added `kprintf()` function (*%#xXidpusc* options of standard C library printf)
 - added to libk `<stdarg.h>`, `<memory.h>`, `<math.h> `
+
+> simple-os (v0.0.3):
+- added vga driver
+- added color printing function `kprintc()` with 16 colors
