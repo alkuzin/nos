@@ -22,20 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/kernel.h>
-#include <libk/stdint.h>
-#include <libk/stddef.h>
-#include <kernel/tty.h>
+#ifndef _KERNEL_VGA_H_
+#define _KERNEL_VGA_H_ 
+
+#define VIDEO_MEMORY   0xB8000
+#define VGA_SCREEN_WIDTH   80
+#define VGA_SCREEN_HEIGHT  25
 
 
-extern void kmain(void)
-{
-	__kclear();
-	kprint("---------------------------------------------\n");	
-	kprintf("%s 2024 [%s] @alkuzin\n", __OS_NAME__, __OS_VERSION__);	
-	kprint("---------------------------------------------\n");	
 
-	kprintf("\nvideo memory address: <%p>\n", VIDEO_MEMORY);	
-
-	for(;;);
-}
+#endif /* _KERNEL_VGA_H_ */

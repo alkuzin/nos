@@ -1,12 +1,11 @@
 CC = gcc
 
-SRC_DIR     = src
 OBJS_DIR    = objs
 BUILD_DIR   = build
-BOOT_DIR    = $(SRC_DIR)/boot
+BOOT_DIR    = $(KERNEL_DIR)/boot
 INCLUDE_DIR = include
-KERNEL_DIR  = $(SRC_DIR)/kernel
-LIBK_DIR    = $(SRC_DIR)/libk
+KERNEL_DIR  = kernel
+LIBK_DIR    = $(KERNEL_DIR)/libk
 
 KERNEL_LIB  = $(LIBK_DIR)/libk.a
 
@@ -25,6 +24,7 @@ $(NAME): $(OBJS)
 	ld $(LFLAGS) linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
 
 all: $(NAME)
+	mkdir -p $(BUILD_DIR)
 
 clean:
 	$(MAKE) -C $(KERNEL_DIR) fclean

@@ -1,12 +1,12 @@
 CC = gcc
 
-INCLUDE_DIR = ../../include
+INCLUDE_DIR = include
 
 CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
 
 NAME = _kernel.o
 
-SRC  = kernel tty tty_printf
+SRC  = kernel tty kprintf
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
