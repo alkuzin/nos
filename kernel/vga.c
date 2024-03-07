@@ -24,10 +24,26 @@ SOFTWARE.
 
 #include <kernel/vga.h>
 
-uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
-    return fg | bg << 4;
+uint8_t vga_entry_color(vga_color_t fg, vga_color_t bg) {
+    return (fg | bg << 4);
 }
 
-uint16_t vga_entry(unsigned char uc, uint8_t color) {
-    return (uint16_t)uc | (uint16_t)color << 8;
+uint16_t vga_entry(uint8_t c, uint8_t color) {
+    return ((uint16_t)c | (uint16_t)color << 8);
 }
+
+void port_byte_out(uint16_t port, uint8_t data) {
+	__asm__ volatile ("out %%al, %%dx" : : "a" (data), "d" (port));
+}
+
+void update_cursor(int x, int y) {
+	uint16_t pos;
+
+	pos = y * VGA_SCREEN_WIDTH + x;
+
+	port_byte_out(REG_SCREEN_CTRL, 15);
+	port_byte_out(REG_SCREEN_DATA, (uint8_t)(pos & 0xFF));
+	port_byte_out(REG_SCREEN_CTRL, 14);
+	port_byte_out(REG_SCREEN_DATA, (uint8_t)(pos >> 8) & 0xFF);
+}
+

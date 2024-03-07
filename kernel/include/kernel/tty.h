@@ -27,6 +27,9 @@ SOFTWARE.
 
 #include <kernel/vga.h>
 
+#define TTY_FG_COLOR VGA_COLOR_WHITE
+#define TTY_BG_COLOR VGA_COLOR_BLUE
+
 /* for NULL pointer in kprintf */
 #define __NIL__ "(nil)"
 

@@ -23,18 +23,33 @@ VGA_SOFTWARE.
 */
 
 #include <libk/stdint.h>
+#include <libk/memory.h>
 #include <kernel/tty.h>
+#include <kernel/vga.h>
 
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
-static uint32_t cursor_pos = 0;
+static int x_pos = 0;
+static int y_pos = 0;
+
+static void __kputchar_at(char c, uint8_t color, int x, int y);
+
+static void __kputchar_at(char c, uint8_t color, int x, int y) {
+    int pos;
+	
+	pos = y * VGA_SCREEN_WIDTH + x;
+	video_memory[pos] = vga_entry(c, color);
+}
 
 void __kclear(void)
 {
+	uint8_t  default_color;
 	uint32_t i;
 
+	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
 	i = 0;
+
 	while(i < VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT) {
-		video_memory[i] = (video_memory[i] & 0xFF00) | ' ';
+		video_memory[i] = vga_entry(' ', default_color);
 		i++;
 	}
 }
@@ -45,46 +60,12 @@ void kprint(const char *str)
 
 	i = 0;
 	while(str[i]) {
-
-		switch(str[i]) {
-			case '\n':
-    			cursor_pos = (cursor_pos / VGA_SCREEN_WIDTH + 1) * VGA_SCREEN_WIDTH;
-				i++;
-				continue;
-		
-			case '\v':
-				cursor_pos += VGA_SCREEN_WIDTH;
-				i++;
-				continue;
-
-			default:
-				kputchar((video_memory[i] & 0xFF00) | str[i]);
-				i++;
-				break;
-		};
+		kputchar(str[i]);	
+		i++;
 	}
 }
 
-void kputchar(const int c)
-{
-	switch(c) {
-		case '\n':
-    		cursor_pos = (cursor_pos / VGA_SCREEN_WIDTH + 1) * VGA_SCREEN_WIDTH;
-			return;
-		
-		case '\v':
-			cursor_pos += VGA_SCREEN_WIDTH;
-			return;
-		
-		default:
-			video_memory[cursor_pos] = (video_memory[cursor_pos] & 0xFF00) | c;
-			cursor_pos++;
-			break;
-	};
-}
-
-// Function to print colored text
-void kprintc(const char* str, enum vga_color fg, enum vga_color bg) 
+void kprintc(const char* str, vga_color_t fg, vga_color_t bg) 
 {
     uint8_t color;
 	int i;
@@ -93,22 +74,47 @@ void kprintc(const char* str, enum vga_color fg, enum vga_color bg)
 	i = 0;
 
     while (str[i]) {
-		switch(str[i]) {
-			case '\n':
-    			cursor_pos = (cursor_pos / VGA_SCREEN_WIDTH + 1) * VGA_SCREEN_WIDTH;
-				i++;
-				return;
-		
-			case '\v':
-				cursor_pos += VGA_SCREEN_WIDTH;
-				i++;
-				return;
-		
-			default:
-				video_memory[cursor_pos] = vga_entry(str[i], color);
-				cursor_pos++;
-				i++;
-				break;
-    	}
+		__kputchar_at(str[i], color, x_pos, y_pos);
+		i++;
 	}
+}
+
+void kputchar(const int c)
+{
+	uint8_t default_color;
+	
+	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
+
+	switch(c) {
+		case '\n':
+			y_pos++;
+			x_pos = 0;
+			return;
+		
+		default:
+			__kputchar_at(c, default_color, x_pos, y_pos);
+			x_pos++;
+			break;
+	};
+
+	if(x_pos >= VGA_SCREEN_WIDTH) {
+		x_pos = 0;
+		y_pos++;
+	}
+	
+	if(y_pos >= VGA_SCREEN_HEIGHT) {
+		for (int i = 0; i < VGA_SCREEN_WIDTH - 1; i++) {
+			for (int j = VGA_SCREEN_HEIGHT - 2; j > 0; j--)
+			
+				video_memory[(j * VGA_SCREEN_WIDTH) + i] = video_memory[((j + 1) * VGA_SCREEN_WIDTH) + i];
+		}
+		
+		for (int i = 0; i < VGA_SCREEN_WIDTH - 1; i++)
+			__kputchar_at(' ', default_color, i, VGA_SCREEN_HEIGHT - 1);
+	
+		y_pos = VGA_SCREEN_HEIGHT - 1;
+	
+	}
+
+	update_cursor(x_pos, y_pos);	
 }

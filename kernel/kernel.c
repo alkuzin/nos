@@ -46,11 +46,10 @@ extern void kmain(void)
 	__kclear(); /* clear screen */
 	
 	/* display kernel info */
-	kprintc("---------------------------------------------\n", VGA_COLOR_BLUE, VGA_COLOR_BLACK);	
-	kprintf("%s [%s] @alkuzin - 2024\n", __OS_NAME__, __OS_VERSION__);	
-	kprintc("---------------------------------------------\n", VGA_COLOR_BLUE, VGA_COLOR_BLACK);	
-
-	kprintf("\nvideo memory address: <%p>\n", VIDEO_MEMORY);	
+	kprint(" ---------------------------------------------\n");	
+	kprintf(" %s [%s] @alkuzin - 2024\n", __OS_NAME__, __OS_VERSION__);	
+	kprint(" ---------------------------------------------\n");	
+	kprintf("\n video memory address: <%p>\n", VIDEO_MEMORY);	
 
 	for(;;); /* infinite loop for halting CPU */
 }

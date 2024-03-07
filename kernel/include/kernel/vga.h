@@ -29,6 +29,10 @@ SOFTWARE.
 #define VGA_SCREEN_WIDTH   80
 #define VGA_SCREEN_HEIGHT  25
 
+#define REG_SCREEN_CTRL    0x3D4
+#define REG_SCREEN_DATA    0x3D5
+
+
 #include <libk/stdint.h>
 
 enum vga_color {
@@ -46,14 +50,20 @@ enum vga_color {
 	VGA_COLOR_LIGHT_CYAN,
 	VGA_COLOR_LIGHT_RED,
 	VGA_COLOR_LIGHT_MAGENTA,
-	VGA_COLOR_LIGHT_BROWN,
+	VGA_COLOR_YELLOW,
 	VGA_COLOR_WHITE
 };
 
+typedef enum vga_color vga_color_t;
+
 /* VGA color attribute */
-uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg);
+uint8_t vga_entry_color(vga_color_t fg, vga_color_t bg);
 
 /* VGA text buffer entry */
-uint16_t vga_entry(unsigned char uc, uint8_t color);
+uint16_t vga_entry(uint8_t c, uint8_t color);
+
+void port_byte_out(uint16_t port, uint8_t data);
+
+void update_cursor(int x, int y);
 
 #endif /* _KERNEL_VGA_H_ */
