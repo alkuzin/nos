@@ -46,4 +46,3 @@ void update_cursor(int x, int y) {
 	port_byte_out(REG_SCREEN_CTRL, 14);
 	port_byte_out(REG_SCREEN_DATA, (uint8_t)(pos >> 8) & 0xFF);
 }
-

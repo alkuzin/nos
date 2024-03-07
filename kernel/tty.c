@@ -28,16 +28,37 @@ VGA_SOFTWARE.
 #include <kernel/vga.h>
 
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
+
+/* x & y positions of the cursor */
 static int x_pos = 0;
 static int y_pos = 0;
 
+/* print char with custom color in a specific place */
 static void __kputchar_at(char c, uint8_t color, int x, int y);
+
+/* VGA scroll function */
+static void __kscroll(void);
 
 static void __kputchar_at(char c, uint8_t color, int x, int y) {
     int pos;
 	
 	pos = y * VGA_SCREEN_WIDTH + x;
 	video_memory[pos] = vga_entry(c, color);
+}
+
+static void __kscroll(void)
+{
+	uint16_t buffer[(VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT * 2)];
+	uint8_t  default_color;
+	
+	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
+
+	memset(buffer, default_color, sizeof(buffer));
+	memcpy(buffer, video_memory + ((1 * VGA_SCREEN_WIDTH)), (VGA_SCREEN_WIDTH * (VGA_SCREEN_HEIGHT - 1) * 2));
+		
+	__kclear();
+
+	memcpy(video_memory, buffer, sizeof(buffer));
 }
 
 void __kclear(void)
@@ -84,6 +105,16 @@ void kputchar(const int c)
 	uint8_t default_color;
 	
 	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
+	
+	if(x_pos >= VGA_SCREEN_WIDTH) {
+		x_pos = 0;
+		y_pos++;
+	}
+	
+	if(y_pos >= VGA_SCREEN_HEIGHT) {
+		__kscroll();
+		y_pos = VGA_SCREEN_HEIGHT - 1;
+	}
 
 	switch(c) {
 		case '\n':
@@ -96,25 +127,6 @@ void kputchar(const int c)
 			x_pos++;
 			break;
 	};
-
-	if(x_pos >= VGA_SCREEN_WIDTH) {
-		x_pos = 0;
-		y_pos++;
-	}
-	
-	if(y_pos >= VGA_SCREEN_HEIGHT) {
-		for (int i = 0; i < VGA_SCREEN_WIDTH - 1; i++) {
-			for (int j = VGA_SCREEN_HEIGHT - 2; j > 0; j--)
-			
-				video_memory[(j * VGA_SCREEN_WIDTH) + i] = video_memory[((j + 1) * VGA_SCREEN_WIDTH) + i];
-		}
-		
-		for (int i = 0; i < VGA_SCREEN_WIDTH - 1; i++)
-			__kputchar_at(' ', default_color, i, VGA_SCREEN_HEIGHT - 1);
-	
-		y_pos = VGA_SCREEN_HEIGHT - 1;
-	
-	}
 
 	update_cursor(x_pos, y_pos);	
 }
