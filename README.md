@@ -53,7 +53,15 @@ SOFTWARE.
 - added to libk `<stdarg.h>`, `<memory.h>`, `<math.h> `
 
 > simple-os (v0.0.3):
-- added vga driver
+- added VGA driver
 - added color printing function `kprintc()` with 16 colors
 
 <img src="res/simple-os-vga-output.png">
+
+> simple-os (v0.0.4):
+
+- modified VGA driver (added new functions: `update_cursor()`, `port_byte_out()`)
+- added default background and foreground colors in `kernel/tty.h`
+- added VGA scrolling (`__kscroll()`)
+
+<img src="res/simple-os-vga-scroll.gif">
