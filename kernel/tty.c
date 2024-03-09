@@ -27,6 +27,7 @@ VGA_SOFTWARE.
 #include <kernel/tty.h>
 #include <kernel/vga.h>
 
+/* video memory address */
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
 
 /* x & y positions of the cursor */
@@ -39,11 +40,9 @@ static void __kputchar_at(char c, uint8_t color, int x, int y);
 /* VGA scroll function */
 static void __kscroll(void);
 
+
 static void __kputchar_at(char c, uint8_t color, int x, int y) {
-    int pos;
-	
-	pos = y * VGA_SCREEN_WIDTH + x;
-	video_memory[pos] = vga_entry(c, color);
+	video_memory[y * VGA_SCREEN_WIDTH + x] = vga_entry(c, color);
 }
 
 static void __kscroll(void)
@@ -120,6 +119,22 @@ void kputchar(const int c)
 		case '\n':
 			y_pos++;
 			x_pos = 0;
+			return;
+		
+		case '\t':
+			x_pos += TTY_TAB_WIDTH;
+			return;
+		
+		case '\v':
+			y_pos++;
+			return;
+		
+		case '\r':
+			x_pos = 0;
+			return;
+		
+		case '\b':
+			x_pos--;
 			return;
 		
 		default:
