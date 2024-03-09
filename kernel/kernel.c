@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include <kernel/kernel.h>
-#include <kernel/tty.h>
+#include <libk/stdarg.h>
 
 
 void __ksleep(uint32_t microsec)
@@ -38,6 +38,25 @@ void __ksleep(uint32_t microsec)
 
 void ksleep(uint32_t sec) {
 	__ksleep(sec * 10000);
+}
+
+void khalt(void) 
+{
+	__asm__ volatile("cli"); /* disable interrupts */
+
+	for(;;);
+}
+
+void kpanic(const char *fmt, ...)
+{
+	va_list args;
+	
+	va_start(args, fmt);
+	kprint("kernel panic: ");
+	kprintf(fmt, args);
+	va_end(args);
+
+	khalt();
 }
 
 /* kernel entry point */

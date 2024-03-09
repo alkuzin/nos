@@ -29,12 +29,20 @@ SOFTWARE.
 #define __OS_VERSION__ "v0.0.4"
 
 #include <libk/stdint.h>
+#include <kernel/tty.h>
+
 
 /* kernel time delay in microseconds */
 void __ksleep(uint32_t microsec);
 
 /* kernel time delay in seconds */
 void ksleep(uint32_t sec);
+
+/* halt kernel */
+void khalt(void);
+
+/* kernel panic (detecting an internal fatal error) */
+void kpanic(const char *fmt, ...);
 
 /* kernel main function */
 extern void kmain(void);
