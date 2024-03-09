@@ -34,6 +34,9 @@ static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
 static int x_pos = 0;
 static int y_pos = 0;
 
+/* foreground & background default color */
+static uint8_t default_color = (uint8_t)(TTY_FG_COLOR | TTY_BG_COLOR << 4);
+
 /* print char with custom color in a specific place */
 static void __kputchar_at(char c, uint8_t color, int x, int y);
 
@@ -48,9 +51,6 @@ static void __kputchar_at(char c, uint8_t color, int x, int y) {
 static void __kscroll(void)
 {
 	uint16_t buffer[(VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT * 2)];
-	uint8_t  default_color;
-	
-	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
 
 	memset(buffer, default_color, sizeof(buffer));
 	memcpy(buffer, video_memory + ((1 * VGA_SCREEN_WIDTH)), (VGA_SCREEN_WIDTH * (VGA_SCREEN_HEIGHT - 1) * 2));
@@ -62,12 +62,9 @@ static void __kscroll(void)
 
 void __kclear(void)
 {
-	uint8_t  default_color;
 	uint32_t i;
 
-	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
 	i = 0;
-
 	while(i < VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT) {
 		video_memory[i] = vga_entry(' ', default_color);
 		i++;
@@ -92,7 +89,6 @@ void kprintc(const char* str, vga_color_t fg, vga_color_t bg)
 
     color = vga_entry_color(fg, bg);
 	i = 0;
-
     while (str[i]) {
 		__kputchar_at(str[i], color, x_pos, y_pos);
 		i++;
@@ -101,10 +97,6 @@ void kprintc(const char* str, vga_color_t fg, vga_color_t bg)
 
 void kputchar(const int c)
 {
-	uint8_t default_color;
-	
-	default_color = vga_entry_color(TTY_FG_COLOR, TTY_BG_COLOR);
-	
 	if(x_pos >= VGA_SCREEN_WIDTH) {
 		x_pos = 0;
 		y_pos++;
