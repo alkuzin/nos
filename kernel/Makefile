@@ -1,25 +1,35 @@
-CC = gcc
+CC  = gcc
+ASM = nasm
 
 INCLUDE_DIR = ../include
 
 CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
+ASMFLAGS = -f elf
 
 NAME = _kernel.o
 
-SRC  = kernel tty kprintf vga
-SRCS = $(addsuffix .c, $(SRC))
-OBJS = $(addsuffix .o, $(SRC))
+SRC      = kernel tty kprintf vga gdt
+SRC_ASM  = gdt_flush
+SRCS     = $(addsuffix .c, $(SRC))
+SRCS_ASM = $(addsuffix .s, $(SRC_ASM))
+OBJS     = $(addsuffix .o, $(SRC))
+OBJS_ASM = $(addsuffix .o, $(SRC_ASM))
 
 OBJS_DIR = objs/
-OBJS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
+OBJS_PREFIXED     = $(addprefix $(OBJS_DIR), $(OBJS))
+OBJS_PREFIXED_ASM = $(addprefix $(OBJS_DIR), $(OBJS_ASM))
 
 $(OBJS_PREFIXED): $(SRCS)
 	mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) -c $(SRCS)
 	mv *.o $(OBJS_DIR)
 
-$(NAME): $(OBJS_PREFIXED)
-	ld -m elf_i386 -relocatable $(OBJS_PREFIXED) -o $(NAME)
+$(OBJS_PREFIXED_ASM): $(SRCS_ASM)
+	$(ASM) $(ASMFLAGS) -o $(OBJS_ASM) $(SRCS_ASM)
+	mv *.o $(OBJS_DIR)
+
+$(NAME): $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM)
+	ld -m elf_i386 -relocatable -z noexecstack $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM) -o $(NAME)
 
 all: $(NAME) 
 
