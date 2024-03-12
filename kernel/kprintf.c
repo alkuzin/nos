@@ -341,7 +341,7 @@ void kprintf(const char *fmt, ...)
     va_list args;
 
     if(!fmt || *fmt == '\0')
-		kprint("kprintf: incorrect format\n");
+		kpanic("%s\n", "incorrect format in kprintf()");
 	
     va_start(args, fmt);
     kvprintf(fmt, args);
@@ -353,7 +353,7 @@ void kvprintf(const char *fmt, va_list args)
     va_list args_copy;
 
     if(!fmt || *fmt == '\0')
-		kprint("kvprintf: incorrect format\n");
+		kpanic("%s\n", "incorrect format in kvprintf()");
 	
 	kprintf_pos = 0;
 	prefix_flag = 0;
