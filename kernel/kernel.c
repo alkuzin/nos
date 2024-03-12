@@ -46,15 +46,15 @@ void khalt(void)
 
 	for(;;);
 }
-
-void kpanic(const char *fmt, ...)
+void kpanic(const char *func_name, void *func_addr, uint32_t line, const char *fmt, ...)
 {
 	va_list args;
 	
 	va_start(args, fmt);
-	kprint("kernel panic: ");
-	kprintf(fmt, args);
-	va_end(args);
+    kprint("\n kernel: panic: ");
+	kprintf("in \"%s\" at line: %u in \"%s\" at <%p>:\n", __FILE__, line, func_name, func_addr);
+	kvprintf(fmt, args);
+    va_end(args);
 
 	khalt();
 }

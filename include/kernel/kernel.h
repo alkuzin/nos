@@ -42,7 +42,7 @@ void ksleep(uint32_t sec);
 void khalt(void);
 
 /* kernel panic (detecting an internal fatal error) */
-void kpanic(const char *fmt, ...);
+void kpanic(const char *func_name, void *func_addr, uint32_t line, const char *fmt, ...);
 
 /* kernel main function */
 extern void kmain(void);
