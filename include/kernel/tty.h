@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef _KERNEL_TTY_H_
 #define _KERNEL_TTY_H_ 
 
+#include <libk/stdarg.h>
 #include <kernel/vga.h>
 
 #define TTY_FG_COLOR  VGA_COLOR_WHITE
@@ -33,6 +34,9 @@ SOFTWARE.
 
 /* for NULL pointer in kprintf */
 #define __NIL__ "(nil)"
+
+/* The kvprintf() variadic function thats formats and prints data */
+void kvprintf(const char *fmt, va_list args);
 
 /* The kprintf() formats and prints data */
 void kprintf(const char *fmt, ...);

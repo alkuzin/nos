@@ -343,13 +343,25 @@ void kprintf(const char *fmt, ...)
     if(!fmt || *fmt == '\0')
 		kprint("kprintf: incorrect format\n");
 	
+    va_start(args, fmt);
+    kvprintf(fmt, args);
+    va_end(args);
+}
+
+void kvprintf(const char *fmt, va_list args)
+{
+    va_list args_copy;
+
+    if(!fmt || *fmt == '\0')
+		kprint("kvprintf: incorrect format\n");
+	
 	kprintf_pos = 0;
 	prefix_flag = 0;
 	bzero(kprintf_buffer, K_PRINTF_BUFFER_SIZE);
 
-    va_start(args, fmt);
+    va_copy(args_copy, args);
     __kparse(fmt, &args);
-    va_end(args);
+    va_end(args_copy);
 
 	kprint(kprintf_buffer);
 }
