@@ -23,8 +23,6 @@ SOFTWARE.
 */
 
 #include <kernel/kernel.h>
-#include <libk/stdarg.h>
-
 
 void __ksleep(uint32_t microsec)
 {
@@ -45,18 +43,6 @@ void khalt(void)
 	__asm__ volatile("cli"); /* disable interrupts */
 
 	for(;;);
-}
-void kpanic(const char *func_name, void *func_addr, uint32_t line, const char *fmt, ...)
-{
-	va_list args;
-	
-	va_start(args, fmt);
-    kprint("\n kernel: panic: ");
-	kprintf("in \"%s\" at line: %u in \"%s\" at <%p>:\n", __FILE__, line, func_name, func_addr);
-	kvprintf(fmt, args);
-    va_end(args);
-
-	khalt();
 }
 
 /* kernel entry point */

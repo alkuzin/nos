@@ -50,6 +50,9 @@ void kprint(const char *str);
 /* print character to screen */
 void kputchar(const int c);
 
+/* kernel panic (detecting an internal fatal error) */
+void kpanic(const char *fmt, ...);
+
 /* clear screen */
 void __kclear(void);
 

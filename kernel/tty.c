@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE VGA_SOFTWARE OR THE USE OR OTHER DEALINGS IN TH
 VGA_SOFTWARE.
 */
 
-#include <libk/stdint.h>
-#include <libk/memory.h>
+#include <kernel/kernel.h>
 #include <kernel/tty.h>
 #include <kernel/vga.h>
+#include <libk/stdint.h>
+#include <libk/memory.h>
 
 /* video memory address */
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
@@ -136,4 +137,16 @@ void kputchar(const int c)
 	};
 
 	update_cursor(x_pos, y_pos);	
+}
+
+void kpanic(const char *fmt, ...)
+{
+	va_list args;
+	
+	va_start(args, fmt);
+    kprintf("kernel: panic: ");
+	kvprintf(fmt, args);
+    va_end(args);
+
+	khalt();
 }
