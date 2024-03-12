@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include <kernel/kernel.h>
+#include <kernel/gdt.h>
 
 void __ksleep(uint32_t microsec)
 {
@@ -49,12 +50,24 @@ void khalt(void)
 extern void kmain(void)
 {
 	__kclear(); /* clear screen */
+
+    /* initializing Global Descriptor Table */
+    gdt_init();
+
+	/* display OS banner */
+    
+    kprintf(
+    "    _____            __        ____  ____      \n"
+    "   / __(_)_ _  ___  / /__ ____/ __ \\/ __/     \n"
+    "  _\\ \\/ /  ' \\/ _ \\/ / -_)___/ /_/ /\\ \\  \n"
+    " /___/_/_/_/_/ .__/_/\\__/    \\____/___/      \n"
+    "            /_/                              \n\n"
+    " %s (%s %s) (c) @alkuzin - 2024\n"
+    " ---------------------------------------------\n\n\n", 
+    __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
 	
-	/* display kernel info */
-	kprint(" ---------------------------------------------\n");	
-	kprintf(" %s [%s] @alkuzin - 2024\n", __OS_NAME__, __OS_VERSION__);	
-	kprint(" ---------------------------------------------\n");	
-	kprintf("\n video memory address: <%p>\n", VIDEO_MEMORY);	
+    kprint(" kernel: initialized Global Descriptor Table \n");	
+
 
 	for(;;); /* infinite loop for halting CPU */
 }

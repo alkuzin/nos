@@ -59,9 +59,18 @@ SOFTWARE.
 <img src="res/simple-os-vga-output.png">
 
 > simple-os (v0.0.4):
-
+- added `ksleep()` & `__ksleep()` functions in `<kernel.h>`
 - modified VGA driver (added new functions: `update_cursor()`, `port_byte_out()`)
 - added default background and foreground colors in `kernel/tty.h`
 - added VGA scrolling (`__kscroll()`)
 
 <img src="res/simple-os-vga-scroll.gif">
+
+> simple-os (v0.0.5):
+- added `\v` `\t` `\r` `\b` special characters support in `kputchar()`
+- define a signed integer types in `<stdint.h>`
+- added `kvprintf()` function
+- added kernel halt `khalt()` & kernel panic `kpanic()` for detecting errors 
+- added Global Descriptor Table
+
+<img src="res/simple-os-kernel-panic.png">

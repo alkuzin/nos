@@ -26,7 +26,8 @@ SOFTWARE.
 #define _KERNEL_H_
 
 #define __OS_NAME__    "simple-os"
-#define __OS_VERSION__ "v0.0.4"
+#define __OS_VERSION__ "v0.0.5"
+#define __OS_ARCH__    "x86_32"
 
 #include <libk/stdint.h>
 #include <kernel/tty.h>
