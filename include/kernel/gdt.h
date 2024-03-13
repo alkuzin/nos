@@ -55,11 +55,46 @@ struct gdt_ptr_s {
 
 typedef struct gdt_ptr_s gdt_ptr_t;
 
+/* TSS (Task State Segment) entry - structure that holds information about a task. */
+struct tss_entry_s {
+    uint32_t prev_tss;
+    uint32_t esp0; /* stack pointer register 0 */
+    uint32_t ss0; /* stack segment register 0 */
+    uint32_t esp1; /* stack pointer register 1 */
+    uint32_t ss1; /* stack segment register 1 */
+    uint32_t esp2; /* stack pointer register 2 */
+    uint32_t ss2; /* stack segment register 2 */
+    uint32_t cr3; /* control register */
+    uint32_t eip; /* instruction pointer */
+    uint32_t eflags; /* flags register */
+    uint32_t eax; /* extended accumulator register */
+    uint32_t ecx; /* extended counter register */
+    uint32_t edx; /* extended data register */
+    uint32_t ebx; /* extended base register */
+    uint32_t esp; /* extended stack pointer */
+    uint32_t ebp; /* extended base pointer */
+    uint32_t esi; /* extended source index */
+    uint32_t edi; /* extended destination index */
+    uint32_t es; /* extra segment */
+    uint32_t cs; /* code segment */
+    uint32_t ss; /* stack segment */
+    uint32_t ds; /* data segment */
+    uint32_t fs; /* additional segment */
+    uint32_t gs; /* global segment */
+    uint32_t ldt; /* Local Descriptor Table register */
+    uint32_t trap; /* flag in the EFLAGS register */
+    uint32_t iomap_base; /* input/output map base register */
+} __attribute__((packed)); /* prevent the compiler from optimizing */
+
+typedef struct tss_entry_s tss_entry_t;
+
 /* initialize Global Descriptor Table */
 void gdt_init(void);
 
 /* set Global Descriptor Table content */
 void set_gdt_gate(uint32_t num, uint32_t base, uint32_t limit, 
                   uint8_t access, uint8_t gran);
+
+void tss_write(uint32_t num, uint16_t ss0, uint32_t esp0);
 
 #endif /* _KERNEL_GDT_H_ */

@@ -22,13 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <libk/memory.h>
 #include <kernel/gdt.h>
 
 
 extern void gdt_flush(uint32_t);
+extern void tss_flush(void);
 
-gdt_entry_t gdt_entries[5];
+gdt_entry_t gdt_entries[6];
 gdt_ptr_t   gdt_ptr;
+tss_entry_t tss_entry;
 
 
 void set_gdt_gate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
@@ -42,10 +45,9 @@ void set_gdt_gate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, u
     gdt_entries[num].access    = access;
 }
 
-
 void gdt_init(void)
 {
-    gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
+    gdt_ptr.limit = (sizeof(gdt_entry_t) * 6) - 1;
     gdt_ptr.base  = (uint32_t) &gdt_entries;
 
     /* null segment (required by convention) */
@@ -75,5 +77,30 @@ void gdt_init(void)
     /* user data segment */
     set_gdt_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
 
+    tss_write(5, 0x10, 0x0);
+
     gdt_flush((uint32_t) &gdt_ptr);
+    tss_flush();
+}
+
+void tss_write(uint32_t num, uint16_t ss0, uint32_t esp0)
+{
+    uint32_t base, limit;
+
+    base = (uint32_t) &tss_entry;
+    limit = base + sizeof(tss_entry);
+
+    set_gdt_gate(num, base, limit, 0xE9, 0x00);
+    bzero(&tss_entry, sizeof(tss_entry));
+
+    tss_entry.ss0 = ss0;
+    tss_entry.esp0 = esp0;
+
+    /* switch to kernel mode from user mode */
+    tss_entry.cs = 0x08 | 0x3; 
+    tss_entry.es = 0x10 | 0x3;
+    tss_entry.ds = 0x10 | 0x3;
+    tss_entry.ss = 0x10 | 0x3;
+    tss_entry.fs = 0x10 | 0x3;
+    tss_entry.gs = 0x10 | 0x3;
 }
