@@ -63,10 +63,11 @@ make fclean
 
 ## 4. Project structure
 
- - `build/`     - containts .bin & .iso files
- - `doc/`       - documentation
- - `res/`      - screenshots & documentation images
- - `kernel/`   - OS source code
+ - `build/`   - containts .bin & .iso files
+ - `doc/`     - documentation
+ - `include/` - contains kernel & libk header files
+ - `res/`     - screenshots & documentation images
+ - `kernel/`  - OS source code
  - LICENSE    - MIT license
  - Makefile   - main makefile
  - README.md  - OS description
@@ -74,7 +75,6 @@ make fclean
 In `kernel/`:
 
  - `boot/`      - containts bootloader
- - `include/`   - contains kernel & libk header files
  - `libk/`      - containts kernel library `libk` source
 
 ## 5. Headers overview 
@@ -83,6 +83,7 @@ In `kernel/`:
  - `kernel.h` - kernel main header file (contains OS name, version, kernel entry point `kmain()`)
  - `tty.h`    - kernel terminal output functions
  - `vga.h`    - vga driver
+ - `gdt.h`    - Global Descriptor Table
 
 
 ## Libk
