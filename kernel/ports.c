@@ -24,7 +24,15 @@ SOFTWARE.
 
 #include <kernel/ports.h>
 
-/* outputs byte of data to specifien input/output port */
+
 void out_port_b(uint16_t port, uint8_t data) {
     __asm__ volatile("outb %1, %0" : : "dN" (port), "a" (data));
+}
+
+uint8_t in_port_b(uint16_t port) {
+    uint8_t rv;
+    
+    __asm__ volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
+
+    return rv;
 }

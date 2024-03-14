@@ -26,6 +26,7 @@ SOFTWARE.
 #include <kernel/tty.h>
 #include <kernel/idt.h>
 #include <kernel/irq.h>
+#include <libk/stddef.h>
 
 
 char *exception_msgs[] = {
@@ -69,13 +70,12 @@ void isr_handler(int_reg_t *regs)
         kpanic(" %s\n", exception_msgs[regs->int_no]);
 }
 
-void *irq_routines[16] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0 
-};
+static irq_handler_t irq_routines[16] = {NULL};
 
-void irq_install_handler(int irq, void (*handler)(int_reg_t *r)) {
+void irq_install_handler(int irq, irq_handler_t handler) 
+{
     irq_routines[irq] = handler;
+    __asm__ volatile("sti");
 }
 
 void irq_uninstall_handler(int irq) {

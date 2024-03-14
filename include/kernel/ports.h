@@ -28,6 +28,10 @@ SOFTWARE.
 #include <libk/stdint.h>
 
 
+/* outputs byte of data to specified input/output port */
 void out_port_b(uint16_t port, uint8_t data);
+
+/* receive byte of data from specified input/output port */
+uint8_t in_port_b(uint16_t port);
 
 #endif /* _KERNEL_PORTS_H_ */

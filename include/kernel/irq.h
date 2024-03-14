@@ -52,11 +52,14 @@ struct int_reg_s {
 
 typedef struct int_reg_s int_reg_t;
 
+typedef void (*irq_handler_t) (int_reg_t *);
+
 void isr_handler(int_reg_t *regs);
 
 void irq_handler(int_reg_t *regs);
 
-void irq_install_handler(int irq, void (*handler)(int_reg_t *r));
+//void irq_install_handler(int irq, void (*handler)(int_reg_t *r));
+void irq_install_handler(int irq, irq_handler_t handler);
 
 void irq_uninstall_handler(int irq);
 
