@@ -31,4 +31,9 @@ SOFTWARE.
 #define NULL   ((void *)0)
 #define size_t uint64_t
 
+typedef uint8_t bool;
+#define true  1
+#define false 0
+
+
 #endif /* _LIBK_STDDEF_H_ */
