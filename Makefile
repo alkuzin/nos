@@ -1,16 +1,16 @@
-CC = gcc
-
 OBJS_DIR    = objs
 BUILD_DIR   = build
 BOOT_DIR    = $(KERNEL_DIR)/boot
 INCLUDE_DIR = include
 KERNEL_DIR  = kernel
 LIBK_DIR    = $(KERNEL_DIR)/libk
+ISO_DIR     = isodir
 
 KERNEL_LIB  = $(LIBK_DIR)/libk.a
 
-NAME   = $(BUILD_DIR)/simple_os.bin
-LFLAGS = -z noexecstack -m elf_i386 -T
+NAME     = $(BUILD_DIR)/simple_os.elf
+NAME_ISO = simple_os.iso
+LFLAGS   = -z noexecstack -m elf_i386 -T
 
 OBJS = $(KERNEL_DIR)/_kernel.o \
        $(BOOT_DIR)/_boot.o
@@ -24,7 +24,7 @@ $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)
 	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
 
-all: $(NAME)
+all: $(NAME) build-iso
 
 clean:
 	$(MAKE) -C $(KERNEL_DIR) fclean
@@ -33,13 +33,18 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f $(BUILD_DIR)/simple_os.img
+	rm -rf $(ISO_DIR) $(NAME_ISO)
+	rm -f $(NAME_ISO)
 
 re: clean all
 
-build-img: all $(NAME)
-	cp $(NAME) $(BUILD_DIR)/simple_os.img
-	truncate -s 1440k $(BUILD_DIR)/simple_os.img
+build-iso: $(NAME)
+	mkdir -p $(ISO_DIR) $(ISO_DIR)/boot/ $(ISO_DIR)/boot/grub/
+	cp $(NAME) $(ISO_DIR)/boot/kernel.elf
+	cp grub/grub.cfg  $(ISO_DIR)/boot/grub/grub.cfg
+	grub-mkrescue -o $(NAME_ISO) $(ISO_DIR)
 
-init:
-	qemu-system-i386 -kernel $(NAME)
+init-iso: 
+	qemu-system-i386 -m 2024 -cdrom $(NAME_ISO)
+
+init: init-iso
