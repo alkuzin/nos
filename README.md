@@ -82,3 +82,9 @@ SOFTWARE.
 - added IDT (Interrupt Descriptor Table) in `<idt.h>`
 - added GNU GRUB support
 - added IRQ (Interrupt Request) in `<irq.h>`
+
+> simple-os (v0.0.7):
+- added PIT (Programmable Interval Timer) in `<timer.h>`
+- added keyboard driver in `<keyboard.h>`
+
+<img src="res/simple-os-keyboard.gif">

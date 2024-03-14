@@ -84,13 +84,15 @@ In `kernel/`:
 ## 5. Headers overview 
 
 ## Kernel
- - `kernel.h` - kernel main header file (contains OS name, version, kernel entry point `kmain()`)
- - `tty.h`    - kernel terminal output functions
- - `vga.h`    - vga driver
- - `gdt.h`    - Global Descriptor Table
- - `idt.h`    - Interrupt Descriptor Table
- - `irq.h`    - Interrupt Requests
- - `ports.h`  - input/output ports
+ - `kernel.h`   - kernel main header file (contains OS name, version, kernel entry point `kmain()`)
+ - `tty.h`      - kernel terminal output functions
+ - `vga.h`      - vga driver
+ - `gdt.h`      - Global Descriptor Table
+ - `idt.h`      - Interrupt Descriptor Table
+ - `irq.h`      - Interrupt Requests
+ - `ports.h`    - input/output ports
+ - `timer.h`    - Programmable Interval Timer driver
+ - `keyboard.h` - keyboard driver
 
 
 ## Libk
