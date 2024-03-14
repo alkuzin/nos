@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <kernel/kernel.h>
 #include <kernel/gdt.h>
+#include <kernel/idt.h>
 
 void __ksleep(uint32_t microsec)
 {
@@ -53,9 +54,11 @@ extern void kmain(void)
 
     /* initializing Global Descriptor Table */
     gdt_init();
+    
+    /* initializing Interrupt Descriptor Table */
+    idt_init();
 
 	/* display OS banner */
-    
     kprintf(
     "    _____            __        ____  ____      \n"
     "   / __(_)_ _  ___  / /__ ____/ __ \\/ __/     \n"
@@ -67,7 +70,7 @@ extern void kmain(void)
     __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
 	
     kprint(" kernel: initialized Global Descriptor Table \n");	
-
+    kprint(" kernel: initialized Interrupt Descriptor Table \n");	
 
 	for(;;); /* infinite loop for halting CPU */
 }

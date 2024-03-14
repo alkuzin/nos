@@ -8,10 +8,9 @@ ASMFLAGS = -f elf
 
 NAME = _kernel.o
 
-SRC      = kernel tty kprintf vga gdt
-SRC_ASM  = gdt_flush
+SRC      = kernel tty kprintf vga gdt idt irq ports
+SRC_ASM  = gdt_flush idt_flush
 SRCS     = $(addsuffix .c, $(SRC))
-SRCS_ASM = $(addsuffix .s, $(SRC_ASM))
 OBJS     = $(addsuffix .o, $(SRC))
 OBJS_ASM = $(addsuffix .o, $(SRC_ASM))
 
@@ -24,11 +23,12 @@ $(OBJS_PREFIXED): $(SRCS)
 	$(CC) $(CFLAGS) -c $(SRCS)
 	mv *.o $(OBJS_DIR)
 
-$(OBJS_PREFIXED_ASM): $(SRCS_ASM)
-	$(ASM) $(ASMFLAGS) -o $(OBJS_ASM) $(SRCS_ASM)
+asm: 
+	$(ASM) $(ASMFLAGS) -o gdt_flush.o gdt_flush.s
+	$(ASM) $(ASMFLAGS) -o idt_flush.o idt_flush.s
 	mv *.o $(OBJS_DIR)
 
-$(NAME): $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM)
+$(NAME): $(OBJS_PREFIXED) asm 
 	ld -m elf_i386 -relocatable -z noexecstack $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM) -o $(NAME)
 
 all: $(NAME) 
