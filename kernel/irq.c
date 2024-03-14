@@ -24,6 +24,7 @@ SOFTWARE.
 
 #include <kernel/ports.h>
 #include <kernel/tty.h>
+#include <kernel/idt.h>
 #include <kernel/irq.h>
 
 
@@ -65,10 +66,10 @@ char *exception_msgs[] = {
 void isr_handler(int_reg_t *regs)
 {
     if(regs->int_no < 32)
-        kpanic(" ((%s))\n", exception_msgs[regs->int_no]);
+        kpanic(" %s\n", exception_msgs[regs->int_no]);
 }
 
-static void *irq_routines[16] = {
+void *irq_routines[16] = {
     0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0 
 };

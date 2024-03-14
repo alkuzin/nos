@@ -35,10 +35,10 @@ extern void idt_flush(uint32_t);
 
 void idt_init(void)
 {
-    idt_ptr.limit = (sizeof(idt_entry_t) * 256) - 1;
+    idt_ptr.limit = sizeof(idt_entries) - 1;
     idt_ptr.base  = (uint32_t) &idt_entries;
 
-    bzero(&idt_entries, sizeof(idt_entry_t) * 256);
+    bzero(&idt_entries, sizeof(idt_entries));
 
     /* chips initialization mode */
     out_port_b(0x20, 0x11);
@@ -115,7 +115,7 @@ void idt_init(void)
 void set_idt_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
     idt_entries[num].base_low  = (base & 0xFFFF);
-    idt_entries[num].base_high = ((base >> 0xF) & 0xFFFF);
+    idt_entries[num].base_high = ((base >> 0x10) & 0xFFFF);
     idt_entries[num].sel       = sel;
     idt_entries[num].always0   = 0;
     idt_entries[num].flags     = (flags | 0x60);

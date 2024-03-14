@@ -48,7 +48,7 @@ struct int_reg_s {
     uint32_t eflags;
     uint32_t useresp;
     uint32_t ss;
-};
+} __attribute__((packed)); /* prevent the compiler from optimizing */
 
 typedef struct int_reg_s int_reg_t;
 
