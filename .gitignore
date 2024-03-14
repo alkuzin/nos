@@ -4,3 +4,5 @@ src/kernel/tty_printf/
 *.a
 .vscode/
 build/
+*.iso
+isodir/
