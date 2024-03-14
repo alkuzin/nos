@@ -24,10 +24,12 @@ List of tools:
  - GNU ar (2.42)
  - truncate (9.4)
  - QEMU emulator (8.2.1)
+ - GNU GRUB (2.12-1)
 
 For Debian/Ubuntu:
 ```console
 sudo apt install gcc nasm make qemu-system-x86 binutils
+sudo apt-get install grub-pc-bin mtools
 ```
 
 ## 3. Installation
@@ -63,9 +65,11 @@ make fclean
 
 ## 4. Project structure
 
- - `build/`   - containts .bin & .iso files
+ - `build/`   - contains .elf files
  - `doc/`     - documentation
+ - `grub/`    - contains GNU GRUB config file
  - `include/` - contains kernel & libk header files
+ - `isodir/`  - contains GNU GRUB config file & compiled kernel 
  - `res/`     - screenshots & documentation images
  - `kernel/`  - OS source code
  - LICENSE    - MIT license
@@ -74,8 +78,8 @@ make fclean
 
 In `kernel/`:
 
- - `boot/`      - containts bootloader
- - `libk/`      - containts kernel library `libk` source
+ - `boot/`      - contains bootloader
+ - `libk/`      - contains kernel library `libk` source
 
 ## 5. Headers overview 
 
@@ -84,6 +88,9 @@ In `kernel/`:
  - `tty.h`    - kernel terminal output functions
  - `vga.h`    - vga driver
  - `gdt.h`    - Global Descriptor Table
+ - `idt.h`    - Interrupt Descriptor Table
+ - `irq.h`    - Interrupt Requests
+ - `ports.h`  - input/output ports
 
 
 ## Libk

@@ -16,6 +16,7 @@ The project was made on Debian 12
  - GNU ar (2.42)
  - truncate (9.4)
  - QEMU emulator (8.2.1)
+ - GNU GRUB (2.12-1)
 
 ## License
 
@@ -74,3 +75,10 @@ SOFTWARE.
 - added Global Descriptor Table
 
 <img src="res/simple-os-kernel-panic.png">
+
+> simple-os (v0.0.6):
+- added ports in `<ports.h>`
+- added TSS (Task State Segment) entry in `<gdt.h>`
+- added IDT (Interrupt Descriptor Table) in `<idt.h>`
+- added GNU GRUB support
+- added IRQ (Interrupt Request) in `<irq.h>`
