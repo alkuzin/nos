@@ -22,7 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <kernel/keyboard.h>
 #include <kernel/kernel.h>
+#include <kernel/timer.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
 
@@ -54,9 +56,19 @@ extern void kmain(void)
 
     /* initializing Global Descriptor Table */
     gdt_init();
+    kprint(" kernel: initialized Global Descriptor Table \n");	
     
     /* initializing Interrupt Descriptor Table */
     idt_init();
+    kprint(" kernel: initialized Interrupt Descriptor Table \n");	
+    
+    /* initializing timer */
+   timer_init();
+ kprint(" kernel: initialized timer \n");	
+
+    /* initializing keyboard */
+    keyboard_init();
+    kprint(" kernel: initialized keyboard \n");	
 
 	/* display OS banner */
     kprintf(
@@ -69,8 +81,6 @@ extern void kmain(void)
     " ---------------------------------------------\n\n\n", 
     __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
 	
-    kprint(" kernel: initialized Global Descriptor Table \n");	
-    kprint(" kernel: initialized Interrupt Descriptor Table \n");	
 
 	for(;;); /* infinite loop for halting CPU */
 }

@@ -33,11 +33,7 @@ uint64_t ticks;
 const uint32_t freq = 100;
 
 
-void on_irq0(int_reg_t *regs)
-{
-    if(regs->int_no < 32)
-        kpanic("%s\n", "on_irq0 error"); 
-    
+void on_irq0(__attribute__((unused)) int_reg_t *regs) {
     ticks++;
 }
 
@@ -51,9 +47,6 @@ void timer_init(void)
     divisor = 1193180 / freq; /* MHz */
 
     out_port_b(0x43, 0x36);
-
-    __asm__ volatile("cli");
-
     out_port_b(0x40, (uint8_t)(divisor & 0xFF));
     out_port_b(0x40, (uint8_t)((divisor >> 8) & 0xFF));
 }
