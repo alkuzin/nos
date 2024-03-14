@@ -20,42 +20,72 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;SOFTWARE.
 
-global boot  ; make extern boot loader entry point
-extern kmain ; declaring `kmain` label as an external function
+MBOOT_PAGE_ALIGN equ 1 << 0
+MBOOT_MEM_INFO equ 1 << 1
+MBOOT_USE_GFX equ 0
 
-; Magic number is a value that BIOS recognize as a kernel
-MAGIC equ 0x1BADB002 
+MBOOT_MAGIC equ 0x1BADB002
+MBOOT_FLAGS equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_USE_GFX
+MBOOT_CHECKSUM equ -(MBOOT_MAGIC + MBOOT_FLAGS)
 
-; flags can control various functions of the BIOS such as:
-; enabling/disabling specific hardware components
-; setting up boot options
-; adjusting power management settings
-FLAGS equ (1 << 0 | 1 << 1) ; indicates a bootable device
+section .multiboot
+align 4
+    dd MBOOT_MAGIC
+    dd MBOOT_FLAGS
+    dd MBOOT_CHECKSUM
+    dd 0, 0, 0, 0, 0
 
-; the purpose of checksum is to ensure OS stability & security
-; by detecting any unauthorised changes to the BIOS firmware
-CHECKSUM equ -(MAGIC + FLAGS)
+    dd 0
+    dd 800
+    dd 600
+    dd 32
 
-; define the multiboot header structure, including 4 double-word (4-byte) values
-section .text ; .text section contains executable instructions of a program
-	align 4 ; aligns next data element/instruction that is multiple of 4 bytes
-
-multiboot_header:
-	dd MAGIC	 ; declare double word (32-bit) of Magic number
-	dd FLAGS     ; declare double word (32-bit) of Magic number flags
-	dd CHECKSUM  ; declare double word (32-bit) of Magic number checksum
-
-; boot loader entry point
-boot:
-	call kmain ; call kernel entry point 'kmain' from kernel/lernel.c
-	cli ; (clear interrupts) disables hardware interrupts
-
-; infinite loop
-halt:
-	hlt	; this instruction halts the CPU 
-	jmp halt
-
-; .bss section is used for declaring statically allocated variables
-; that are not initialized with a value
 section .bss
-	align 4 ; aligns next data element/instruction that is multiple of 4 bytes
+align 16
+stack_bottom:
+    RESB 16384 * 8
+stack_top:
+
+section .boot
+
+global boot
+boot:
+    mov ecx, (initial_page_dir - 0xC0000000)
+    mov cr3, ecx
+
+    mov ecx, cr4
+    or ecx, 0x10
+    mov cr4, ecx
+
+    mov ecx, cr0
+    or ecx, 0x80000000
+    mov cr0, ecx
+
+    jmp higher_half
+
+section .text
+higher_half:
+    mov esp, stack_top
+    push ebx
+    push eax
+    Xor ebp, ebp
+    extern kmain
+    CALL kmain
+
+halt:
+    hlt
+    jmp halt
+
+
+section .data
+align 4096
+global initial_page_dir
+initial_page_dir:
+    dd 10000011b
+    times 768-1 dd 0
+
+    dd (0 << 22) | 10000011b
+    dd (1 << 22) | 10000011b
+    dd (2 << 22) | 10000011b
+    dd (3 << 22) | 10000011b
+    times 256-4 dd 0
