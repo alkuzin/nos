@@ -8,7 +8,7 @@ ASMFLAGS = -f elf
 
 NAME = _kernel.o
 
-SRC      = kernel tty kprintf vga gdt idt irq ports timer
+SRC      = kernel tty kprintf vga gdt idt irq ports timer keyboard
 SRC_ASM  = gdt_flush idt_flush
 SRCS     = $(addsuffix .c, $(SRC))
 OBJS     = $(addsuffix .o, $(SRC))
