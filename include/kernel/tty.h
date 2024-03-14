@@ -56,4 +56,10 @@ void kpanic(const char *fmt, ...);
 /* clear screen */
 void __kclear(void);
 
+/* get cursor x position */
+int __vga_get_x(void);
+
+/* get cursor y position */
+int __vga_get_y(void);
+
 #endif /* _KERNEL_TTY_H_ */

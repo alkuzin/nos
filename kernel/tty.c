@@ -112,23 +112,28 @@ void kputchar(const int c)
 		case '\n':
 			y_pos++;
 			x_pos = 0;
-			return;
+			break;
 		
 		case '\t':
 			x_pos += TTY_TAB_WIDTH;
-			return;
+			break;
 		
 		case '\v':
 			y_pos++;
-			return;
+			break;
 		
 		case '\r':
 			x_pos = 0;
-			return;
+			break;
 		
 		case '\b':
-			x_pos--;
-			return;
+            x_pos--;
+            if(!x_pos && y_pos) {
+			    y_pos--;
+                x_pos = VGA_SCREEN_WIDTH;
+            }
+			__kputchar_at(' ', default_color, x_pos, y_pos);
+			break;
 		
 		default:
 			__kputchar_at(c, default_color, x_pos, y_pos);
@@ -149,4 +154,12 @@ void kpanic(const char *fmt, ...)
     va_end(args);
 
 	khalt();
+}
+
+int __vga_get_x(void) {
+    return x_pos;
+}
+
+int __vga_get_y(void) {
+    return y_pos;
 }
