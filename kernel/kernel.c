@@ -22,11 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <kernel/multiboot.h>
 #include <kernel/keyboard.h>
 #include <kernel/kernel.h>
 #include <kernel/timer.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
+#include <kernel/mm.h>
 
 void __ksleep(uint32_t microsec)
 {
@@ -50,7 +52,7 @@ void khalt(void)
 }
 
 /* kernel entry point */
-extern void kmain(void)
+extern void kmain(uint32_t magic, multiboot_t *boot_info)
 {
 	__kclear(); /* clear screen */
 
@@ -69,6 +71,11 @@ extern void kmain(void)
     /* initializing keyboard */
     keyboard_init();
     kprint(" kernel: initialized keyboard \n");	
+    
+    /* initializing memory management */
+    kprintf(" magic number: %#X\n", magic);
+    memory_init(boot_info);
+    kprint(" kernel: initialized memory management \n");	
 
 	/* display OS banner */
     kprintf(
