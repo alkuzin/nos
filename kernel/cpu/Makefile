@@ -1,15 +1,18 @@
-CC = gcc
+CC  = gcc
+ASM = nasm
 
-INCLUDE_DIR = ../include
+INCLUDE_DIR = ../../include
 
 CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
 ASMFLAGS = -f elf
 
-NAME = _kernel.o
+NAME = _cpu.o
 
-SRC      = kernel tty kprintf ports 
+SRC      = gdt idt irq
+SRC_ASM  = gdt_flush idt_flush
 SRCS     = $(addsuffix .c, $(SRC))
 OBJS     = $(addsuffix .o, $(SRC))
+OBJS_ASM = $(addsuffix .o, $(SRC_ASM))
 
 OBJS_DIR = objs/
 OBJS_PREFIXED     = $(addprefix $(OBJS_DIR), $(OBJS))
@@ -20,8 +23,13 @@ $(OBJS_PREFIXED): $(SRCS)
 	$(CC) $(CFLAGS) -c $(SRCS)
 	mv *.o $(OBJS_DIR)
 
-$(NAME): $(OBJS_PREFIXED)
-	ld -m elf_i386 -relocatable -z noexecstack $(OBJS_PREFIXED) -o $(NAME)
+asm: 
+	$(ASM) $(ASMFLAGS) -o gdt_flush.o gdt_flush.s
+	$(ASM) $(ASMFLAGS) -o idt_flush.o idt_flush.s
+	mv *.o $(OBJS_DIR)
+
+$(NAME): $(OBJS_PREFIXED) asm 
+	ld -m elf_i386 -relocatable -z noexecstack $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM) -o $(NAME)
 
 all: $(NAME) 
 

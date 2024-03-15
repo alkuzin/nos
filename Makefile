@@ -1,11 +1,15 @@
 OBJS_DIR    = objs
 BUILD_DIR   = build
-BOOT_DIR    = $(KERNEL_DIR)/boot
 INCLUDE_DIR = include
 KERNEL_DIR  = kernel
-LIBK_DIR    = $(KERNEL_DIR)/libk
 ISO_DIR     = isodir
+BOOT_DIR    = $(KERNEL_DIR)/boot
 
+
+CPU_DIR     = $(KERNEL_DIR)/cpu
+DRIVERS_DIR = $(KERNEL_DIR)/drivers
+
+LIBK_DIR    = $(KERNEL_DIR)/libk
 KERNEL_LIB  = $(LIBK_DIR)/libk.a
 
 NAME     = $(BUILD_DIR)/simple_os.elf
@@ -13,12 +17,16 @@ NAME_ISO = simple_os.iso
 LFLAGS   = -z noexecstack -m elf_i386 -T
 
 OBJS = $(KERNEL_DIR)/_kernel.o \
-       $(BOOT_DIR)/_boot.o
+       $(BOOT_DIR)/_boot.o \
+       $(CPU_DIR)/_cpu.o \
+       $(DRIVERS_DIR)/_drivers.o
 
 $(OBJS):
 	$(MAKE) -C $(BOOT_DIR) all
 	$(MAKE) -C $(KERNEL_DIR) all
 	$(MAKE) -C $(LIBK_DIR) all
+	$(MAKE) -C $(CPU_DIR) all
+	$(MAKE) -C $(DRIVERS_DIR) all
 
 $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)

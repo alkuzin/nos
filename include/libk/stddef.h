@@ -29,7 +29,7 @@ SOFTWARE.
 
 
 #define NULL   ((void *)0)
-#define size_t uint64_t
+#define size_t uint32_t
 
 typedef uint8_t bool;
 #define true  1

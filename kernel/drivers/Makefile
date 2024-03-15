@@ -1,15 +1,14 @@
 CC = gcc
 
-INCLUDE_DIR = ../include
+INCLUDE_DIR = ../../include
 
 CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
-ASMFLAGS = -f elf
 
-NAME = _kernel.o
+NAME = _drivers.o
 
-SRC      = kernel tty kprintf ports 
-SRCS     = $(addsuffix .c, $(SRC))
-OBJS     = $(addsuffix .o, $(SRC))
+SRC  = keyboard timer vga
+SRCS = $(addsuffix .c, $(SRC))
+OBJS = $(addsuffix .o, $(SRC))
 
 OBJS_DIR = objs/
 OBJS_PREFIXED     = $(addprefix $(OBJS_DIR), $(OBJS))
