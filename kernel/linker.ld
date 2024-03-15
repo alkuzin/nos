@@ -22,15 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/* boot - boot loader entry point */
 ENTRY(boot)
 SECTIONS
 {
-    . = 0x00100000;
+    . = 0x00100000; /* setting memory address to 0x00100000 */
 
     .multiboot ALIGN(4K): {
         *(.multiboot)
     }
-
+    
     .note.gnu.build-id ALIGN(4K): {
         *(.note.gnu.build-id)
     }
@@ -38,13 +39,16 @@ SECTIONS
     .boot ALIGN(4K) : {
         *(.boot)
     }
+     
 
+    /* mapping next sections to higher half location */
     . += 0xC0000000;
 
     .text ALIGN(4K): AT(ADDR(.text) - 0xC0000000){
-        *(.text)
+        *(.text) /* place all the code in this section */
     }
-
+    
+    /* align read-only data (such as const variables) boundary */
     .rodata ALIGN(4K): AT(ADDR(.rodata) - 0xC0000000){
         *(.rodata)
     }
@@ -53,8 +57,10 @@ SECTIONS
         *(.data)
     }
 
+    /* global/static variables
+       linker puts all unitialized data in this section */
     .bss ALIGN(4K): AT(ADDR(.bss) - 0xC0000000){
-        *(COMMON)
+        *(COMMON) /* for shared data across multiple files */
         *(.bss)
     }
 

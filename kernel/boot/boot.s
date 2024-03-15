@@ -20,66 +20,87 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;SOFTWARE.
 
-MBOOT_PAGE_ALIGN equ 1 << 0
-MBOOT_MEM_INFO equ 1 << 1
-MBOOT_USE_GFX equ 0
+; Magic number is a value that BIOS recognize as a kernel
+MBOOT_MAGIC      equ 0x1BADB002
 
-MBOOT_MAGIC equ 0x1BADB002
-MBOOT_FLAGS equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_USE_GFX
-MBOOT_CHECKSUM equ -(MBOOT_MAGIC + MBOOT_FLAGS)
+; flags can control various functions of the BIOS such as:
+; enabling/disabling specific hardware components
+; setting up boot options
+; adjusting power management settings
+MBOOT_PAGE_ALIGN equ 1 << 0
+MBOOT_MEM_INFO   equ 1 << 1
+MBOOT_USE_GFX    equ 0
+
+; indicates a bootable device
+MBOOT_FLAGS      equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_USE_GFX 
+
+; the purpose of checksum is to ensure OS stability & security
+; by detecting any unauthorised changes to the BIOS firmware
+MBOOT_CHECKSUM   equ -(MBOOT_MAGIC + MBOOT_FLAGS)
 
 section .multiboot
-align 4
-    dd MBOOT_MAGIC
-    dd MBOOT_FLAGS
-    dd MBOOT_CHECKSUM
+align 4 ; aligns next data element/instruction that is multiple of 4 bytes
+    dd MBOOT_MAGIC    ; declare double word (32-bit) of Magic number
+    dd MBOOT_FLAGS    ; declare double word (32-bit) of Magic number flags
+    dd MBOOT_CHECKSUM ; declare double word (32-bit) of Magic number checksum
     dd 0, 0, 0, 0, 0
 
-    dd 0
-    dd 800
-    dd 600
-    dd 32
+    dd 0   ; linear graphics mode
+    dd 800 ; screen width
+    dd 600 ; screen height
+    dd 32  ; depth
 
+; .bss section is used for declaring statically allocated variables
+; that are not initialized with a value
 section .bss
 align 16
+; reserving space for the stack
 stack_bottom:
     RESB 16384 * 8
 stack_top:
 
 section .boot
 
+; boot entry point
 global boot
 boot:
     mov ecx, (initial_page_dir - 0xC0000000)
-    mov cr3, ecx
+    
+    ; cr3 -control register telling the CPU where the location of the page directory
+    ; and page tables for the current task
+    mov cr3, ecx 
 
+    ; physical address extension
     mov ecx, cr4
     or ecx, 0x10
     mov cr4, ecx
 
+    ; enabling paging
     mov ecx, cr0
     or ecx, 0x80000000
     mov cr0, ecx
 
     jmp higher_half
 
+; .text section contains executable instructions of a program
 section .text
 higher_half:
     mov esp, stack_top
-    push ebx
-    push eax
-    Xor ebp, ebp
+    push ebx     ; multiboot info
+    push eax     ; magic number
+    xor ebp, ebp ; reset ebp
+    ; call kernel entry point 'kmain' from kernel/lernel.c
     extern kmain
-    CALL kmain
+    call kmain 
 
 halt:
-    hlt
-    jmp halt
+    hlt	     ; this instruction halts the CPU 
+    jmp halt ; infinite loop
 
 
 section .data
-align 4096
-global initial_page_dir
+align 4096 ; 4 Mb
+global initial_page_dir ; page table entry
 initial_page_dir:
     dd 10000011b
     times 768-1 dd 0
