@@ -29,6 +29,7 @@ SOFTWARE.
 #define __OS_VERSION__ "v0.0.7"
 #define __OS_ARCH__    "x86_32"
 
+#include <kernel/multiboot.h>
 #include <libk/stdint.h>
 #include <kernel/tty.h>
 
@@ -43,6 +44,6 @@ void ksleep(uint32_t sec);
 void khalt(void);
 
 /* kernel main function */
-extern void kmain(void);
+extern void kmain(uint32_t magic, multiboot_t *boot_info);
 
 #endif /* _KERNEL_H_ */
