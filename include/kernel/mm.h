@@ -26,8 +26,23 @@ SOFTWARE.
 #define _KERNEL_MM_H_
 
 #include <kernel/multiboot.h>
+#include <libk/stdint.h>
 
 
-void memory_init(multiboot_t *boot_info);
+#define KERNEL_START  0xC0000000
+#define PFLAG_PRESENT (1 << 0)
+#define PFLAG_WRITE   (1 << 1)
+#define PAGE_SIZE     0x1000
+#define PAGES_DIRS    256
+#define PAGES_FRAMES  (0x100000000 / PAGE_SIZE / 8)
+
+
+extern uint32_t initial_page_dir[1024];
+
+void memory_init(uint32_t mem_high, uint32_t physical_alloc_start);
+
+void pmm_init(uint32_t mem_low, uint32_t mem_high);
+
+void invalidate(uint32_t vaddr);
 
 #endif /* _KERNEL_MM_H_ */

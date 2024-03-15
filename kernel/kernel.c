@@ -73,8 +73,17 @@ extern void kmain(uint32_t magic, multiboot_t *boot_info)
     kprint(" kernel: initialized keyboard \n");	
     
     /* initializing memory management */
-    kprintf(" magic number: %#X\n", magic);
-    memory_init(boot_info);
+
+    uint32_t mod1, physical_alloc_start;
+
+    mod1 = *(uint32_t *)(boot_info->mods_addr + 4);
+    physical_alloc_start = ((mod1 + 0xFFF) & ~0xFFF);
+
+    kprintf("\n kernel: set magic number:     %#X\n", magic);
+    kprintf(" kernel: set mod1:             %#X\n", mod1);
+    kprintf(" kernel: physical_alloc_start: %#X\n\n", physical_alloc_start);
+    
+    memory_init(boot_info->mem_upper * 1024, physical_alloc_start);
     kprint(" kernel: initialized memory management \n");	
 
 	/* display OS banner */

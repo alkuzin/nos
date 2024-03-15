@@ -29,18 +29,42 @@ and x86-64 architectures. It contains entries telling the CPU about memory segme
 
 #include <kernel/multiboot.h>
 #include <libk/stdint.h>
+#include <libk/memory.h>
 #include <kernel/tty.h>
+#include <libk/math.h>
 #include <kernel/mm.h>
 
-void memory_init(multiboot_t *boot_info)
+
+static uint32_t page_frame_min;
+static uint32_t page_frame_max;
+static uint32_t total_alloc;
+
+static uint32_t page_dirs[PAGES_DIRS][1024] __attribute__((aligned(PAGE_SIZE)));
+static uint32_t page_dir_used[PAGES_DIRS];
+
+uint8_t physical_memory_bitmap[PAGES_FRAMES / 8];
+
+
+void pmm_init(uint32_t mem_low, uint32_t mem_high)
 {
-    multiboot_mmap_entry_t *mmmt;
+    page_frame_min = ceil_div(mem_low, PAGE_SIZE);
+    page_frame_max = mem_high / PAGE_SIZE;
+    total_alloc    = 0;
 
-    for(uint32_t i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
-       mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
+    bzero(physical_memory_bitmap, sizeof(physical_memory_bitmap));
+}
 
-       kprintf("\n low addr:   <%#x> | high addr:   <%#x>\n", mmmt->addr_low, mmmt->addr_high);
-       kprintf(" low length: <%#x> | high lenght: <%#x>\n", mmmt->len_low, mmmt->len_high);
-       kprintf(" size:        %#x  | type:           %u\n\n", mmmt->size, mmmt->type);
-    }
+void memory_init(uint32_t mem_high, uint32_t physical_alloc_start)
+{
+    initial_page_dir[0] = 0;
+
+    initial_page_dir[1023] = ((uint32_t) initial_page_dir - KERNEL_START) | PFLAG_PRESENT | PFLAG_WRITE;
+
+    pmm_init(physical_alloc_start, mem_high);
+    bzero(page_dirs, PAGE_SIZE * PAGES_DIRS);
+    bzero(page_dir_used, PAGES_DIRS);
+}
+
+void invalidate(uint32_t vaddr) {
+    __asm__ volatile("invlpg %0" :: "m" (vaddr));
 }

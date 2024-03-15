@@ -33,6 +33,8 @@ SOFTWARE.
 
 #define abs(x) ((x) < 0 ? -(x) : (x))
 
+#define ceil_div(x, y) (((x + y) - 1) / y)
+
 #include <libk/stdint.h>
 
 /* the log() calculates natural logarithm */
