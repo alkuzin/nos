@@ -28,7 +28,8 @@ SOFTWARE.
 #include <kernel/timer.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
-#include <kernel/mm.h>
+#include <libk/memory.h>
+#include <kernel/pmm.h>
 
 void __ksleep(uint32_t microsec)
 {
@@ -55,7 +56,8 @@ void khalt(void)
 extern void kmain(uint32_t magic, multiboot_t *boot_info)
 {
 	__kclear(); /* clear screen */
-
+    kprintf("\n kernel: set magic number:     %#X\n", magic);
+    
     /* initializing Global Descriptor Table */
     gdt_init();
     kprint(" kernel: initialized Global Descriptor Table \n");	
@@ -65,26 +67,16 @@ extern void kmain(uint32_t magic, multiboot_t *boot_info)
     kprint(" kernel: initialized Interrupt Descriptor Table \n");	
     
     /* initializing timer */
-   timer_init();
- kprint(" kernel: initialized timer \n");	
+    timer_init();
+    kprint(" kernel: initialized timer \n");	
 
     /* initializing keyboard */
     keyboard_init();
     kprint(" kernel: initialized keyboard \n");	
     
     /* initializing memory management */
-
-    uint32_t mod1, physical_alloc_start;
-
-    mod1 = *(uint32_t *)(boot_info->mods_addr + 4);
-    physical_alloc_start = ((mod1 + 0xFFF) & ~0xFFF);
-
-    kprintf("\n kernel: set magic number:     %#X\n", magic);
-    kprintf(" kernel: set mod1:             %#X\n", mod1);
-    kprintf(" kernel: physical_alloc_start: %#X\n\n", physical_alloc_start);
-    
-    memory_init(boot_info->mem_upper * 1024, physical_alloc_start);
-    kprint(" kernel: initialized memory management \n");	
+    memory_init(boot_info);
+    kprint(" kernel: initialized memory management\n");	
 
 	/* display OS banner */
     kprintf(
