@@ -22,27 +22,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _KERNEL_MM_H_
-#define _KERNEL_MM_H_
+/* Physical Memory Management */
+
+#ifndef _KERNEL_PMM_H_
+#define _KERNEL_PMM_H_
 
 #include <kernel/multiboot.h>
 #include <libk/stdint.h>
+#include <libk/stddef.h>
+
+#define BLOCK_SIZE     4096 /* 4KB */
+#define BITS_PER_BYTE  8
 
 
-#define KERNEL_START  0xC0000000
-#define PFLAG_PRESENT (1 << 0)
-#define PFLAG_WRITE   (1 << 1)
-#define PAGE_SIZE     0x1000
-#define PAGES_DIRS    256
-#define PAGES_FRAMES  (0x100000000 / PAGE_SIZE / 8)
+void memory_init(multiboot_t *boot_info);
 
+/* set block in the memory map */
+void pmm_set_block(uint32_t bit);
 
-extern uint32_t initial_page_dir[1024];
+/* unset block in the memory map */
+void pmm_unset_block(uint32_t bit);
 
-void memory_init(uint32_t mem_high, uint32_t physical_alloc_start);
+/* test if a block in the memory map is set/used */
+bool pmm_test_block(uint32_t bit);
 
-void pmm_init(uint32_t mem_low, uint32_t mem_high);
+/* n - number of blocks */
+int32_t pmm_find_first_free_blocks(uint32_t n);
 
-void invalidate(uint32_t vaddr);
+void pmm_init(uint32_t start_addr, uint32_t size);
 
-#endif /* _KERNEL_MM_H_ */
+/* get largest free area of RAM & get free and total physical memory */
+void pmm_get_memory(const multiboot_t *boot_info, uint32_t *start_addr, uint32_t *size);
+
+void pmm_region_init(uint32_t base_addr, uint32_t size);
+
+void pmm_region_deinit(uint32_t base_addr, uint32_t size);
+
+uint32_t *pmm_blocks_alloc(uint32_t n);
+
+void pmm_free_blocks(uint32_t *addr, uint32_t n);
+
+#endif /* _KERNEL_PMM_H_ */
