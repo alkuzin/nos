@@ -22,44 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/* Physical Memory Management */
-
-#ifndef _KERNEL_PMM_H_
-#define _KERNEL_PMM_H_
+#ifndef _KERNEL_MM_H_
+#define _KERNEL_MM_H_
 
 #include <kernel/multiboot.h>
 #include <libk/stdint.h>
-#include <libk/stddef.h>
-
-#define BLOCK_SIZE     4096 /* 4KB */
-#define BITS_PER_BYTE  8
+#include <kernel/pmm.h>
+#include <kernel/vmm.h>
 
 
-/* set block in the memory map */
-void pmm_set_block(uint32_t bit);
+void memory_init(multiboot_t *boot_info);
 
-/* unset block in the memory map */
-void pmm_unset_block(uint32_t bit);
-
-/* test if a block in the memory map is set/used */
-bool pmm_test_block(uint32_t bit);
-
-/* n - number of blocks */
-int32_t pmm_find_first_free_blocks(uint32_t n);
-
-void pmm_init(uint32_t start_addr, uint32_t size);
-
-/* get largest free area of RAM & get free and total physical memory */
-void pmm_get_memory(const multiboot_t *boot_info, uint32_t *start_addr, uint32_t *size);
-
-void pmm_region_init(uint32_t base_addr, uint32_t size);
-
-void pmm_region_deinit(uint32_t base_addr, uint32_t size);
-
-uint32_t *pmm_blocks_alloc(uint32_t n);
-
-void pmm_free_blocks(uint32_t *addr, uint32_t n);
-
-void __attribute__((unused)) __display_memory(multiboot_t *boot_info);
-
-#endif /* _KERNEL_PMM_H_ */
+#endif /* _KERNEL_MM_H_ */

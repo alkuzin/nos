@@ -22,44 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/* Physical Memory Management */
-
-#ifndef _KERNEL_PMM_H_
-#define _KERNEL_PMM_H_
-
 #include <kernel/multiboot.h>
 #include <libk/stdint.h>
-#include <libk/stddef.h>
+#include <kernel/tty.h>
+#include <kernel/pmm.h>
+#include <kernel/vmm.h>
+#include <kernel/mm.h>
 
-#define BLOCK_SIZE     4096 /* 4KB */
-#define BITS_PER_BYTE  8
 
+void memory_init(multiboot_t *boot_info)
+{
+    uint32_t start_addr, size;
+    bool vmm_status;
 
-/* set block in the memory map */
-void pmm_set_block(uint32_t bit);
+    if(!(boot_info->flags >> 6 & 0x1))
+        kpanic("invalid memory map given by GRUB bootloader");
 
-/* unset block in the memory map */
-void pmm_unset_block(uint32_t bit);
+    /* initializing physical memory manager */
 
-/* test if a block in the memory map is set/used */
-bool pmm_test_block(uint32_t bit);
+    /* set start address, size of available memory
+       set total, used & free physical memory */
+    pmm_get_memory(boot_info, &start_addr, &size);
+    pmm_init(start_addr, size);
+    
+    /* free some available blocks of memory */
+    pmm_region_init(start_addr, size / BITS_PER_BYTE);
+    
+    /* TODO: add kernel shell command for displaying memory info */
+    /* __display_memory(boot_info); */ 
 
-/* n - number of blocks */
-int32_t pmm_find_first_free_blocks(uint32_t n);
+    /* initializing virtual memory manager */
+    vmm_status = vmm_init();
 
-void pmm_init(uint32_t start_addr, uint32_t size);
+    if(!vmm_status)
+        kpanic("%s\n", "virtual memory manager initialization error");
 
-/* get largest free area of RAM & get free and total physical memory */
-void pmm_get_memory(const multiboot_t *boot_info, uint32_t *start_addr, uint32_t *size);
-
-void pmm_region_init(uint32_t base_addr, uint32_t size);
-
-void pmm_region_deinit(uint32_t base_addr, uint32_t size);
-
-uint32_t *pmm_blocks_alloc(uint32_t n);
-
-void pmm_free_blocks(uint32_t *addr, uint32_t n);
-
-void __attribute__((unused)) __display_memory(multiboot_t *boot_info);
-
-#endif /* _KERNEL_PMM_H_ */
+    __display_memory(boot_info);
+}

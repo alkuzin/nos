@@ -161,7 +161,7 @@ void pmm_free_blocks(uint32_t *addr, uint32_t n) {
     used_blocks -= n;
 }
 
-static void __display_memory(multiboot_t *boot_info) 
+void __attribute__((unused)) __display_memory(multiboot_t *boot_info) 
 {
     multiboot_mmap_entry_t *mmmt;
     uint32_t free_blocks;
@@ -173,10 +173,33 @@ static void __display_memory(multiboot_t *boot_info)
     for(uint32_t i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
        mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
         
-       kprintf(" <%#x>     \t| <%#x> \t| ", mmmt->addr_low, mmmt->addr_high);
-       kprintf(" %#x \t| %#x | ", mmmt->len_low, mmmt->len_high);
-       kprintf(" %#x | %#x\n", mmmt->size, mmmt->type);
+       kprintf(" <%#x> | <%#x> | ", mmmt->addr_low, mmmt->addr_high);
+       kprintf(" %#x | %#x | ", mmmt->len_low, mmmt->len_high);
+       kprintf(" %#x | ", mmmt->size);
+
+       switch(mmmt->type) {
+            case MULTIBOOT_MEMORY_AVAILABLE:
+                kprint("(available)\n");
+                break;
+            
+            case MULTIBOOT_MEMORY_RESERVED:
+                kprint("(reserved)\n");
+                break;
+            
+            case MULTIBOOT_MEMORY_ACPI_RECLAIMABLE:
+                kprint("(reclaimable)\n");
+                break;
+            
+            case MULTIBOOT_MEMORY_NVS:
+                kprint("(nvs)\n");
+                break;
+            
+            case MULTIBOOT_MEMORY_BADRAM:
+                kprint("(bad RAM)\n");
+                break;
+       }
     }
+    
     kprint(" ---------------------------------------------------------------------\n");
     kprintf(" total: %u KB \t free: %u KB\n", phys_mem_total / 1024, phys_mem_free / 1024);
     kprint(" ---------------------------------------------------------------------\n");
@@ -213,23 +236,4 @@ void pmm_get_memory(const multiboot_t *boot_info, uint32_t *start_addr, uint32_t
 
     *start_addr = max_entry_size_addr;
     *size       = max_entry_size;
-}
-
-void memory_init(multiboot_t *boot_info)
-{
-    uint32_t start_addr, size;
-
-    if(!(boot_info->flags >> 6 & 0x1))
-        kpanic("invalid memory map given by GRUB bootloader");
-
-    /* set start address, size of available memory
-       set total, used & free physical memory */
-    pmm_get_memory(boot_info, &start_addr, &size);
-    pmm_init(start_addr, size);
-    
-    /* free some available blocks of memory */
-    pmm_region_init(start_addr, size / BITS_PER_BYTE);
-    
-    /* TODO: add kernel shell command for displaying memory info */
-    /* __display_memory(boot_info); */ 
 }

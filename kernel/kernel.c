@@ -26,10 +26,11 @@ SOFTWARE.
 #include <kernel/keyboard.h>
 #include <kernel/kernel.h>
 #include <kernel/timer.h>
+#include <libk/memory.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
-#include <libk/memory.h>
-#include <kernel/pmm.h>
+#include <kernel/mm.h>
+
 
 void __ksleep(uint32_t microsec)
 {
@@ -56,7 +57,7 @@ void khalt(void)
 extern void kmain(uint32_t magic, multiboot_t *boot_info)
 {
 	__kclear(); /* clear screen */
-    kprintf("\n kernel: set magic number:     %#X\n", magic);
+    kprintf("\n kernel: set magic number: %#X\n", magic);
     
     /* initializing Global Descriptor Table */
     gdt_init();
