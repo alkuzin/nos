@@ -88,3 +88,11 @@ SOFTWARE.
 - added keyboard driver in `<keyboard.h>`
 
 <img src="res/simple-os-keyboard.gif">
+
+> simple-os (v0.0.8):
+- added multiboot information structure in `<multiboot.h>`
+- added physical memory manager in `<pmm.h>`
+- added virtual memory manager in `<vmm.h>`
+- added main memory manager in `<mm.h>`
+
+<img src="res/simple-os-memory-management.png">

@@ -78,29 +78,36 @@ make fclean
 
 In `kernel/`:
 
- - `boot/`      - contains bootloader
- - `libk/`      - contains kernel library `libk` source
+ - `boot/`    - contains bootloader
+ - `cpu/`     - contains GDT, IDT, IRQ        
+ - `drivers/` - contains OS drivers (VGA, keyboard, timer)        
+ - `libk/`    - contains kernel library `libk` source
+ - `mm/`      - contains virtual & physical memory managers
+
 
 ## 5. Headers overview 
 
 ## Kernel
- - `kernel.h`   - kernel main header file (contains OS name, version, kernel entry point `kmain()`)
- - `tty.h`      - kernel terminal output functions
- - `vga.h`      - vga driver
- - `gdt.h`      - Global Descriptor Table
- - `idt.h`      - Interrupt Descriptor Table
- - `irq.h`      - Interrupt Requests
- - `ports.h`    - input/output ports
- - `timer.h`    - Programmable Interval Timer driver
- - `keyboard.h` - keyboard driver
-
+ - `gdt.h`       - Global Descriptor Table
+ - `idt.h`       - Interrupt Descriptor Table
+ - `irq.h`       - Interrupt Requests
+ - `kernel.h`    - kernel main header file (contains OS name, version, kernel entry point `kmain()`)
+ - `keyboard.h`  - keyboard driver
+ - `mm.h`        - main memory manager
+ - `multiboot.h` - multiboot information structure
+ - `pmm.h`       - physical memory manager
+ - `ports.h`     - input/output ports
+ - `timer.h`     - Programmable Interval Timer driver
+ - `tty.h`       - kernel terminal output functions
+ - `vga.h`       - vga driver
+ - `vmm.h`       - virtual memory manager
 
 ## Libk
+ - `ctype.h`  - declares several macros that are useful for testing and mapping characters
+ - `math.h`   - defines various mathematical functions
  - `memory.h` - defines several memory management functions
  - `stdarg.h` - declares defines several macros for stepping through a list of arguments 
  				whose number and types are not known to the called function
  - `stddef.h` - defines NULL & size_t
  - `stdint.h` - defines an unsigned integer types of a fixed width of exactly N bits for uintN_t
  - `string.h` - defines several strings management functions
- - `ctype.h`  - declares several macros that are useful for testing and mapping characters
- - `math.h`   - defines various mathematical functions
