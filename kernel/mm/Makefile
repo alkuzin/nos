@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(IN
 
 NAME = _mm.o
 
-SRC  = pmm vmm mm
+SRC  = pmm vmm mm kmalloc
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

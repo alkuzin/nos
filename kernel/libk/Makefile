@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(IN
 
 NAME = libk.a
 
-SRC  = math string memory
+SRC  = math string memory stdlib
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
