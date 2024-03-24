@@ -31,7 +31,7 @@ SOFTWARE.
 int strlen(const char *str);
 
 /* the strcmp() compares the two strings s1 and s2. */
-int strncmp(char *s1, char *s2, size_t n);
+int strncmp(const char *s1, const char *s2, size_t n);
 
 /* Copy a string with truncation. */
 size_t strlcpy(char *dest, const char *src, size_t size);
