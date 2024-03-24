@@ -48,14 +48,9 @@ void memory_init(multiboot_t *boot_info)
     /* free some available blocks of memory */
     pmm_region_init(start_addr, size / BITS_PER_BYTE);
     
-    /* TODO: add kernel shell command for displaying memory info */
-    /* __display_memory(boot_info); */ 
-
     /* initializing virtual memory manager */
     vmm_status = vmm_init();
 
     if(!vmm_status)
         kpanic("%s\n", "virtual memory manager initialization error");
-
-    __display_memory(boot_info);
 }
