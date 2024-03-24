@@ -96,3 +96,12 @@ SOFTWARE.
 - added main memory manager in `<mm.h>`
 
 <img src="res/simple-os-memory-management.png">
+
+> simple-os (v0.0.9):
+- added `kmalloc()` & `kfree()` functions for dynamic memory allocation
+- added option to set default color
+- added `keyboard_wait()` & `keyboard_getchar()` functions in `keyboadrd.h`
+- added kernel shell in `ksh.h`
+- added simple-os standard functions in `sstd.h`
+
+<img src="res/simple-os-kernel-shell.gif">

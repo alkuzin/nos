@@ -83,6 +83,7 @@ In `kernel/`:
  - `drivers/` - contains OS drivers (VGA, keyboard, timer)        
  - `libk/`    - contains kernel library `libk` source
  - `mm/`      - contains virtual & physical memory managers
+ - `shell/`   - contains kernel shell
 
 
 ## 5. Headers overview 
@@ -101,6 +102,8 @@ In `kernel/`:
  - `tty.h`       - kernel terminal output functions
  - `vga.h`       - vga driver
  - `vmm.h`       - virtual memory manager
+ - `sstd.h`      - simple-os standard functions
+ - `kmalloc.h`   - dynamic memory allocation functions
 
 ## Libk
  - `ctype.h`  - declares several macros that are useful for testing and mapping characters
@@ -111,3 +114,6 @@ In `kernel/`:
  - `stddef.h` - defines NULL & size_t
  - `stdint.h` - defines an unsigned integer types of a fixed width of exactly N bits for uintN_t
  - `string.h` - defines several strings management functions
+
+## Shell
+ - `ksh.h`    - contains kernel shell functions
