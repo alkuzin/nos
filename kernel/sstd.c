@@ -22,19 +22,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _KERNEL_H_
-#define _KERNEL_H_
-
-#define __OS_NAME__    "simple-os"
-#define __OS_VERSION__ "v0.0.8"
-#define __OS_ARCH__    "x86_32"
-
-#include <kernel/multiboot.h>
-#include <libk/stdint.h>
 #include <kernel/sstd.h>
+#include <libk/stdint.h>
 
 
-/* kernel main function */
-extern void kmain(uint32_t magic, multiboot_t *boot_info);
+void __ksleep(uint32_t microsec)
+{
+	uint32_t i;
 
-#endif /* _KERNEL_H_ */
+	for (i = 0; i < microsec * 10000; i++) {
+		for (i = 0; i < microsec * 10000; i++)
+			__asm__ volatile ("nop"); /* do nothing */
+	}
+}
+
+void ksleep(uint32_t sec) {
+	__ksleep(sec * 10000);
+}
+
+void khalt(void) 
+{
+	__asm__ volatile("cli"); /* disable interrupts */
+	for(;;);
+}

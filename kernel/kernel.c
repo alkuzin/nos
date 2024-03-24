@@ -27,35 +27,19 @@ SOFTWARE.
 #include <kernel/kernel.h>
 #include <kernel/timer.h>
 #include <libk/memory.h>
+#include <kernel/sstd.h>
+#include <kernel/tty.h>
 #include <kernel/gdt.h>
 #include <kernel/idt.h>
 #include <kernel/mm.h>
+#include <shell/ksh.h>
 
-
-void __ksleep(uint32_t microsec)
-{
-	uint32_t i;
-
-	for (i = 0; i < microsec * 10000; i++) {
-		for (i = 0; i < microsec * 10000; i++)
-			__asm__ volatile ("nop"); /* do nothing */
-	}
-}
-
-void ksleep(uint32_t sec) {
-	__ksleep(sec * 10000);
-}
-
-void khalt(void) 
-{
-	__asm__ volatile("cli"); /* disable interrupts */
-
-	for(;;);
-}
 
 /* kernel entry point */
 extern void kmain(uint32_t magic, multiboot_t *boot_info)
 {
+    __set_default_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE);
+
 	__kclear(); /* clear screen */
     kprintf("\n kernel: set magic number: %#X\n", magic);
     
@@ -71,10 +55,6 @@ extern void kmain(uint32_t magic, multiboot_t *boot_info)
     timer_init();
     kprint(" kernel: initialized timer \n");	
 
-    /* initializing keyboard */
-    keyboard_init();
-    kprint(" kernel: initialized keyboard \n");	
-    
     /* initializing memory management */
     memory_init(boot_info);
     kprint(" kernel: initialized memory management\n");	
@@ -89,7 +69,11 @@ extern void kmain(uint32_t magic, multiboot_t *boot_info)
     " %s (%s %s) (c) @alkuzin - 2024\n"
     " ---------------------------------------------\n\n\n", 
     __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
-	
+
+    /* initializing kernel shell */
+    ksh_init(boot_info);
+    kprint(" kernel: initialized kernel shell\n");	
+
 
 	for(;;); /* infinite loop for halting CPU */
 }

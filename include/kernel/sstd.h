@@ -22,19 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _KERNEL_H_
-#define _KERNEL_H_
+/* sstd.h - simple-os standart */
 
-#define __OS_NAME__    "simple-os"
-#define __OS_VERSION__ "v0.0.8"
-#define __OS_ARCH__    "x86_32"
+#ifndef _KERNEL_SSTD_H_
+#define _KERNEL_SSTD_H_
 
-#include <kernel/multiboot.h>
 #include <libk/stdint.h>
-#include <kernel/sstd.h>
 
 
-/* kernel main function */
-extern void kmain(uint32_t magic, multiboot_t *boot_info);
+/* kernel time delay in microseconds */
+void __ksleep(uint32_t microsec);
 
-#endif /* _KERNEL_H_ */
+/* kernel time delay in seconds */
+void ksleep(uint32_t sec);
+
+/* halt kernel */
+void khalt(void);
+
+#endif /* _KERNEL_SSTD_H_ */
