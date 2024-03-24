@@ -9,6 +9,7 @@ DRIVERS_DIR = $(KERNEL_DIR)/drivers
 MM_DIR      = $(KERNEL_DIR)/mm
 LIBK_DIR    = $(KERNEL_DIR)/libk
 KERNEL_LIB  = $(LIBK_DIR)/libk.a
+KSH_DIR     = $(KERNEL_DIR)/shell
 
 NAME     = $(BUILD_DIR)/simple_os.elf
 NAME_ISO = simple_os.iso
@@ -18,7 +19,8 @@ OBJS = $(KERNEL_DIR)/_kernel.o \
        $(BOOT_DIR)/_boot.o \
        $(CPU_DIR)/_cpu.o \
        $(DRIVERS_DIR)/_drivers.o \
-       $(MM_DIR)/_mm.o
+       $(MM_DIR)/_mm.o \
+       $(KSH_DIR)/_ksh.o
 
 $(OBJS):
 	$(MAKE) -C $(BOOT_DIR) all
@@ -27,6 +29,7 @@ $(OBJS):
 	$(MAKE) -C $(CPU_DIR) all
 	$(MAKE) -C $(DRIVERS_DIR) all
 	$(MAKE) -C $(MM_DIR) all
+	$(MAKE) -C $(KSH_DIR) all
 
 $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)
@@ -41,6 +44,7 @@ clean:
 	$(MAKE) -C $(CPU_DIR) fclean
 	$(MAKE) -C $(DRIVERS_DIR) fclean
 	$(MAKE) -C $(MM_DIR) fclean
+	$(MAKE) -C $(KSH_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)
