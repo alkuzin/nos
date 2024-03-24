@@ -33,6 +33,7 @@ and x86-64 architectures. It contains entries telling the CPU about memory segme
 #include <kernel/ports.h>
 #include <kernel/irq.h>
 
+#define INPUT_BUFFER_SIZE 256
 
 typedef enum {
     KEY_ESC         = 0x01,
@@ -51,8 +52,16 @@ typedef enum {
     KEY_DOWN_ARROW  = 0x50
 } keycode_t;
 
+/* keyboard initialization */
 void keyboard_init(void);
 
+/* keyboard key press handler */
 void keyboard_handler(int_reg_t *regs);
+
+/* keyboard wait for user to press a key */
+void keyboard_wait(void);
+
+/* keyboard get character on key press */
+uint8_t keyboard_getchar(void);
 
 #endif /* _KERNEL_KEYBOARD_H_ */

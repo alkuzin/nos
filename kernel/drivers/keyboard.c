@@ -30,9 +30,6 @@ SOFTWARE.
 #include <kernel/irq.h>
 #include <kernel/tty.h>
 
-
-bool caps_is_on, caps_lock_is_on;
-
 const uint32_t UNKNOWN = 0xFFFFFFFF;
 const uint32_t ESC     = 0xFFFFFFFF - 1;
 const uint32_t CTRL    = 0xFFFFFFFF - 2;
@@ -69,7 +66,6 @@ const uint32_t NONE    = 0xFFFFFFFF - 30;
 const uint32_t ALTGR   = 0xFFFFFFFF - 31;
 const uint32_t NUMLCK  = 0xFFFFFFFF - 32;
 
-
 const uint32_t lowercase[128] = {
 UNKNOWN,ESC,'1','2','3','4','5','6','7','8',
 '9','0','-','=','\b','\t','q','w','e','r',
@@ -105,6 +101,8 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN };
 
+bool caps_is_on, caps_lock_is_on;
+
 
 void keyboard_init(void)
 {
@@ -116,49 +114,29 @@ void keyboard_init(void)
 
 void keyboard_handler(__attribute__((unused)) int_reg_t *regs)
 {
-    uint8_t scan_code, press;
-    int x_pos, y_pos;
+    /* do nothing */
+}
+
+void keyboard_wait(void) {
+    while((in_port_b(0x64) & 0x01) == 0);
+}
+
+uint8_t keyboard_getchar(void) {
+    uint8_t scan_code, press, cc;
     
+    keyboard_wait();
+
     /* get code of key that is pressed */
     scan_code = in_port_b(0x60) & 0x7F;
 
     /* is key is pressed down or released */
     press = in_port_b(0x60) & 0x80;
-
-    x_pos = __vga_get_x();
-    y_pos = __vga_get_y();
-
-    switch(scan_code) {
-        
+    
+    switch(scan_code) {    
         case KEY_UP_ARROW:
-            if(!press)
-                kprint("KEY_UP_ARROW\n");
-            break;
-        
         case KEY_DOWN_ARROW:
-            if(!press)
-                kprint("KEY_DOWN_ARROW\n");
-            break;
-
         case KEY_LEFT_ARROW:
-            if(!press)
-                kprint("KEY_LEFT_ARROW\n");
-            break;
-
         case KEY_RIGHT_ARROW:
-            if(!press) {
-                kprint("KEY_RIGHT_ARROW\n");
-                x_pos--;
-
-                if(!x_pos && y_pos) {
-                    y_pos--;
-                    x_pos = VGA_SCREEN_WIDTH;
-                }
-
-               update_cursor(x_pos, y_pos);
-            }
-            break;
-
         case KEY_LSHFT:
             if(!press)
                 caps_is_on = true;
@@ -175,12 +153,14 @@ void keyboard_handler(__attribute__((unused)) int_reg_t *regs)
 
         default:
             if(!press) {
-                if((caps_is_on || caps_lock_is_on) && (lowercase[scan_code] != UNKNOWN)) {
-                    kputchar(uppercase[scan_code]);
-                }
+                if((caps_is_on || caps_lock_is_on) && (lowercase[scan_code] != UNKNOWN))
+                    cc = uppercase[scan_code];
                 else
-                    kputchar(lowercase[scan_code]);
+                    cc = lowercase[scan_code];
+
+                return cc;
             }
             break;
     }
+    return 0;
 }
