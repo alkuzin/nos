@@ -57,9 +57,17 @@ void kpanic(const char *fmt, ...);
 void __kclear(void);
 
 /* get cursor x position */
-int __vga_get_x(void);
+int __tty_get_x(void);
 
 /* get cursor y position */
-int __vga_get_y(void);
+int __tty_get_y(void);
+
+/* set cursor x position */
+void __tty_set_x(int x);
+
+/* set cursor y position */
+void __tty_set_y(int y);
+
+void __set_default_color(vga_color_t fg, vga_color_t bg);
 
 #endif /* _KERNEL_TTY_H_ */

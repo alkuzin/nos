@@ -23,10 +23,11 @@ VGA_SOFTWARE.
 */
 
 #include <kernel/kernel.h>
-#include <kernel/tty.h>
-#include <kernel/vga.h>
 #include <libk/stdint.h>
 #include <libk/memory.h>
+#include <kernel/tty.h>
+#include <kernel/vga.h>
+#include <libk/ctype.h>
 
 /* video memory address */
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;
@@ -45,6 +46,10 @@ static void __kputchar_at(char c, uint8_t color, int x, int y);
 static void __kscroll(void);
 
 
+void __set_default_color(vga_color_t fg, vga_color_t bg) {
+    default_color = (uint8_t)(fg | bg << 4);
+}
+
 static void __kputchar_at(char c, uint8_t color, int x, int y) {
 	video_memory[y * VGA_SCREEN_WIDTH + x] = vga_entry(c, color);
 }
@@ -54,11 +59,20 @@ static void __kscroll(void)
 	uint16_t buffer[(VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT * 2)];
 
 	memset(buffer, default_color, sizeof(buffer));
-	memcpy(buffer, video_memory + ((1 * VGA_SCREEN_WIDTH)), (VGA_SCREEN_WIDTH * (VGA_SCREEN_HEIGHT - 1) * 2));
-		
+	memcpy(buffer, video_memory,  sizeof(buffer));
+
 	__kclear();
 
-	memcpy(video_memory, buffer, sizeof(buffer));
+    for (uint16_t y = 0; y < VGA_SCREEN_HEIGHT; y++) {
+        for (uint16_t x = 0; x < VGA_SCREEN_WIDTH; x++)
+            buffer[(y-1) * VGA_SCREEN_WIDTH + x] = buffer[y*VGA_SCREEN_WIDTH+x];
+    }
+
+    for (uint16_t x = 0; x < VGA_SCREEN_WIDTH; x++) {
+        buffer[(VGA_SCREEN_HEIGHT-1) * VGA_SCREEN_WIDTH + x] = ' ' | default_color;
+    }
+	
+    memcpy(video_memory, buffer, sizeof(buffer));
 }
 
 void __kclear(void)
@@ -74,12 +88,12 @@ void __kclear(void)
 
 void kprint(const char *str)
 {
-	uint32_t i;
+    uint32_t i;
 
-	i = 0;
-	while(str[i]) {
-		kputchar(str[i]);	
-		i++;
+    i = 0;
+    while(str[i]) {
+        kputchar(str[i]);       
+        i++;
 	}
 }
 
@@ -136,8 +150,10 @@ void kputchar(const int c)
 			break;
 		
 		default:
-			__kputchar_at(c, default_color, x_pos, y_pos);
-			x_pos++;
+            if(isprint(c)) {
+			    __kputchar_at(c, default_color, x_pos, y_pos);
+			    x_pos++;
+            }
 			break;
 	};
 
@@ -156,10 +172,18 @@ void kpanic(const char *fmt, ...)
 	khalt();
 }
 
-int __vga_get_x(void) {
+int __tty_get_x(void) {
     return x_pos;
 }
 
-int __vga_get_y(void) {
+int __tty_get_y(void) {
     return y_pos;
+}
+
+void __tty_set_x(int x) {
+    x_pos = x;
+}
+
+void __tty_set_y(int y) {
+    y_pos = y;
 }
