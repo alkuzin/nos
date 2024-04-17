@@ -38,6 +38,7 @@ SOFTWARE.
 static char input_buffer[INPUT_BUFFER_SIZE]; /* user input buffer */
 static uint32_t buf_pos = 0; /* user input buffer current character position */
 
+void __display_help(void);
 
 void ksh_init(multiboot_t *boot_info)
 {
@@ -79,31 +80,26 @@ void ksh_init(multiboot_t *boot_info)
 
 void ksh_exec(multiboot_t *boot_info, const char *cmd)
 {
-    /* TODO: also check length of command */
+    int cmd_length;
+
+    cmd_length = strlen(cmd);
     
-    if(strncmp(cmd, "lsmem", 5) == 0)
+    if(strncmp(cmd, "lsmem", 5) == 0 && cmd_length == 5)
         __display_memory(boot_info);
-    else if(strncmp(cmd, "clear", 5) == 0 || strncmp(cmd, "c", 1) == 0) {
+    else if(strncmp(cmd, "clear", 5) == 0 && cmd_length == 5) {
         __kclear();
 
         __tty_set_x(0);
         __tty_set_y(0);
         update_cursor(0, 0);
-
-        kprintf(
-        "    _____            __        ____  ____      \n"
-        "   / __(_)_ _  ___  / /__ ____/ __ \\/ __/     \n"
-        "  _\\ \\/ /  ' \\/ _ \\/ / -_)___/ /_/ /\\ \\  \n"
-        " /___/_/_/_/_/ .__/_/\\__/    \\____/___/      \n"
-        "            /_/                              \n \n"
-        " %s (%s %s) (c) @alkuzin - 2024\n"
-        " ---------------------------------------------\n \n \n \n \n", 
-        __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
     }
-    else
+    else if(strncmp(cmd, "help", 4) == 0 && cmd_length == 4)
+        __display_help();
+    else {
         kprintf(" ksh: incorrect command \"%s\"\n", (char *)cmd);
+        kprint(" ksh: type \"help\" to see list of available commands\n");
+    }
 }
-
 
 void ksh_display_prompt(void) {
     kprint(" <simple-os>-$ ");
@@ -111,4 +107,13 @@ void ksh_display_prompt(void) {
 
 bool ksh_is_empty(void) {
     return input_buffer[0] == 0;
+}
+
+void __display_help(void)
+{
+    kprint("----------------------< help >------------------------\n \n"
+           "\thelp         - display this help menu\n \n"
+           "\tclear        - clear screen\n \n"
+           "\tlsmem        - display list of memory segments\n \n"
+           "------------------------------------------------------\n");
 }
