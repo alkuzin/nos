@@ -2,17 +2,18 @@ OBJS_DIR    = objs
 BUILD_DIR   = build
 INCLUDE_DIR = include
 KERNEL_DIR  = kernel
+LIBC_DIR    = libc
 ISO_DIR     = isodir
 BOOT_DIR    = $(KERNEL_DIR)/boot
 CPU_DIR     = $(KERNEL_DIR)/cpu
 DRIVERS_DIR = $(KERNEL_DIR)/drivers
 MM_DIR      = $(KERNEL_DIR)/mm
 LIBK_DIR    = $(KERNEL_DIR)/libk
-KERNEL_LIB  = $(LIBK_DIR)/libk.a
+LIBC        = $(LIBC_DIR)/libc.a
 KSH_DIR     = $(KERNEL_DIR)/shell
 
-NAME     = $(BUILD_DIR)/simple_os.elf
-NAME_ISO = simple_os.iso
+NAME     = $(BUILD_DIR)/nos.elf
+NAME_ISO = nos.iso
 LFLAGS   = -z noexecstack -m elf_i386 -T
 
 OBJS = $(KERNEL_DIR)/_kernel.o \
@@ -23,9 +24,9 @@ OBJS = $(KERNEL_DIR)/_kernel.o \
        $(KSH_DIR)/_ksh.o
 
 $(OBJS):
+	$(MAKE) -C $(LIBC_DIR) all
 	$(MAKE) -C $(BOOT_DIR) all
 	$(MAKE) -C $(KERNEL_DIR) all
-	$(MAKE) -C $(LIBK_DIR) all
 	$(MAKE) -C $(CPU_DIR) all
 	$(MAKE) -C $(DRIVERS_DIR) all
 	$(MAKE) -C $(MM_DIR) all
@@ -33,14 +34,14 @@ $(OBJS):
 
 $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)
-	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(KERNEL_LIB)
+	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(LIBC)
 
 all: $(NAME) build-iso
 
 clean:
+	$(MAKE) -C $(LIBC_DIR) fclean
 	$(MAKE) -C $(KERNEL_DIR) fclean
 	$(MAKE) -C $(BOOT_DIR) fclean
-	$(MAKE) -C $(LIBK_DIR) fclean
 	$(MAKE) -C $(CPU_DIR) fclean
 	$(MAKE) -C $(DRIVERS_DIR) fclean
 	$(MAKE) -C $(MM_DIR) fclean
@@ -56,7 +57,7 @@ re: clean all
 build-iso: $(NAME)
 	mkdir -p $(ISO_DIR) $(ISO_DIR)/boot/ $(ISO_DIR)/boot/grub/
 	cp $(NAME) $(ISO_DIR)/boot/kernel.elf
-	cp grub/grub.cfg  $(ISO_DIR)/boot/grub/grub.cfg
+	cp grub/grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
 	grub-mkrescue -o $(NAME_ISO) $(ISO_DIR)
 
 init-iso: 

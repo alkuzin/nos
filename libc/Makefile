@@ -1,0 +1,32 @@
+CC = gcc
+
+INCLUDE_DIR = ../include/libc
+
+CFLAGS = -Wall -Wextra -Werror -m32 -O2 -Oz -nostdlib -nodefaultlibs \
+         -fno-pie -fno-exceptions -fno-stack-protector -fno-builtin  \
+         -ffreestanding -I $(INCLUDE_DIR)
+
+NAME = libc.a
+
+LIBC_MATH_DIR   = math/
+LIBC_STRING_DIR = string/
+
+OBJS = $(LIBC_MATH_DIR)libc_math.o $(LIBC_STRING_DIR)libc_string.o
+
+$(OBJS):
+	$(MAKE) -C $(LIBC_MATH_DIR) all
+	$(MAKE) -C $(LIBC_STRING_DIR) all
+
+$(NAME): $(OBJS)
+	ar rcs $(NAME) $(OBJS)
+
+all: $(NAME) 
+
+clean:
+	$(MAKE) -C $(LIBC_MATH_DIR) fclean
+	$(MAKE) -C $(LIBC_STRING_DIR) fclean
+
+fclean: clean
+	rm -f $(NAME)
+
+re: clean all

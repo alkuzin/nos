@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/ports.h>
-#include <kernel/tty.h>
-#include <kernel/idt.h>
-#include <kernel/irq.h>
-#include <libk/stddef.h>
+#include <nos/ports.h>
+#include <nos/tty.h>
+#include <nos/idt.h>
+#include <nos/irq.h>
+#include <stddef.h>
 
 
 char *exception_msgs[] = {

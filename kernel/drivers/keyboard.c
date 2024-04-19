@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/keyboard.h>
-#include <kernel/ports.h>
-#include <libk/stdint.h>
-#include <libk/stddef.h>
-#include <libk/ctype.h>
-#include <kernel/irq.h>
-#include <kernel/tty.h>
+#include <nos/keyboard.h>
+#include <nos/ports.h>
+#include <nos/irq.h>
+#include <nos/tty.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <ctype.h>
 
 const uint32_t UNKNOWN = 0xFFFFFFFF;
 const uint32_t ESC     = 0xFFFFFFFF - 1;

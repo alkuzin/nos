@@ -22,13 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/multiboot.h>
-#include <libk/stddef.h>
-#include <libk/stdint.h>
-#include <libk/memory.h>
-#include <kernel/pmm.h>
-#include <kernel/tty.h>
-
+#include <nos/multiboot.h>
+#include <nos/pmm.h>
+#include <nos/tty.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 static uint32_t *memory_map    = 0;
 static uint32_t max_blocks     = 0;

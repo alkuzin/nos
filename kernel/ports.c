@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/ports.h>
+#include <nos/ports.h>
 
 
 void out_port_b(uint16_t port, uint8_t data) {

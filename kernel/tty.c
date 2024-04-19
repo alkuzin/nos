@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE VGA_SOFTWARE OR THE USE OR OTHER DEALINGS IN TH
 VGA_SOFTWARE.
 */
 
-#include <kernel/kernel.h>
-#include <libk/stdint.h>
-#include <libk/memory.h>
-#include <kernel/tty.h>
-#include <kernel/vga.h>
-#include <libk/ctype.h>
+#include <nos/kernel.h> // TODO: mv kernel data (name, version, ...) to separate file
+#include <nos/unistd.h>
+#include <nos/tty.h>
+#include <nos/vga.h>
+#include <stdint.h>
+#include <string.h>
+#include <ctype.h>
 
 /* video memory address */
 static uint16_t *video_memory = (uint16_t *)VIDEO_MEMORY;

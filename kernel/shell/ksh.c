@@ -22,18 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/keyboard.h>
-#include <kernel/kernel.h> 
-#include <kernel/sstd.h> 
-#include <libk/stdlib.h>
-#include <libk/stddef.h>
-#include <libk/stdint.h>
-#include <libk/string.h>
-#include <libk/memory.h>
-#include <kernel/tty.h>
-#include <kernel/vga.h>
-#include <kernel/mm.h>
-#include <shell/ksh.h>
+#include <nos/shell/ksh.h>
+#include <nos/keyboard.h>
+#include <nos/kernel.h> 
+#include <nos/unistd.h> 
+#include <nos/tty.h>
+#include <nos/vga.h>
+#include <nos/mm.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 static char input_buffer[INPUT_BUFFER_SIZE]; /* user input buffer */
 static uint32_t buf_pos = 0; /* user input buffer current character position */
@@ -95,6 +93,10 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
     }
     else if(strncmp(cmd, "help", 4) == 0 && cmd_length == 4)
         __display_help();
+    else if(strncmp(cmd, "reboot", 6) == 0 && cmd_length == 6) {
+        kboot(boot_info);
+        return;
+    }
     else {
         kprintf(" ksh: incorrect command \"%s\"\n", (char *)cmd);
         kprint(" ksh: type \"help\" to see list of available commands\n");
@@ -102,7 +104,7 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
 }
 
 void ksh_display_prompt(void) {
-    kprint(" <simple-os>-$ ");
+    kprint(" <nos>-$ ");
 }
 
 bool ksh_is_empty(void) {
@@ -111,9 +113,11 @@ bool ksh_is_empty(void) {
 
 void __display_help(void)
 {
+    /* TODO: add command for displaying kernel info */
     kprint("----------------------< help >------------------------\n \n"
            "\thelp         - display this help menu\n \n"
            "\tclear        - clear screen\n \n"
            "\tlsmem        - display list of memory segments\n \n"
+           "\treboot       - reboot kernel\n \n"
            "------------------------------------------------------\n");
 }

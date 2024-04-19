@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/timer.h>
-#include <kernel/ports.h>
-#include <libk/stdint.h>
-#include <kernel/tty.h>
-#include <kernel/irq.h>
+#include <nos/timer.h>
+#include <nos/ports.h>
+#include <nos/tty.h>
+#include <nos/irq.h>
+#include <stdint.h>
 
 
 uint64_t ticks;

@@ -22,26 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/multiboot.h>
-#include <kernel/keyboard.h>
-#include <kernel/kernel.h>
-#include <kernel/timer.h>
-#include <libk/memory.h>
-#include <kernel/sstd.h>
-#include <kernel/tty.h>
-#include <kernel/gdt.h>
-#include <kernel/idt.h>
-#include <kernel/mm.h>
-#include <shell/ksh.h>
+#include <nos/shell/ksh.h>
+#include <nos/multiboot.h>
+#include <nos/keyboard.h>
+#include <nos/unistd.h>
+#include <nos/kernel.h>
+#include <nos/timer.h>
+#include <string.h>
+#include <nos/tty.h>
+#include <nos/gdt.h>
+#include <nos/idt.h>
+#include <nos/mm.h>
 
 
-/* kernel entry point */
-extern void kmain(uint32_t magic, multiboot_t *boot_info)
+void kboot(multiboot_t *boot_info)
 {
-    __set_default_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE);
-
 	__kclear(); /* clear screen */
-    kprintf("\n kernel: set magic number: %#X\n", magic);
     
     /* initializing Global Descriptor Table */
     gdt_init();
@@ -59,21 +55,19 @@ extern void kmain(uint32_t magic, multiboot_t *boot_info)
     memory_init(boot_info);
     kprint(" kernel: initialized memory management\n");	
 
-	/* display OS banner */
-    kprintf(
-    "    _____            __        ____  ____      \n"
-    "   / __(_)_ _  ___  / /__ ____/ __ \\/ __/     \n"
-    "  _\\ \\/ /  ' \\/ _ \\/ / -_)___/ /_/ /\\ \\  \n"
-    " /___/_/_/_/_/ .__/_/\\__/    \\____/___/      \n"
-    "            /_/                              \n\n"
-    " %s (%s %s) (c) @alkuzin - 2024\n"
-    " ---------------------------------------------\n\n\n", 
-    __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
+    __DISPLAY_OS_INFO();
+    __DISPLAY_OS_BUILD_INFO();
 
     /* initializing kernel shell */
+    kprint(" kernel: initializing kernel shell\n");	
     ksh_init(boot_info);
-    kprint(" kernel: initialized kernel shell\n");	
+}
 
+/* kernel entry point */
+extern void kmain(__attribute__((unused)) uint32_t magic, multiboot_t *boot_info)
+{
+    __set_default_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+    kboot(boot_info);
 
 	for(;;); /* infinite loop for halting CPU */
 }

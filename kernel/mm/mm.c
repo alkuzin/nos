@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/multiboot.h>
-#include <libk/stdint.h>
-#include <kernel/tty.h>
-#include <kernel/pmm.h>
-#include <kernel/vmm.h>
-#include <kernel/mm.h>
+#include <nos/multiboot.h>
+#include <nos/tty.h>
+#include <nos/pmm.h>
+#include <nos/vmm.h>
+#include <nos/mm.h>
+#include <stdint.h>
 
 
 void memory_init(multiboot_t *boot_info)

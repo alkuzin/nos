@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/multiboot.h>
-#include <libk/stdint.h>
-#include <libk/stddef.h>
-#include <libk/memory.h>
-#include <kernel/vmm.h>
-#include <kernel/pmm.h>
-#include <kernel/tty.h>
+#include <nos/multiboot.h>
+#include <nos/vmm.h>
+#include <nos/pmm.h>
+#include <nos/tty.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
 
 page_dir_t *cur_page_dir = 0;
 

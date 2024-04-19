@@ -2,9 +2,13 @@ CC  = gcc
 ASM = nasm
 
 INCLUDE_DIR = ../../include
+LIBC_DIR    = $(INCLUDE_DIR)/libc
 
-CFLAGS = -Wall -Wextra -Werror -g -m32 -nostdlib -fno-pie -ffreestanding -I $(INCLUDE_DIR)
+LFLAGS   = -m elf_i386 -relocatable -z noexecstack 
 ASMFLAGS = -f elf
+CFLAGS   = -Wall -Wextra -Werror -m32 -O2 -Oz -nostdlib -nodefaultlibs \
+         -fno-pie -fno-exceptions -fno-stack-protector -fno-builtin  \
+         -ffreestanding -I $(INCLUDE_DIR) -I $(LIBC_DIR)
 
 NAME = _cpu.o
 
@@ -29,7 +33,7 @@ asm:
 	mv *.o $(OBJS_DIR)
 
 $(NAME): $(OBJS_PREFIXED) asm 
-	ld -m elf_i386 -relocatable -z noexecstack $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM) -o $(NAME)
+	ld $(LFLAGS) $(OBJS_PREFIXED) $(OBJS_PREFIXED_ASM) -o $(NAME)
 
 all: $(NAME) 
 

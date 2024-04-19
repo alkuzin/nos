@@ -22,13 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <libk/string.h>
-#include <libk/stddef.h> 
-#include <libk/stdarg.h> 
-#include <libk/memory.h>
-#include <libk/ctype.h> 
-#include <kernel/tty.h>
-#include <libk/math.h>
+#include <nos/tty.h>
+#include <string.h>
+#include <stddef.h> 
+#include <stdarg.h> 
+#include <ctype.h> 
+#include <math.h>
 
 #define K_PRINTF_BUFFER_SIZE 1024
 

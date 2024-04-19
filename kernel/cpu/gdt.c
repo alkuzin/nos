@@ -22,9 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <libk/memory.h>
-#include <kernel/gdt.h>
-
+#include <nos/gdt.h>
+#include <string.h>
 
 extern void gdt_flush(uint32_t);
 extern void tss_flush(void);

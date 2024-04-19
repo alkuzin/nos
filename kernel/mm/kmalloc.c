@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/kmalloc.h>
-#include <libk/stdint.h>
-#include <libk/stddef.h>
-#include <kernel/pmm.h>
-#include <kernel/vmm.h>
+#include <nos/kmalloc.h>
+#include <nos/pmm.h>
+#include <nos/vmm.h>
+#include <stdint.h>
+#include <stddef.h>
 
 kmalloc_block_t *kmalloc_head = NULL; /* start of kmalloc blocks linked list */
 uint32_t kmalloc_vaddr        = 0; /* kmalloc virtual address */

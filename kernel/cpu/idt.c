@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/ports.h>
-#include <libk/memory.h>
-#include <kernel/tty.h>
-#include <kernel/idt.h>
-#include <kernel/irq.h>
+#include <nos/ports.h>
+#include <nos/tty.h>
+#include <nos/idt.h>
+#include <nos/irq.h>
+#include <string.h>
 
 idt_entry_t idt_entries[256];
 idt_ptr_t   idt_ptr;

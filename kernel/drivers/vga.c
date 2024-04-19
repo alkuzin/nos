@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <kernel/vga.h>
+#include <nos/vga.h>
 
 uint8_t vga_entry_color(vga_color_t fg, vga_color_t bg) {
     return (fg | bg << 4);
