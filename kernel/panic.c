@@ -20,50 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#ifndef _NOS_KERNEL_TTY_H_
-#define _NOS_KERNEL_TTY_H_ 
-
+#include <stdint.h>
 #include <stdarg.h>
 
-#include <nos/vga.h>
+#include <nos/kernel.h>
+#include <nos/unistd.h>
+#include <nos/tty.h>
 
-#define TTY_FG_COLOR  VGA_COLOR_WHITE
-#define TTY_BG_COLOR  VGA_COLOR_BLUE
-#define TTY_TAB_WIDTH 4
 
-/* for NULL pointer in kprintf */
-#define __NIL__ "(nil)"
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
+{
+	va_list args;
+	
+	va_start(args, fmt);
+    kprintf("kernel: panic: in \"%s\" in \"%s()\" at line %d:", file, func, line);
+	kvprintf(fmt, args);
+    va_end(args);
 
-/* The kvprintf() variadic function thats formats and prints data */
-void kvprintf(const char *fmt, va_list args);
-
-/* The kprintf() formats and prints data */
-void kprintf(const char *fmt, ...);
-
-/* print colored text to screen */
-void kprintc(const char* str, vga_color_t fg, vga_color_t bg);
-
-/* print text to screen */
-void kprint(const char *str);
-
-/* print character to screen */
-void kputchar(const i32 c);
-
-/* clear screen */
-void __kclear(void);
-
-/* get cursor x position */
-i32 __tty_get_x(void);
-
-/* get cursor y position */
-i32 __tty_get_y(void);
-
-/* set cursor x position */
-void __tty_set_x(i32 x);
-
-/* set cursor y position */
-void __tty_set_y(i32 y);
-
-void __set_default_color(vga_color_t fg, vga_color_t bg);
-
-#endif /* _NOS_KERNEL_TTY_H_ */
+	khalt();
+}
