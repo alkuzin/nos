@@ -1,37 +1,36 @@
-/*
-MIT License
-
-Copyright (c) 2024 Alexander (@alkuzin)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+/* MIT License
+ *
+ * Copyright (c) 2024 Alexander (@alkuzin)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
 
 /* Virtual Memory Management */
 
 #ifndef _NOS_KERNEL_VMM_H_
 #define _NOS_KERNEL_VMM_H_
 
-#include <nos/multiboot.h>
-#include <nos/vmm.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+
+#include <nos/multiboot.h>
+#include <nos/vmm.h>
 
 #define TABLES_PER_DIR  1024
 #define PAGES_PER_TABLE 1024
@@ -77,31 +76,31 @@ typedef enum {
 }PAGE_DIR_FLAGS;
 
 typedef struct {
-    uint32_t entries[PAGES_PER_TABLE];
+    u32 entries[PAGES_PER_TABLE];
 } page_table_t;
 
 typedef struct {
-    uint32_t entries[TABLES_PER_DIR];
+    u32 entries[TABLES_PER_DIR];
 } page_dir_t;
 
 
 /* pt - page table */
-uint32_t *vmm_get_pt_entry(page_table_t *pt, const uint32_t addr);
+u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr);
 
 /* pd - page directory */
-uint32_t *vmm_get_pd_entry(page_dir_t *pd, const uint32_t addr);
+u32 *vmm_get_pd_entry(page_dir_t *pd, const u32 addr);
 
-uint32_t *vmm_get_page(const uint32_t vaddr);
+u32 *vmm_get_page(const u32 vaddr);
 
 /* page allocation */
-void *vmm_page_alloc(uint32_t *page);
+void *vmm_page_alloc(u32 *page);
 
-void vmm_free_page(uint32_t *page);
+void vmm_free_page(u32 *page);
 
 bool vmm_set_page_dir(page_dir_t *pd);
 
 /* TLB - Translation Lookaside Buffer */
-void vmm_flush_tlb_entry(uint32_t vaddr);
+void vmm_flush_tlb_entry(u32 vaddr);
 
 bool vmm_map_page(void *paddr, void *vaddr);
 

@@ -1,38 +1,37 @@
-/*
-MIT License
+/* MIT License
+ *
+ * Copyright (c) 2024 Alexander (@alkuzin)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
 
-Copyright (c) 2024 Alexander (@alkuzin)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
 
 #include <nos/multiboot.h>
 #include <nos/vmm.h>
 #include <nos/pmm.h>
 #include <nos/tty.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <string.h>
 
 page_dir_t *cur_page_dir = 0;
 
-uint32_t *vmm_get_pt_entry(page_table_t *pt, const uint32_t addr)
+u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr)
 {
     if (!pt)
         return NULL;
@@ -40,7 +39,7 @@ uint32_t *vmm_get_pt_entry(page_table_t *pt, const uint32_t addr)
     return &pt->entries[PT_INDEX(addr)];
 }
 
-uint32_t *vmm_get_pd_entry(page_dir_t *pd, const uint32_t addr)
+u32 *vmm_get_pd_entry(page_dir_t *pd, const u32 addr)
 {
     if (!pd)
         return NULL;
@@ -48,9 +47,9 @@ uint32_t *vmm_get_pd_entry(page_dir_t *pd, const uint32_t addr)
     return &pd->entries[PT_INDEX(addr)];
 }
 
-uint32_t *vmm_get_page(const uint32_t vaddr)
+u32 *vmm_get_page(const u32 vaddr)
 {
-    uint32_t *entry, *page;
+    u32 *entry, *page;
     page_table_t *table;
     page_dir_t   *pd;
 
@@ -67,21 +66,21 @@ uint32_t *vmm_get_page(const uint32_t vaddr)
     return page;
 }
 
-void *vmm_page_alloc(uint32_t *page) 
+void *vmm_page_alloc(u32 *page) 
 {
     void *block;
 
     block = pmm_blocks_alloc(1);
 
     if(block) {
-        SET_FRAME(page, (uint32_t)block);
+        SET_FRAME(page, (u32)block);
         SET_ATTRIBUTE(page, PTE_PRESENT);
     }
 
     return block;
 }
 
-void vmm_free_page(uint32_t *page)
+void vmm_free_page(u32 *page)
 {
     void *addr;
 
@@ -101,23 +100,23 @@ bool vmm_set_page_dir(page_dir_t *pd)
     cur_page_dir = pd;
 
     /* cr3 register contains address of the current page directory */
-    __asm__ volatile("mov %0, %%cr3" :: "r"((uint32_t)pd));
+    __asm__ volatile("mov %0, %%cr3" :: "r"((u32)pd));
 
     return true;
 }
 
-void vmm_flush_tlb_entry(uint32_t vaddr) {
+void vmm_flush_tlb_entry(u32 vaddr) {
     __asm__ volatile("cli; invlpg (%0); sti" : : "r"(vaddr));
 }
 
 bool vmm_map_page(void *paddr, void *vaddr)
 {
-   uint32_t     *entry, *page;
+   u32     *entry, *page;
    page_table_t *table;
    page_dir_t   *pd;
 
    pd    = cur_page_dir;
-   entry = &pd->entries[PD_INDEX((uint32_t)vaddr)];
+   entry = &pd->entries[PD_INDEX((u32)vaddr)];
 
    if((*entry & PTE_PRESENT) != PTE_PRESENT) {
         table = (page_table_t *)pmm_blocks_alloc(1);
@@ -127,27 +126,27 @@ bool vmm_map_page(void *paddr, void *vaddr)
 
         bzero(table, sizeof(page_table_t));
 
-        entry = &pd->entries[PD_INDEX((uint32_t)vaddr)];
+        entry = &pd->entries[PD_INDEX((u32)vaddr)];
 
         SET_ATTRIBUTE(entry, PDE_PRESENT);
         SET_ATTRIBUTE(entry, PDE_READ_WRITE);
-        SET_FRAME(entry, (uint32_t)table);
+        SET_FRAME(entry, (u32)table);
    }
 
     table = (page_table_t *)PAGE_PADDRESS(entry);
-    page  = &table->entries[PT_INDEX((uint32_t)vaddr)];
+    page  = &table->entries[PT_INDEX((u32)vaddr)];
     
     SET_ATTRIBUTE(page, PTE_PRESENT);
-    SET_FRAME(page, (uint32_t)paddr);
+    SET_FRAME(page, (u32)paddr);
 
     return true;
 }
 
 void vmm_unmap_page(void *vaddr)
 {
-    uint32_t *page;
+    u32 *page;
 
-    page = vmm_get_page((uint32_t)vaddr);
+    page = vmm_get_page((u32)vaddr);
 
     SET_FRAME(page, 0);
     CLEAR_ATTRIBUTE(page, PTE_PRESENT);
@@ -156,8 +155,8 @@ void vmm_unmap_page(void *vaddr)
 bool vmm_init(void)
 {
     page_table_t *table, *table3G;
-    uint32_t page, frame, vaddr;
-    uint32_t *entry1, *entry2;
+    u32 page, frame, vaddr;
+    u32 *entry1, *entry2;
     page_dir_t *dir;
 
 
@@ -171,7 +170,7 @@ bool vmm_init(void)
     /* clear page directory and set as current */
     bzero(dir, sizeof(page_dir_t));
 
-    for(uint32_t i = 0; i < 1024; i++)
+    for(u32 i = 0; i < 1024; i++)
         dir->entries[i] = 0x02;
     
     /* default page table */
@@ -194,7 +193,7 @@ bool vmm_init(void)
     frame = 0x0;
     vaddr = 0x0;
 
-    for(uint32_t i = 0; i < 1024; i++) {
+    for(u32 i = 0; i < 1024; i++) {
         page = 0;
         SET_ATTRIBUTE(&page, PTE_PRESENT);
         SET_ATTRIBUTE(&page, PTE_READ_WRITE);
@@ -210,7 +209,7 @@ bool vmm_init(void)
     frame = KERNEL_ADDR;
     vaddr = 0xC0000000;
 
-    for(uint32_t i = 0; i < 1024; i++) {
+    for(u32 i = 0; i < 1024; i++) {
         page = 0;
         SET_ATTRIBUTE(&page, PTE_PRESENT);
         SET_ATTRIBUTE(&page, PTE_READ_WRITE);
@@ -229,7 +228,7 @@ bool vmm_init(void)
     SET_ATTRIBUTE(entry1, PDE_READ_WRITE);
 
     /* 3GB directory entry points to default page table*/
-    SET_FRAME(entry1, (uint32_t)table); 
+    SET_FRAME(entry1, (u32)table); 
 
     entry2 = &dir->entries[PD_INDEX(0x00000000)];
 
@@ -237,7 +236,7 @@ bool vmm_init(void)
     SET_ATTRIBUTE(entry2, PDE_READ_WRITE);
 
     /* default directory entry points to 3GB page table*/
-    SET_FRAME(entry2, (uint32_t)table3G);
+    SET_FRAME(entry2, (u32)table3G);
 
     cur_page_dir = dir;
 

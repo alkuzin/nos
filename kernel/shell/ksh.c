@@ -1,26 +1,28 @@
-/*
-MIT License
+/* MIT License
+ *
+ * Copyright (c) 2024 Alexander (@alkuzin)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
 
-Copyright (c) 2024 Alexander (@alkuzin)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 #include <nos/shell/ksh.h>
 #include <nos/keyboard.h>
@@ -29,12 +31,9 @@ SOFTWARE.
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/mm.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
 
 static char input_buffer[INPUT_BUFFER_SIZE]; /* user input buffer */
-static uint32_t buf_pos = 0; /* user input buffer current character position */
+static u32 buf_pos = 0; /* user input buffer current character position */
 
 void __display_help(void);
 
@@ -78,7 +77,7 @@ void ksh_init(multiboot_t *boot_info)
 
 void ksh_exec(multiboot_t *boot_info, const char *cmd)
 {
-    int cmd_length;
+    i32 cmd_length;
 
     cmd_length = strlen(cmd);
     
@@ -98,13 +97,13 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         return;
     }
     else {
-        kprintf(" ksh: incorrect command \"%s\"\n", (char *)cmd);
+        kprintf(" ksh: incorrect command \"%s\" (len: %d)\n", (char *)cmd, cmd_length);
         kprint(" ksh: type \"help\" to see list of available commands\n");
     }
 }
 
 void ksh_display_prompt(void) {
-    kprint(" <nos>-$ ");
+    kprint(" sh: ");
 }
 
 bool ksh_is_empty(void) {

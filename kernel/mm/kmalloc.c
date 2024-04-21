@@ -1,53 +1,52 @@
-/*
-MIT License
+/* MIT License
+ *
+ * Copyright (c) 2024 Alexander (@alkuzin)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
 
-Copyright (c) 2024 Alexander (@alkuzin)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+#include <stdint.h>
+#include <stddef.h>
 
 #include <nos/kmalloc.h>
 #include <nos/pmm.h>
 #include <nos/vmm.h>
-#include <stdint.h>
-#include <stddef.h>
 
 kmalloc_block_t *kmalloc_head = NULL; /* start of kmalloc blocks linked list */
-uint32_t kmalloc_vaddr        = 0; /* kmalloc virtual address */
-uint32_t kmalloc_paddr        = 0; /* kmalloc physical address */
-uint32_t kmalloc_pages        = 0; /* total kmalloc pages */
+u32 kmalloc_vaddr = 0; /* kmalloc virtual address */
+u32 kmalloc_paddr = 0; /* kmalloc physical address */
+u32 kmalloc_pages = 0; /* total kmalloc pages */
 
 void *kmalloc_get_head(void) {
     return (void *)(kmalloc_head);
 }
 
-void kmalloc_init(const size_t n) /* n - number of bytes */
+void kmalloc_init(const usize n) /* n - number of bytes */
 {
-    uint32_t *page;
-    uint32_t i, v;
+    u32 *page;
+    u32 i, v;
 
     kmalloc_pages = n / PAGE_SIZE;
     
     if(n % PAGE_SIZE > 0)
         kmalloc_pages++;
 
-    kmalloc_paddr = (uint32_t)pmm_blocks_alloc(kmalloc_pages);
+    kmalloc_paddr = (u32)pmm_blocks_alloc(kmalloc_pages);
     kmalloc_head  = (kmalloc_block_t *)kmalloc_vaddr;
 
     /* map in pages */
@@ -74,7 +73,7 @@ void kmalloc_init(const size_t n) /* n - number of bytes */
     }
 }
 
-void kmalloc_split(kmalloc_block_t *node, const uint32_t size)
+void kmalloc_split(kmalloc_block_t *node, const u32 size)
 {
     kmalloc_block_t *new_node;
 
@@ -89,12 +88,12 @@ void kmalloc_split(kmalloc_block_t *node, const uint32_t size)
     node->next    = new_node;
 }
 
-void *kmalloc_next_block(const uint32_t size)
+void *kmalloc_next_block(const u32 size)
 {
     kmalloc_block_t *cur;
-    uint32_t vaddr, page;
-    uint32_t *temp_page;
-    uint8_t pages;
+    u32 vaddr, page;
+    u32 *temp_page;
+    u8  pages;
 
     cur  = NULL;
 
@@ -129,7 +128,7 @@ void *kmalloc_next_block(const uint32_t size)
         
         vaddr = kmalloc_vaddr + kmalloc_pages * PAGE_SIZE;
 
-        for(uint8_t i = 0; i < pages; i++) {
+        for(u8 i = 0; i < pages; i++) {
             page = 0;
             temp_page = vmm_page_alloc(&page);
 

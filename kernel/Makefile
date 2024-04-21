@@ -11,7 +11,7 @@ CFLAGS   = -Wall -Wextra -Werror -m32 -O2 -Oz -nostdlib -nodefaultlibs \
 
 NAME = _kernel.o
 
-SRC      = kernel tty kprintf ports unistd
+SRC      = kernel tty kprintf ports unistd panic
 SRCS     = $(addsuffix .c, $(SRC))
 OBJS     = $(addsuffix .o, $(SRC))
 

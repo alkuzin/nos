@@ -1,68 +1,68 @@
-/*
-MIT License
+/* MIT License
+ *
+ * Copyright (c) 2024 Alexander (@alkuzin)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE. */
 
-Copyright (c) 2024 Alexander (@alkuzin)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-#include <nos/tty.h>
 #include <string.h>
 #include <stddef.h> 
 #include <stdarg.h> 
 #include <ctype.h> 
 #include <math.h>
 
+#include <nos/kernel.h>
+#include <nos/tty.h>
+
 #define K_PRINTF_BUFFER_SIZE 1024
 
 static char kprintf_buffer[K_PRINTF_BUFFER_SIZE] = {0};
-static int  kprintf_pos = 0;
-static int  prefix_flag = 0; /* '#' prefix flag */
+static i32  kprintf_pos = 0;
+static i32  prefix_flag = 0; /* '#' prefix flag */
 
 /* append character to kprintf buffer */
 static void kprintf_append(char c);
 
 /* %x %X options (hexadecimal) */
-static void   __kprintf_hex(uint64_t n, int is_upper);
+static void   __kprintf_hex(u64 n, i32 is_upper);
 
 /* hexadecimal to alphanumeric lenght */
-static int    __kxtoa_len(uint32_t n);
+static i32    __kxtoa_len(u32 n);
 
 /* %i %d options (int) */
-static void   __kprintf_int(int n);
+static void   __kprintf_int(i32 n);
 
-/* int to alphanumeric lenght */
-static size_t __kitoa_len(int n);
+/* i32 to alphanumeric lenght */
+static usize __kitoa_len(i32 n);
 
 /* %p option (pointer) */
-static void   __kprintf_pointer(uint64_t p);
+static void   __kprintf_pointer(u64 p);
 
 /* digit to hex */
-static char   __kdtoh(int v);
+static char   __kdtoh(i32 v);
 
 /* %u option (unsigned int) */
-static void   __kprintf_uint(uint32_t n);
+static void   __kprintf_uint(u32 n);
 
-/* unsigned int to alphanumeric lenght */
-static size_t __kutoa_len(uint32_t n);
+/* unsigned i32 to alphanumeric lenght */
+static usize __kutoa_len(u32 n);
 
-/* print kprintf arguments */
+/* pri32 kprintf arguments */
 static void   __kprint_args(char type, va_list * args);
 
 /* parse kprintf arguments */
@@ -76,10 +76,10 @@ static void kprintf_append(char c)
 	kprintf_pos++;
 }
 
-/* kprintf unsigned int */
-static size_t __kutoa_len(uint32_t n)
+/* kprintf unsigned i32 */
+static usize __kutoa_len(u32 n)
 {
-	size_t len;
+	usize len;
 
 	len = 0;
 
@@ -94,9 +94,9 @@ static size_t __kutoa_len(uint32_t n)
 	return len;
 }
 
-static void __kprintf_uint(uint32_t n)
+static void __kprintf_uint(u32 n)
 {
-	size_t length, i;
+	usize length, i;
 
 	i = __kutoa_len(n);
 	length   = i;
@@ -122,7 +122,7 @@ static void __kprintf_uint(uint32_t n)
 }
 
 /* kprintf pointer */
-static char __kdtoh(int v) 
+static char __kdtoh(i32 v) 
 {
    if (v >= 0 && v < 10)
        return '0' + v;
@@ -130,9 +130,9 @@ static char __kdtoh(int v)
        return 'a' + v - 10;
 }
 
-static void __kprintf_pointer(uint64_t p)
+static void __kprintf_pointer(u64 p)
 {
-	int count, i;
+	i32 count, i;
 		
 	if(p == 0) {
 		i = 0;
@@ -162,10 +162,10 @@ static void __kprintf_pointer(uint64_t p)
 	}
 }
 
-/* kprintf int */
-static size_t __kitoa_len(int n)
+/* kprintf i32 */
+static usize __kitoa_len(i32 n)
 {
-	size_t len;
+	usize len;
 
 	len = 0;
 
@@ -185,9 +185,9 @@ static size_t __kitoa_len(int n)
 	return len;
 }
 
-static void __kprintf_int(int n)
+static void __kprintf_int(i32 n)
 {
-	size_t length, i;
+	usize length, i;
 
 	i = __kitoa_len(n);
 	length = i;
@@ -218,7 +218,7 @@ static void __kprintf_int(int n)
 }
 
 /* kprintf hex */
-static int __kxtoa_len(uint32_t n)
+static i32 __kxtoa_len(u32 n)
 {
 	if (n == 0)
 	   return 1;
@@ -226,12 +226,12 @@ static int __kxtoa_len(uint32_t n)
 	return (int)(log(n) / log(16)) + 1;
 }
 
-static void __kprintf_hex(uint64_t n, int is_upper)
+static void __kprintf_hex(u64 n, i32 is_upper)
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
 	static const char *digits = NULL;
-	int i;
+	i32 i;
 	
 	i = __kxtoa_len(n);
 	char hex[i + 1];
@@ -284,7 +284,7 @@ static void __kprint_args(char type, va_list *args)
 
 		case 's':
 			char *str;
-			int i;
+			i32 i;
 			
 			i = 0;
 			str = va_arg(*args, char *);
@@ -296,7 +296,7 @@ static void __kprint_args(char type, va_list *args)
 			break;
 
 		case 'p':
-			__kprintf_pointer((uint64_t)va_arg(*args, void *));
+			__kprintf_pointer((u64)va_arg(*args, void *));
 			break;
 
 		case 'd': case 'i':
@@ -304,18 +304,18 @@ static void __kprint_args(char type, va_list *args)
 			break;
 
 		case 'u':
-			__kprintf_uint(va_arg(*args, uint32_t));
+			__kprintf_uint(va_arg(*args, u32));
 			break;
 
 		case 'x': case 'X':
-			__kprintf_hex(va_arg(*args, uint64_t), isupper(type));
+			__kprintf_hex(va_arg(*args, u64), isupper(type));
 			break;
 	};
 }
 
 static void __kparse(const char* str, va_list *args)
 {
-    int i;
+    i32 i;
 
     i = -1;
     while(str[++i]) {
@@ -340,7 +340,7 @@ void kprintf(const char *fmt, ...)
     va_list args;
 
     if(!fmt || *fmt == '\0')
-		kpanic("%s\n", "incorrect format in kprintf()");
+		panic("%s\n", "incorrect format in kprintf()");
 	
     va_start(args, fmt);
     kvprintf(fmt, args);
@@ -352,7 +352,7 @@ void kvprintf(const char *fmt, va_list args)
     va_list args_copy;
 
     if(!fmt || *fmt == '\0')
-		kpanic("%s\n", "incorrect format in kvprintf()");
+		panic("%s\n", "incorrect format in kvprintf()");
 	
 	kprintf_pos = 0;
 	prefix_flag = 0;
