@@ -2,9 +2,9 @@ CC = gcc
 
 INCLUDE_DIR = ../include/libc
 
-CFLAGS = -Wall -Wextra -Werror -m32 -O2 -Oz -nostdlib -nodefaultlibs \
+CFLAGS = -Wall -Wextra -Werror -g -m32 -O2 -Oz -nostdlib -nodefaultlibs \
          -fno-pie -fno-exceptions -fno-stack-protector -fno-builtin  \
-         -ffreestanding -I $(INCLUDE_DIR)
+         -ffreestanding -I $(INCLUDE_DIR) -I $(LIBC_DIR)
 
 NAME = libc.a
 
