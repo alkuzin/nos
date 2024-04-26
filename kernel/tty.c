@@ -29,59 +29,106 @@
 #include <nos/tty.h>
 #include <nos/vga.h>
 
-/* video memory address */
-static u16 *video_memory = (u16 *)VIDEO_MEMORY;
-
-/* x & y positions of the cursor */
-static i32 x_pos = 0;
-static i32 y_pos = 0;
-
-/* foreground & background default color */
-static u8 default_color = (u8)(TTY_FG_COLOR | TTY_BG_COLOR << 4);
-
-/* print char with custom color in a specific place */
-static void __kputchar_at(char c, u8 color, i32 x, i32 y);
 
 /* VGA scroll function */
 static void __kscroll(void);
 
+/* main kernel TTY structure */
+static tty_t tty;
 
-void __set_default_color(vga_color_t fg, vga_color_t bg) {
-    default_color = (u8)(fg | bg << 4);
+void tty_init(void)
+{
+    tty.v_mem  = (u16 *)VIDEO_MEMORY;
+    tty.x_pos  = 0;
+    tty.y_pos  = 0;
+    tty.fg     = TTY_FG_COLOR;
+    tty.bg     = TTY_BG_COLOR;
+    tty.color  = (u8)(tty.fg | tty.bg << 4);
+    tty.height = VGA_SCREEN_HEIGHT;
+    tty.width  = VGA_SCREEN_WIDTH;
 }
 
-static void __kputchar_at(char c, u8 color, i32 x, i32 y) {
-	video_memory[y * VGA_SCREEN_WIDTH + x] = vga_entry(c, color);
+i32 tty_get_x(void)
+{
+    return tty.x_pos;
+}
+
+i32 tty_get_y(void)
+{
+    return tty.y_pos;
+}
+
+void tty_set_x(i32 x)
+{
+    tty.x_pos = x;
+}
+
+void tty_set_y(i32 y)
+{
+    tty.y_pos = y;
+}
+
+vga_color_t tty_get_fg(void)
+{
+    return tty.fg;
+}
+
+vga_color_t tty_get_bg(void)
+{
+    return tty.bg;
+}
+
+void tty_set_color(vga_color_t fg, vga_color_t bg)
+{
+    tty.fg    = TTY_FG_COLOR;
+    tty.bg    = TTY_BG_COLOR;
+    tty.color = (u8)(fg | bg << 4);
+}
+
+i32  tty_get_height(void)
+{
+    return tty.height;
+}
+
+i32  tty_get_width(void)
+{
+    return tty.width;
+}
+
+void tty_kputchar_at(char c, u8 color, i32 x, i32 y)
+{
+	tty.v_mem[y * tty.width + x] = vga_entry(c, color);
 }
 
 static void __kscroll(void)
 {
-	u16 buffer[(VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT * 2)];
+	u16 buffer[(tty.width * tty.height * 2)];
 
-	memset(buffer, default_color, sizeof(buffer));
-	memcpy(buffer, video_memory,  sizeof(buffer));
+	memset(buffer, tty.color, sizeof(buffer));
+	memcpy(buffer, tty.v_mem, sizeof(buffer));
 
-	__kclear();
+	tty_clear();
 
-    for (u16 y = 0; y < VGA_SCREEN_HEIGHT; y++) {
-        for (u16 x = 0; x < VGA_SCREEN_WIDTH; x++)
-            buffer[(y-1) * VGA_SCREEN_WIDTH + x] = buffer[y*VGA_SCREEN_WIDTH+x];
+    for (u16 y = 0; y < tty.height; y++) {
+        for (u16 x = 0; x < tty.width; x++)
+            buffer[(y - 1) * tty.width + x] = buffer[y * tty.width + x];
     }
 
-    for (u16 x = 0; x < VGA_SCREEN_WIDTH; x++) {
-        buffer[(VGA_SCREEN_HEIGHT-1) * VGA_SCREEN_WIDTH + x] = ' ' | default_color;
+    for (u16 x = 0; x < tty.width; x++) {
+        buffer[(tty.height - 1) * tty.width + x] = (' ' | tty.color);
     }
 	
-    memcpy(video_memory, buffer, sizeof(buffer));
+    memcpy(tty.v_mem, buffer, sizeof(buffer));
 }
 
-void __kclear(void)
+void tty_clear(void)
 {
-	u32 i;
+	i32 i;
 
 	i = 0;
-	while(i < VGA_SCREEN_WIDTH * VGA_SCREEN_HEIGHT) {
-		video_memory[i] = vga_entry(' ', default_color);
+	
+    while(i < tty.width * tty.height) {
+		tty.v_mem[i] = vga_entry(' ', tty.color);
 		i++;
 	}
 }
@@ -99,79 +146,66 @@ void kprint(const char *str)
 
 void kprintc(const char* str, vga_color_t fg, vga_color_t bg) 
 {
-    u8 color;
+    u8  color;
 	i32 i;
 
     color = vga_entry_color(fg, bg);
-	i = 0;
+	i     = 0;
+
     while (str[i]) {
-		__kputchar_at(str[i], color, x_pos, y_pos);
+		tty_kputchar_at(str[i], color, tty.x_pos, tty.y_pos);
 		i++;
 	}
 }
 
 void kputchar(const i32 c)
 {
-	if(x_pos >= VGA_SCREEN_WIDTH) {
-		x_pos = 0;
-		y_pos++;
+	if(tty.x_pos >= tty.width) {
+		tty.x_pos = 0;
+		tty.y_pos++;
 	}
 	
-	if(y_pos >= VGA_SCREEN_HEIGHT) {
+	if(tty.y_pos >= tty.height) {
 		__kscroll();
-		y_pos = VGA_SCREEN_HEIGHT - 1;
+		tty.y_pos = tty.height - 1;
 	}
 
 	switch(c) {
 		case '\n':
-			y_pos++;
-			x_pos = 0;
+			tty.y_pos++;
+			tty.x_pos = 0;
 			break;
 		
 		case '\t':
-			x_pos += TTY_TAB_WIDTH;
+			tty.x_pos += TTY_TAB_WIDTH;
 			break;
 		
 		case '\v':
-			y_pos++;
+			tty.y_pos++;
 			break;
 		
 		case '\r':
-			x_pos = 0;
+			tty.x_pos = 0;
 			break;
 		
 		case '\b':
-            x_pos--;
-            if(!x_pos && y_pos) {
-			    y_pos--;
-                x_pos = VGA_SCREEN_WIDTH;
+            tty.x_pos--;
+            
+            if(!tty.x_pos && tty.y_pos) {
+			    tty.y_pos--;
+                tty.x_pos = tty.width;
             }
-			__kputchar_at(' ', default_color, x_pos, y_pos);
+			
+            tty_kputchar_at(' ', tty.color, tty.x_pos, tty.y_pos);
 			break;
 		
 		default:
             if(isprint(c)) {
-			    __kputchar_at(c, default_color, x_pos, y_pos);
-			    x_pos++;
+			    tty_kputchar_at(c, tty.color, tty.x_pos, tty.y_pos);
+			    tty.x_pos++;
             }
 			break;
 	};
 
-	update_cursor(x_pos, y_pos);	
-}
-
-i32 __tty_get_x(void) {
-    return x_pos;
-}
-
-i32 __tty_get_y(void) {
-    return y_pos;
-}
-
-void __tty_set_x(i32 x) {
-    x_pos = x;
-}
-
-void __tty_set_y(i32 y) {
-    y_pos = y;
+	update_cursor(tty.x_pos, tty.y_pos);	
 }

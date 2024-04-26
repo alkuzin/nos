@@ -84,10 +84,10 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
     if(strncmp(cmd, "lsmem", 5) == 0 && cmd_length == 5)
         __display_memory(boot_info);
     else if(strncmp(cmd, "clear", 5) == 0 && cmd_length == 5) {
-        __kclear();
+        tty_clear();
 
-        __tty_set_x(0);
-        __tty_set_y(0);
+        tty_set_x(0);
+        tty_set_y(0);
         update_cursor(0, 0);
     }
     else if(strncmp(cmd, "help", 4) == 0 && cmd_length == 4)

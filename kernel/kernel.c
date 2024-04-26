@@ -37,8 +37,12 @@
 
 void kboot(multiboot_t *boot_info)
 {
-	__kclear(); /* clear screen */
-    
+    /* initializing kernel TTY */
+    tty_init();
+    tty_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+	tty_clear(); 
+    kprint(" kernel: initialized TTY \n");	
+
     /* initializing Global Descriptor Table */
     gdt_init();
     kprint(" kernel: initialized Global Descriptor Table \n");	
@@ -66,7 +70,6 @@ void kboot(multiboot_t *boot_info)
 /* kernel entry point */
 extern void kmain(__attribute__((unused)) u32 magic, multiboot_t *boot_info)
 {
-    __set_default_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
     kboot(boot_info);
 
 	for(;;); /* infinite loop for halting CPU */
