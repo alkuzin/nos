@@ -37,16 +37,22 @@
 #define __OS_BUILD_INFO_FMT__  "%s %s <%s>\n"
 
 #define __DISPLAY_OS_INFO() \
-kprintf(__OS_INFO_FMT__, __OS_NAME__, __OS_VERSION__, __OS_ARCH__)
+printk(__OS_INFO_FMT__, __OS_NAME__, __OS_VERSION__, __OS_ARCH__)
 
 #define __DISPLAY_OS_BUILD_INFO() \
-kprintf(__OS_BUILD_INFO_FMT__, " Build time:", __OS_BUILD_TIME__, __OS_BUILD_DATE__)
+printk(__OS_BUILD_INFO_FMT__, " Build time:", __OS_BUILD_TIME__, __OS_BUILD_DATE__)
 
 /* kernel panic (detecting an internal fatal error) */
 #define panic(fmt, ...) __panic(__FILE__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
 /* detatiled kernel panic */
 void __panic(const char *file, const char *func, u32 line, const char *fmt, ...);
+
+/* The printk() formats and prints data */
+void printk(const char *fmt, ...);
+
+/* The vprintk() formats and prints data */
+void vprintk(const char *fmt, va_list args);
 
 /* boot kernel */
 void kboot(multiboot_t *boot_info);

@@ -41,29 +41,29 @@ void kboot(multiboot_t *boot_info)
     tty_init();
     tty_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 	tty_clear(); 
-    kprint(" kernel: initialized TTY \n");	
+    printk(" %s\n", "kernel: initialized TTY");	
 
     /* initializing Global Descriptor Table */
     gdt_init();
-    kprint(" kernel: initialized Global Descriptor Table \n");	
+    printk(" %s\n", "kernel: initialized Global Descriptor Table");
     
     /* initializing Interrupt Descriptor Table */
     idt_init();
-    kprint(" kernel: initialized Interrupt Descriptor Table \n");	
+    printk(" %s\n", "kernel: initialized Interrupt Descriptor Table");	
     
     /* initializing timer */
     timer_init();
-    kprint(" kernel: initialized timer \n");	
+    printk(" %s\n", "kernel: initialized timer");	
 
     /* initializing memory management */
     memory_init(boot_info);
-    kprint(" kernel: initialized memory management\n");	
+    printk(" %s\n", "kernel: initialized memory management");
 
     __DISPLAY_OS_INFO();
     __DISPLAY_OS_BUILD_INFO();
 
     /* initializing kernel shell */
-    kprint(" kernel: initializing kernel shell\n");	
+    printk(" %s\n", "kernel: initializing kernel shell");
     ksh_init(boot_info);
 }
 

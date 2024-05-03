@@ -20,22 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stdarg.h>
+#include <stddef.h> 
+#include <stdarg.h> 
+#include <stdio.h> 
 
 #include <nos/kernel.h>
-#include <nos/unistd.h>
 #include <nos/tty.h>
 
+#define BUF_SIZE 1024
 
-void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
+static char buf[BUF_SIZE];
+
+
+void vprintk(const char *fmt, va_list args)
 {
-	va_list args;
-	
-	va_start(args, fmt);
-    printk("kernel: panic: in \"%s\" in \"%s()\" at line %d:", file, func, line);
-	vprintk(fmt, args);
+    va_list args_copy;
+
+    va_copy(args_copy, args);
+    vsnprintf(buf, BUF_SIZE, fmt, args);
+    va_end(args_copy);
+
+	putk(buf);
+}
+
+void printk(const char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    vsnprintf(buf, BUF_SIZE, fmt, args);
     va_end(args);
 
-	khalt();
+    putk(buf);
 }
