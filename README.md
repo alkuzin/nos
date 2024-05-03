@@ -4,19 +4,9 @@
 
 ## Description
 
-Test OS project for x86_32 platform. ([documentation](docs/README.md))
+NOS - hobby Unix-like x86-32 operating system. ([documentation](docs/README.md))
 
-## Tools
-The project was made on Debian 12
-
- - GCC (13.2.0)
- - NASM (2.16.01)
- - GNU Make (4.3)
- - GNU ld (2.42)
- - GNU ar (2.42)
- - truncate (9.4)
- - QEMU emulator (8.2.1)
- - GNU GRUB (2.12-1)
+<img src="res/nos.png">
 
 ## License
 

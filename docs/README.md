@@ -1,6 +1,6 @@
-# Simple OS documentation
+# The Null Operating System documentation
 
-<img src="../res/simple-os-doc-banner.png">
+<img src="../res/nos_docs_banner.png">
 
 ## Contents
 
@@ -11,7 +11,7 @@
 5. [Headers overview](#5-headers-overview)
 
 ## 1. Introduction
-Test OS project for x86_32 platform
+NOS - hobby Unix-like x86-32 operating system.
 
 ## 2. Tools installation
 
@@ -35,27 +35,17 @@ sudo apt-get install grub-pc-bin mtools
 ## 3. Installation
 First clone this repository:
 ```console
-https://github.com/alkuzin/simple-os.git
+https://github.com/alkuzin/nos.git
 ```
-Then move to the `simple-os/` directory:
+Then move to the `nos/` directory:
 ```console
 cd simple-os/
 ```
 
-To build kernel as `.bin` run:
+To build kernel as `.iso` and run on QEMU use:
 
 ```console
-make all
-```
-
-To build kernel as `.iso` run:
-
-```console
-make build-iso
-```
-To run OS on QEMU use this:
- ```console
-make init
+make all && make init
 ```
 
 To return everything to original state:
@@ -66,12 +56,13 @@ make fclean
 ## 4. Project structure
 
  - `build/`   - contains .elf files
- - `doc/`     - documentation
+ - `docs/`    - documentation
  - `grub/`    - contains GNU GRUB config file
  - `include/` - contains kernel & libk header files
  - `isodir/`  - contains GNU GRUB config file & compiled kernel 
+ - `kernel/`  - kernel source code
+ - `libc/`    - C standard library
  - `res/`     - screenshots & documentation images
- - `kernel/`  - OS source code
  - LICENSE    - MIT license
  - Makefile   - main makefile
  - README.md  - OS description
@@ -102,17 +93,17 @@ In `kernel/`:
  - `tty.h`       - kernel terminal output functions
  - `vga.h`       - vga driver
  - `vmm.h`       - virtual memory manager
- - `sstd.h`      - simple-os standard functions
  - `kmalloc.h`   - dynamic memory allocation functions
 
-## Libk
+## Libc
  - `ctype.h`  - declares several macros that are useful for testing and mapping characters
  - `math.h`   - defines various mathematical functions
  - `memory.h` - defines several memory management functions
  - `stdarg.h` - declares defines several macros for stepping through a list of arguments 
  				whose number and types are not known to the called function
  - `stddef.h` - defines NULL & size_t
- - `stdint.h` - defines an unsigned integer types of a fixed width of exactly N bits for uintN_t
+ - `stdint.h` - defines an integer types of a fixed width
+ - `stdio.h`  - defines several input/output functions
  - `string.h` - defines several strings management functions
 
 ## Shell
