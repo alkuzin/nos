@@ -133,31 +133,6 @@ void tty_clear(void)
 	}
 }
 
-void kprint(const char *str)
-{
-    u32 i;
-
-    i = 0;
-    while(str[i]) {
-        kputchar(str[i]);       
-        i++;
-	}
-}
-
-void kprintc(const char* str, vga_color_t fg, vga_color_t bg) 
-{
-    u8  color;
-	i32 i;
-
-    color = vga_entry_color(fg, bg);
-	i     = 0;
-
-    while (str[i]) {
-		tty_kputchar_at(str[i], color, tty.x_pos, tty.y_pos);
-		i++;
-	}
-}
-
 void kputchar(const i32 c)
 {
 	if(tty.x_pos >= tty.width) {

@@ -82,19 +82,6 @@ void tty_clear(void);
 /* print char with custom color in a specific place */
 void tty_kputchar_at(char c, u8 color, i32 x, i32 y);
 
-// TODO: move these functions to stdio.h
-/* The kvprintf() variadic function thats formats and prints data */
-void kvprintf(const char *fmt, va_list args);
-
-/* The kprintf() formats and prints data */
-void kprintf(const char *fmt, ...);
-
-/* print colored text to screen */
-void kprintc(const char* str, vga_color_t fg, vga_color_t bg);
-
-/* print text to screen */
-void kprint(const char *str);
-
 /* print character to screen */
 void kputchar(const i32 c);
 

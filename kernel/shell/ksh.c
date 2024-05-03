@@ -23,6 +23,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <nos/shell/ksh.h>
 #include <nos/keyboard.h>
@@ -97,13 +98,13 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         return;
     }
     else {
-        kprintf(" ksh: incorrect command \"%s\" (len: %d)\n", (char *)cmd, cmd_length);
-        kprint(" ksh: type \"help\" to see list of available commands\n");
+        printk(" ksh: incorrect command \"%s\" (len: %d)\n", (char *)cmd, cmd_length);
+        putk(" ksh: type \"help\" to see list of available commands\n");
     }
 }
 
 void ksh_display_prompt(void) {
-    kprint(" sh: ");
+    putk(" sh: ");
 }
 
 bool ksh_is_empty(void) {
@@ -113,7 +114,7 @@ bool ksh_is_empty(void) {
 void __display_help(void)
 {
     /* TODO: add command for displaying kernel info */
-    kprint("----------------------< help >------------------------\n \n"
+    putk("----------------------< help >------------------------\n \n"
            "\thelp         - display this help menu\n \n"
            "\tclear        - clear screen\n \n"
            "\tlsmem        - display list of memory segments\n \n"

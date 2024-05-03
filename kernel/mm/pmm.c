@@ -23,8 +23,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <nos/multiboot.h>
+#include <nos/kernel.h>
 #include <nos/pmm.h>
 #include <nos/tty.h>
 
@@ -164,49 +166,49 @@ void __attribute__((unused)) __display_memory(multiboot_t *boot_info)
     multiboot_mmap_entry_t *mmmt;
     u32 free_blocks;
 
-    kprint(" ---------------------------------------------------------------------\n");
-    kprint(" low addr \t| high addr \t| low len \t| high len | size | type |\n"); 
-    kprint(" ---------------------------------------------------------------------\n");
+    putk(" ---------------------------------------------------------------------\n");
+    putk(" low addr \t| high addr \t| low len \t| high len | size | type |\n"); 
+    putk(" ---------------------------------------------------------------------\n");
 
     for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
        mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
         
-       kprintf(" <%#x> | <%#x> | ", mmmt->addr_low, mmmt->addr_high);
-       kprintf(" %#x | %#x | ", mmmt->len_low, mmmt->len_high);
-       kprintf(" %#x | ", mmmt->size);
+       printk(" <%#x> | <%#x> | ", mmmt->addr_low, mmmt->addr_high);
+       printk(" %#x | %#x | ", mmmt->len_low, mmmt->len_high);
+       printk(" %#x | ", mmmt->size);
 
        switch(mmmt->type) {
             case MULTIBOOT_MEMORY_AVAILABLE:
-                kprint("(available)\n");
+                putk("(available)\n");
                 break;
             
             case MULTIBOOT_MEMORY_RESERVED:
-                kprint("(reserved)\n");
+                putk("(reserved)\n");
                 break;
             
             case MULTIBOOT_MEMORY_ACPI_RECLAIMABLE:
-                kprint("(reclaimable)\n");
+                putk("(reclaimable)\n");
                 break;
             
             case MULTIBOOT_MEMORY_NVS:
-                kprint("(nvs)\n");
+                putk("(nvs)\n");
                 break;
             
             case MULTIBOOT_MEMORY_BADRAM:
-                kprint("(bad RAM)\n");
+                putk("(bad RAM)\n");
                 break;
        }
     }
     
-    kprint(" ---------------------------------------------------------------------\n");
-    kprintf(" total: %u KB \t free: %u KB\n", phys_mem_total / 1024, phys_mem_free / 1024);
-    kprint(" ---------------------------------------------------------------------\n");
+    putk(" ---------------------------------------------------------------------\n");
+    printk(" total: %u KB \t free: %u KB\n", phys_mem_total / 1024, phys_mem_free / 1024);
+    putk(" ---------------------------------------------------------------------\n");
 
     free_blocks = max_blocks - used_blocks;
     
-    kprintf(" max blocks:  %u (%u KB)\n", max_blocks, (max_blocks * BLOCK_SIZE) / 1024);
-    kprintf(" used blocks: %u (%u KB)\n", used_blocks, (used_blocks * BLOCK_SIZE) / 1024);
-    kprintf(" free blocks: %u (%u KB)\n", free_blocks, (free_blocks * BLOCK_SIZE) / 1024);
+    printk(" max blocks:  %u (%u KB)\n", max_blocks, (max_blocks * BLOCK_SIZE) / 1024);
+    printk(" used blocks: %u (%u KB)\n", used_blocks, (used_blocks * BLOCK_SIZE) / 1024);
+    printk(" free blocks: %u (%u KB)\n", free_blocks, (free_blocks * BLOCK_SIZE) / 1024);
 }
 
 void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size)
