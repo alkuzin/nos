@@ -39,7 +39,7 @@ https://github.com/alkuzin/nos.git
 ```
 Then move to the `nos/` directory:
 ```console
-cd simple-os/
+cd nos/
 ```
 
 To build kernel as `.iso` and run on QEMU use:
@@ -58,7 +58,7 @@ make fclean
  - `build/`   - contains .elf files
  - `docs/`    - documentation
  - `grub/`    - contains GNU GRUB config file
- - `include/` - contains kernel & libk header files
+ - `include/` - contains kernel & libc header files
  - `isodir/`  - contains GNU GRUB config file & compiled kernel 
  - `kernel/`  - kernel source code
  - `libc/`    - C standard library
@@ -72,10 +72,8 @@ In `kernel/`:
  - `boot/`    - contains bootloader
  - `cpu/`     - contains GDT, IDT, IRQ        
  - `drivers/` - contains OS drivers (VGA, keyboard, timer)        
- - `libk/`    - contains kernel library `libk` source
  - `mm/`      - contains virtual & physical memory managers
  - `shell/`   - contains kernel shell
-
 
 ## 5. Headers overview 
 
@@ -107,4 +105,4 @@ In `kernel/`:
  - `string.h` - defines several strings management functions
 
 ## Shell
- - `ksh.h`    - contains kernel shell functions
+ - `ksh.h`    - contains kernel shell functions & builtin commands
