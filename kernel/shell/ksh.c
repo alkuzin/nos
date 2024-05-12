@@ -23,6 +23,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdio.h>
 
 #include <nos/shell/ksh.h>
@@ -32,6 +33,7 @@
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/mm.h>
+
 
 static char input_buffer[INPUT_BUFFER_SIZE]; /* user input buffer */
 static u32 buf_pos = 0; /* user input buffer current character position */
@@ -54,13 +56,25 @@ void ksh_init(multiboot_t *boot_info)
         
         do {
             cc = (char)keyboard_getchar();
+
             if(cc != 0 && cc != '\n') {
+                
+                if (cc == '\b' && buf_pos == 0)
+                    continue;
+
+                if (cc == '\b' && buf_pos > 0) {
+                    buf_pos--;
+                    input_buffer[buf_pos] = 0;
+                }
+                
                 kputchar(cc);
-                if(buf_pos < INPUT_BUFFER_SIZE) {
+
+                if(buf_pos < INPUT_BUFFER_SIZE && isprint(cc)) {
                     input_buffer[buf_pos] = cc;
                     buf_pos++;
                 }
             }
+
         } while(cc != '\n');
 
         input_buffer[buf_pos] = '\0';
@@ -84,6 +98,7 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
     
     if(strncmp(cmd, "lsmem", 5) == 0 && cmd_length == 5)
         __display_memory(boot_info);
+
     else if(strncmp(cmd, "clear", 5) == 0 && cmd_length == 5) {
         tty_clear();
 
@@ -91,23 +106,28 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         tty_set_y(0);
         update_cursor(0, 0);
     }
+
     else if(strncmp(cmd, "help", 4) == 0 && cmd_length == 4)
         __display_help();
+
     else if(strncmp(cmd, "reboot", 6) == 0 && cmd_length == 6) {
         kboot(boot_info);
         return;
     }
+
     else {
         printk(" ksh: incorrect command \"%s\" (len: %d)\n", (char *)cmd, cmd_length);
         putk(" ksh: type \"help\" to see list of available commands\n");
     }
 }
 
-void ksh_display_prompt(void) {
+void ksh_display_prompt(void)
+{
     putk(" sh: ");
 }
 
-bool ksh_is_empty(void) {
+bool ksh_is_empty(void)
+{
     return input_buffer[0] == 0;
 }
 
@@ -115,9 +135,9 @@ void __display_help(void)
 {
     /* TODO: add command for displaying kernel info */
     putk("----------------------< help >------------------------\n \n"
-           "\thelp         - display this help menu\n \n"
-           "\tclear        - clear screen\n \n"
-           "\tlsmem        - display list of memory segments\n \n"
-           "\treboot       - reboot kernel\n \n"
+           "\t help         - display this help menu\n \n"
+           "\t clear        - clear screen\n \n"
+           "\t lsmem        - display list of memory segments\n \n"
+           "\t reboot       - reboot kernel\n \n"
            "------------------------------------------------------\n");
 }
