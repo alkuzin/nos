@@ -34,11 +34,22 @@
 #include <nos/vga.h>
 #include <nos/mm.h>
 
+/* display promt for user input */
+static void ksh_display_prompt(void);
 
-static char input_buffer[INPUT_BUFFER_SIZE]; /* user input buffer */
-static u32 buf_pos = 0; /* user input buffer current character position */
+/* check if user input buffer is empty */
+static bool ksh_is_empty(void);
 
-void __display_help(void);
+/* check shell command is valid */
+static i32 ksh_is_valid(const char *cmd, const i32 cmd_len, const char *input,
+                        const i32 input_len);
+
+/* shell commands input buffer */
+static char input_buffer[INPUT_BUFFER_SIZE]; 
+
+/* current character position of user input buffer */
+static u32 buf_pos;
+
 
 void ksh_init(multiboot_t *boot_info)
 {
@@ -50,6 +61,8 @@ void ksh_init(multiboot_t *boot_info)
     /* clear user input buffer */
     bzero(input_buffer, sizeof(input_buffer));
     kputchar('\n');
+
+    buf_pos = 0;
 
     for(;;) {
         ksh_display_prompt();
@@ -90,54 +103,33 @@ void ksh_init(multiboot_t *boot_info)
     khalt(); 
 }
 
-void ksh_exec(multiboot_t *boot_info, const char *cmd)
+static i32 ksh_is_valid(const char *cmd, const i32 cmd_len, const char *input, const i32 input_len)
 {
-    i32 cmd_length;
-
-    cmd_length = strlen(cmd);
-    
-    if(strncmp(cmd, "lsmem", 5) == 0 && cmd_length == 5)
-        __display_memory(boot_info);
-
-    else if(strncmp(cmd, "clear", 5) == 0 && cmd_length == 5) {
-        tty_clear();
-
-        tty_set_x(0);
-        tty_set_y(0);
-        update_cursor(0, 0);
-    }
-
-    else if(strncmp(cmd, "help", 4) == 0 && cmd_length == 4)
-        __display_help();
-
-    else if(strncmp(cmd, "reboot", 6) == 0 && cmd_length == 6) {
-        kboot(boot_info);
-        return;
-    }
-
-    else {
-        printk(" ksh: incorrect command \"%s\" (len: %d)\n", (char *)cmd, cmd_length);
-        putk(" ksh: type \"help\" to see list of available commands\n");
-    }
+    return (cmd_len == input_len) && (strncmp(cmd, input, cmd_len) == 0);
 }
 
-void ksh_display_prompt(void)
+void ksh_exec(multiboot_t *boot_info, const char *cmd)
+{
+    [[gnu::unused]]i32 cmd_len;
+
+    cmd_len = strlen(cmd);
+    
+    if(ksh_is_valid("lsmem", 5, cmd, cmd_len))
+        ksh_lsmem(boot_info);
+    else if(ksh_is_valid("clear", 5, cmd, cmd_len))
+        ksh_clear();
+    else if(ksh_is_valid("help", 4, cmd, cmd_len))
+        ksh_help();
+    else
+        ksh_warning((char *)cmd);
+}
+
+static void ksh_display_prompt(void)
 {
     putk(" sh: ");
 }
 
-bool ksh_is_empty(void)
+static bool ksh_is_empty(void)
 {
     return input_buffer[0] == 0;
-}
-
-void __display_help(void)
-{
-    /* TODO: add command for displaying kernel info */
-    putk("----------------------< help >------------------------\n \n"
-           "\t help         - display this help menu\n \n"
-           "\t clear        - clear screen\n \n"
-           "\t lsmem        - display list of memory segments\n \n"
-           "\t reboot       - reboot kernel\n \n"
-           "------------------------------------------------------\n");
 }

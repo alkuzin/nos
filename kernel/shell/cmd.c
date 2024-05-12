@@ -20,29 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#ifndef _NOS_KERNEL_SHELL_H_
-#define _NOS_KERNEL_SHELL_H_
+#include <stdint.h>
+#include <stdio.h>
 
-#include <stddef.h>
+#include <nos/shell/ksh.h>
+#include <nos/kernel.h> 
+#include <nos/unistd.h> 
+#include <nos/tty.h>
+#include <nos/vga.h>
+#include <nos/mm.h>
 
-#include <nos/multiboot.h>
 
-/* initialize kernel shell */
-void ksh_init(multiboot_t *boot_info);
+void ksh_warning(const char *cmd)
+{
+    printk(" ksh: incorrect command \"%s\"\n ksh: type \"help\""
+           " to see list of available commands\n", cmd);
+}
 
-/* execute builtin shell commands */
-void ksh_exec(multiboot_t *boot_info, const char *cmd);
+void ksh_clear(void)
+{
+    tty_clear();
 
-/* shell warning in case of incorrect command */
-void ksh_warning(const char *cmd);
+    tty_set_x(0);
+    tty_set_y(0);
+    update_cursor(0, 0);
+}
 
-/* clear terminal */
-void ksh_clear(void);
+void ksh_lsmem(multiboot_t *boot_info)
+{
+    __display_memory(boot_info);
+}
 
-/* display list of available memory */
-void ksh_lsmem(multiboot_t *boot_info);
-
-/* display list of available shell commands */
-void ksh_help(void);
-
-#endif /* _NOS_KERNEL_SHELL_H_ */
+void ksh_help(void)
+{
+    /* TODO: add command for displaying kernel info */
+    putk("----------------------< help >------------------------\n \n"
+           " \t help         - display this help menu\n \n"
+           " \t clear        - clear screen\n \n"
+           " \t lsmem        - display list of memory segments\n \n"
+           "------------------------------------------------------\n");
+}

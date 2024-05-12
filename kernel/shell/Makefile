@@ -10,7 +10,7 @@ CFLAGS = -Wall -Wextra -Werror -g -m32 -O2 -Oz -nostdlib -nodefaultlibs \
 
 NAME = _ksh.o
 
-SRC  = ksh
+SRC  = ksh cmd
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
