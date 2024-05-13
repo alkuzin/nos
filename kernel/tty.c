@@ -133,6 +133,18 @@ void tty_clear(void)
 	}
 }
 
+void tty_rewrite(void)
+{
+	i32 i;
+
+	i = 0;
+	
+    while(i < tty.width * tty.height) {
+		tty.v_mem[i] = vga_entry(tty.v_mem[i], tty.color);
+		i++;
+	}
+}
+
 void kputchar(const i32 c)
 {
 	if(tty.x_pos >= tty.width) {

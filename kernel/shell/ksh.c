@@ -120,6 +120,11 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         ksh_clear();
     else if(ksh_is_valid("help", 4, cmd, cmd_len))
         ksh_help();
+        // TODO: make shell arguments parser
+    else if(ksh_is_valid("theme_0", 7, cmd, cmd_len))
+        ksh_theme(THEME_DEFAULT);
+    else if(ksh_is_valid("theme_1", 7, cmd, cmd_len))
+        ksh_theme(THEME_CLASSIC);
     else
         ksh_warning((char *)cmd);
 }

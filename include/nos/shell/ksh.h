@@ -24,8 +24,14 @@
 #define _NOS_KERNEL_SHELL_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include <nos/multiboot.h>
+
+typedef enum {
+    THEME_DEFAULT,
+    THEME_CLASSIC
+} theme_t;
 
 /* initialize kernel shell */
 void ksh_init(multiboot_t *boot_info);
@@ -44,5 +50,8 @@ void ksh_lsmem(multiboot_t *boot_info);
 
 /* display list of available shell commands */
 void ksh_help(void);
+
+/* change cli theme */
+void ksh_theme(theme_t theme);
 
 #endif /* _NOS_KERNEL_SHELL_H_ */

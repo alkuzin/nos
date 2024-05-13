@@ -79,6 +79,9 @@ i32  tty_get_width(void);
 /* clear screen */
 void tty_clear(void);
 
+/* rewrite tty buffer */
+void tty_rewrite(void);
+
 /* print char with custom color in a specific place */
 void tty_kputchar_at(char c, u8 color, i32 x, i32 y);
 
