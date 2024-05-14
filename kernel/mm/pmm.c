@@ -37,21 +37,24 @@ static u32 phys_mem_total = 0;
 static u32 phys_mem_free  = 0;
 
 
-void pmm_set_block(u32 bit) {
+void pmm_set_block(u32 bit) 
+{
     memory_map[bit/32] |= (1 << (bit % 32));
 }
 
-void pmm_unset_block(u32 bit) {
+void pmm_unset_block(u32 bit) 
+{
     memory_map[bit/32] &= ~(1 << (bit % 32));
 }
 
-bool pmm_test_block(u32 bit) {
+bool pmm_test_block(u32 bit) 
+{
     return memory_map[bit/32] & (1 << (bit % 32));
 }
 
 i32 pmm_find_first_free_blocks(u32 n)
 {
-    i32  bit, start_bit;
+    i32 bit, start_bit;
     u32 free_blocks;
 
     /* not able to return memory */
@@ -150,7 +153,8 @@ u32 *pmm_blocks_alloc(u32 n)
     return (u32 *)addr;
 }
 
-void pmm_free_blocks(u32 *addr, u32 n) {
+void pmm_free_blocks(u32 *addr, u32 n)
+{
     i32 starting_block;
 
     starting_block = (u32)addr / BLOCK_SIZE;
@@ -166,16 +170,15 @@ void __attribute__((unused)) __display_memory(multiboot_t *boot_info)
     multiboot_mmap_entry_t *mmmt;
     u32 free_blocks;
 
-    putk(" ---------------------------------------------------------------------\n");
-    putk(" low addr \t| high addr \t| low len \t| high len | size | type |\n"); 
-    putk(" ---------------------------------------------------------------------\n");
+    putk(" ---------------------------------------------------------------------\n"
+         " low addr \t| high addr \t| low len \t| high len | size | type |\n"
+         " ---------------------------------------------------------------------\n");
 
     for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
        mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
         
-       printk(" <%#x> | <%#x> | ", mmmt->addr_low, mmmt->addr_high);
-       printk(" %#x | %#x | ", mmmt->len_low, mmmt->len_high);
-       printk(" %#x | ", mmmt->size);
+       printk(" <%#x> | <%#x> |  %#x | %#x |  %#x | ", mmmt->addr_low, 
+       mmmt->addr_high, mmmt->len_low, mmmt->len_high, mmmt->size);
 
        switch(mmmt->type) {
             case MULTIBOOT_MEMORY_AVAILABLE:
@@ -206,18 +209,17 @@ void __attribute__((unused)) __display_memory(multiboot_t *boot_info)
 
     free_blocks = max_blocks - used_blocks;
     
-    printk(" max blocks:  %u (%u KB)\n", max_blocks, (max_blocks * BLOCK_SIZE) / 1024);
-    printk(" used blocks: %u (%u KB)\n", used_blocks, (used_blocks * BLOCK_SIZE) / 1024);
-    printk(" free blocks: %u (%u KB)\n", free_blocks, (free_blocks * BLOCK_SIZE) / 1024);
+    printk(" total blocks: %u (%u KB)\n", max_blocks, (max_blocks * BLOCK_SIZE) / 1024);
+    printk(" used  blocks: %u (%u KB)\n", used_blocks, (used_blocks * BLOCK_SIZE) / 1024);
+    printk(" free  blocks: %u (%u KB)\n", free_blocks, (free_blocks * BLOCK_SIZE) / 1024);
 }
 
 void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size)
 {
-    u32 max_entry_size, max_entry_size_addr;
     multiboot_mmap_entry_t *mmmt;
+    u32 max_entry_size;
 
-    max_entry_size_addr  = 0;
-    max_entry_size       = 0;
+    max_entry_size = 0;
 
     for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
        mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
@@ -225,15 +227,13 @@ void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size)
        if(mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
             phys_mem_free += mmmt->len_low;
     
-           if(mmmt->len_low > max_entry_size) {
+           if(mmmt->len_low > max_entry_size)
                 max_entry_size = mmmt->len_low;
-                max_entry_size_addr = mmmt->addr_low;
-           }
        }
 
        phys_mem_total += mmmt->len_low;
     }
 
-    *start_addr = max_entry_size_addr;
+    *start_addr = _kernel_end;
     *size       = max_entry_size;
 }

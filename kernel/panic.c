@@ -33,7 +33,7 @@ void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
 	va_list args;
 	
 	va_start(args, fmt);
-    printk("kernel: panic: in \"%s\" in \"%s()\" at line %d:", file, func, line);
+    printk(" kernel: panic: in \"%s\" in \"%s()\" at line %d: ", file, func, line);
 	vprintk(fmt, args);
     va_end(args);
 

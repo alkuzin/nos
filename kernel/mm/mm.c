@@ -46,7 +46,7 @@ void memory_init(multiboot_t *boot_info)
     pmm_init(start_addr, size);
     
     /* free some available blocks of memory */
-    pmm_region_init(start_addr, size / BITS_PER_BYTE);
+    pmm_region_init(start_addr, size);
     
     /* initializing virtual memory manager */
     vmm_status = vmm_init();

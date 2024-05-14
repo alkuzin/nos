@@ -33,6 +33,9 @@
 #define BLOCK_SIZE     4096 /* 4KB */
 #define BITS_PER_BYTE  8
 
+
+extern u32 _kernel_end;
+
 /* set block in the memory map */
 void pmm_set_block(u32 bit);
 
