@@ -1,19 +1,13 @@
-CC = gcc
+include kernel_common.mk
 
 INCLUDE_DIR = ../include
 LIBC_DIR    = $(INCLUDE_DIR)/libc
 
-LFLAGS   = -m elf_i386 -relocatable -z noexecstack 
-ASMFLAGS = -f elf
-CFLAGS   = -Wall -Wextra -Werror -g -m32 -O2 -Oz -nostdlib -nodefaultlibs \
-         -fno-pie -fno-exceptions -fno-stack-protector -fno-builtin  \
-         -ffreestanding -I $(INCLUDE_DIR) -I $(LIBC_DIR)
-
 NAME = _kernel.o
 
-SRC      = kernel tty printk ports unistd panic
-SRCS     = $(addsuffix .c, $(SRC))
-OBJS     = $(addsuffix .o, $(SRC))
+SRC  = kernel tty printk ports unistd panic
+SRCS = $(addsuffix .c, $(SRC))
+OBJS = $(addsuffix .o, $(SRC))
 
 OBJS_DIR = objs/
 OBJS_PREFIXED     = $(addprefix $(OBJS_DIR), $(OBJS))

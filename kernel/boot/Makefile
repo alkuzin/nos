@@ -1,5 +1,5 @@
-ASM      = nasm
-ASMFLAGS = -f elf
+include ../kernel_common.mk
+
 NAME     = _boot.o
 
 $(NAME):
