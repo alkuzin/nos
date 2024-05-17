@@ -20,40 +20,104 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  string.h
+ * @brief Defines several strings and memory management functions.
+ *
+ * @details This header file provides functions for manipulating strings,
+ * such as copying, concatenating and comparing.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _LIBC_STRING_H_
 #define _LIBC_STRING_H_
 
 #include <stddef.h>
 
-/* Get string length */
+/**
+ * @brief Get string length.
+ * 
+ * @param [in] str - given null terminated string.
+ * @return str length.
+ */
 i32   strlen(const char *str);
 
-/* the strcmp() compares the two strings s1 and s2. */
+/**
+ * @brief Compares the two strings s1 and s2.
+ * 
+ * @param [in] s1 - first given null terminated string.
+ * @param [in] s2 - second given null terminated string.
+ * @param [in] n - given number of symbols for comparison.
+ * @return 0, if s1 and s2 are equal;
+ * @return a negative value if s1 is less than s2;
+ * @return a positive value if s1 is greater than s2.
+ */
 i32   strncmp(const char *s1, const char *s2, usize n);
 
-/* Copy a string with truncation. */
+/**
+ * @brief Copy a string with truncation.
+ * 
+ * @param [out] dest - given buffer for copied string.
+ * @param [in] src - given source null terminated string.
+ * @param [in] size - given size to copy.
+ * @return number of copied string characters.
+ */
 usize strncpy(char *dest, const char *src, usize size);
 
-/* Catenate a string with truncation. */
+/**
+ * @brief Catenate a string with truncation.
+ * 
+ * @param [out] dest - given buffer for concatenated string.
+ * @param [in] src - given source null terminated string.
+ * @param [in] size - given size to concatenate.
+ * @return length of new concatenated string.
+ */
 usize strncat(char *dest, const char *src, usize size);
 
-/* the memset() fills the first n bytes of the 
- * memory of the area pointed to by s 
- * with the constant byte c. */
+/**
+ * @brief Fills the first n bytes of the memory of the area pointed to by s 
+ * with the constant byte c.
+ * 
+ * @param [out] s - given buffer pointer.
+ * @param [in] c - given byte for filling buffer.
+ * @param [in] n - given number of buffer bytes to fill.
+ * @return filled buffer pointer.
+ */
 void  *memset(void *s, i32 c, usize n);
 
-/* the bzero() erases the data in the n bytes 
+/**
+ * @brief Erases the data in the n bytes 
  * of the memory of the area pointed to by s, 
- * by writing '\0' bytes to that area. */
+ * by writing '\0' bytes to that area.
+ * 
+ * @param [out] s - given buffer pointer.
+ * @param [in] n - given number of buffer bytes to erase.
+ */
 void  bzero(void *s, usize n);
 
-/* the memcpy() copies n bytes from memory area src
- * to memory area dest. */
+/**
+ * @brief Copies n bytes from memory area src to memory area dest.
+ * 
+ * @param [out] dest - given destination buffer.
+ * @param [in] src - given source buffer.
+ * @param [in] n - given number of bytes to copy.
+ * @return destination buffer pointer.
+ */
 void  *memcpy(void *dest, const void *src, usize n);
 
-/* the memcmp() function compares the 
- * first n bytes (each interpreted as 
- * unsigned char) of the memory areas s1 and s2. */
+/**
+ * @brief Compares the first n bytes (each interpreted as unsigned char) 
+ * of the memory areas s1 and s2.
+ * 
+ * @param [in] s1 - first given memory area pointer.
+ * @param [in] s2 - second given memory area pointer.
+ * @param [in] n - given number of bytes to compare.
+ * @return 0, if s1 and s2 are equal;
+ * @return a negative value if s1 is less than s2;
+ * @return a positive value if s1 is greater than s2.
+ */
 i32   memcmp(const void *s1, const void *s2, usize n);
 
 #endif /* _LIBC_STRING_H_ */

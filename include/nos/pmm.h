@@ -20,7 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-/* Physical Memory Management */
+/**
+ * @file  pmm.h
+ * @brief Contains declarations for physical memory management.
+ * 
+ * @details This header file includes functions related to the
+ * physical memory management.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
 
 #ifndef _NOS_KERNEL_PMM_H_
 #define _NOS_KERNEL_PMM_H_
@@ -33,34 +42,95 @@
 #define BLOCK_SIZE     4096 /* 4KB */
 #define BITS_PER_BYTE  8
 
-
+///< Kernel end address.
 extern u32 _kernel_end;
 
-/* set block in the memory map */
+/**
+ * @brief Set block in the memory map.
+ * 
+ * @param [in] bit - given block to set.
+ */
 void pmm_set_block(u32 bit);
 
-/* unset block in the memory map */
+/**
+ * @brief Unset block in the memory map.
+ * 
+ * @param [in] bit - given block to unset.
+ */
 void pmm_unset_block(u32 bit);
 
-/* test if a block in the memory map is set/used */
+/**
+ * @brief Test if a block in the memory map is set/used.
+ * 
+ * @param [in] bit - given block to test.
+ * @return true - block is set;
+ * @return false - otherwise.
+ */
 bool pmm_test_block(u32 bit);
 
-/* n - number of blocks */
-i32  pmm_find_first_free_blocks(u32 n);
+/**
+ * @brief Find the first free blocks in the memory map.
+ * 
+ * @param [in] n - given number of blocks to find.
+ * @return the index of the first free block, or -1 if not found. 
+ */
+i32 pmm_find_first_free_blocks(u32 n);
 
+/**
+ * @brief Initialize the physical memory manager.
+ * 
+ * @param [in] start_addr - given starting address of the memory map.
+ * @param [in] size - given size of the memory map.
+ */
 void pmm_init(u32 start_addr, u32 size);
 
-/* get largest free area of RAM & get free and total physical memory */
+/**
+ * @brief Get information about memory regions.
+ * Get largest free area of RAM & get free and total physical memory.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ * @param [in] start_addr - given starting address of memory.
+ * @param [in] size - given pointer to store the size of memory.
+ */
 void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size);
 
+/**
+ * @brief Initialize a memory region.
+ * 
+ * @param [in] base_addr - given base address of the region.
+ * @param [in] size - given size of the region.
+ */
 void pmm_region_init(u32 base_addr, u32 size);
 
+/**
+ * @brief Deinitialize a memory region.
+ * 
+ * @param [in] base_addr - given base address of the region.
+ * @param [in] size - given size of the region.
+ */
 void pmm_region_deinit(u32 base_addr, u32 size);
 
-u32  *pmm_blocks_alloc(u32 n);
+/**
+ * @brief Allocate a block of memory.
+ * 
+ * @param [in] n - given number of blocks to allocate.
+ * @return pointer to the allocated memory block.
+ */
+u32 *pmm_blocks_alloc(u32 n);
 
+/**
+ * @brief Free a block of memory.
+ * 
+ * @param [in] addr - given pointer to the memory block to free.
+ * @param [in] n - given number of blocks to free.
+ */
 void pmm_free_blocks(u32 *addr, u32 n);
 
-void __attribute__((unused)) __display_memory(multiboot_t *boot_info);
+/**
+ * @brief Display memory information.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ */
+void pmm_display_memory(multiboot_t *boot_info);
 
 #endif /* _NOS_KERNEL_PMM_H_ */

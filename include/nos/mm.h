@@ -20,6 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  mm.h
+ * @brief Contains declarations for memory management.
+ * 
+ * @details This header file includes functions related to the
+ * physical and virtual memory management.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_MM_H_
 #define _NOS_KERNEL_MM_H_
 
@@ -27,6 +38,11 @@
 #include <nos/pmm.h>
 #include <nos/vmm.h>
 
+/**
+ * @brief Initialize memory manager.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ */
 void memory_init(multiboot_t *boot_info);
 
 #endif /* _NOS_KERNEL_MM_H_ */

@@ -20,6 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  stdint.h
+ * @brief Defines an integer types of a fixed width.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _LIBC_STDINT_H_
 #define _LIBC_STDINT_H_
 

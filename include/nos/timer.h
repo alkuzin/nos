@@ -20,13 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  timer.h
+ * @brief Contains functions related to timer operations.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_TIMER_H_
 #define _NOS_KERNEL_TIMER_H_
 
 #include <nos/irq.h>
 
+
+/** @brief Initialize the timer. */
 void timer_init(void);
 
+/** @brief Interrupt service routine for IRQ0. */
 void on_irq0(int_reg_t *regs);
 
 #endif /* _NOS_KERNEL_TIMER_H_ */

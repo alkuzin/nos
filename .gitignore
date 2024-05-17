@@ -6,3 +6,6 @@ src/kernel/tty_printf/
 build/
 *.iso
 isodir/
+docs/doxygen/html/
+docs/doxygen/man/
+docs/doxygen/rtf/

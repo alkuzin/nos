@@ -20,29 +20,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  unistd.h
+ * @brief Contains diferent system functions.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_UNISTD_H_
 #define _NOS_UNISTD_H_
 
 #include <stdint.h>
 #include <stddef.h>
 
-/* kernel time delay in microseconds */
+/**
+ * @brief Kernel time delay in microseconds.
+ * 
+ * @param [in] microsec - given number of microseconds for kernel to sleep. 
+ */
 void __ksleep(u32 microsec);
 
-/* kernel time delay in seconds */
+/**
+ * @brief Kernel time delay in seconds.
+ * 
+ * @param [in] sec - given number of seconds for kernel to sleep. 
+ */
 void ksleep(u32 sec);
 
-/* halt kernel */
-void khalt(void);
+///< Halt kernel.
+void khalt(void); 
 
-/* the kmalloc() function allocates n bytes 
- * and returns a pointer to the allocated memory */
+/**
+ * @brief Allocates n bytes and returns a pointer
+ * to the allocated memory.
+ * 
+ * @param [in] n - given number of bytes to allocate.
+ * @return pointer to allocated memory in case of success.
+ * @return null pointer otherwise.
+ */
 void *kmalloc(usize n);
 
-/* the kfree() function frees the memory space pointed to by ptr, 
+
+/**
+ * @brief Frees the memory space pointed to by ptr, 
  * which must have been returned by a previous call to kmalloc()
- * or related functions. Otherwise, or if ptr has already been freed, 
- * undefined behavior occurs. If ptr is NULL, no operation is performed. */
+ * or related functions. Otherwise, or if ptr has already 
+ * been freed, undefined behavior occurs. 
+ * If ptr is null pointer, no operation is performed.
+ * 
+ * @param [in] ptr - given pointer to allocated memory.
+ */
 void kfree(void *ptr);
 
 #endif /* _NOS_UNISTD_H_ */

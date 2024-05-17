@@ -20,6 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  ksh.h
+ * @brief Contain kernel shell functions.
+ *
+ * @details This header file contain main kernel shell functions
+ * and builtin commands.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_SHELL_H_
 #define _NOS_KERNEL_SHELL_H_
 
@@ -28,30 +39,52 @@
 
 #include <nos/multiboot.h>
 
+/** @brief Enumeration of builtin CLI themes. */
 typedef enum {
     THEME_DEFAULT,
     THEME_CLASSIC
 } theme_t;
 
-/* initialize kernel shell */
+/**
+ * @brief Initialize kernel shell.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ */
 void ksh_init(multiboot_t *boot_info);
 
-/* execute builtin shell commands */
+/**
+ * @brief Execute builtin shell commands.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ * @param [in] cmd - given shell command string.
+ */
 void ksh_exec(multiboot_t *boot_info, const char *cmd);
 
-/* shell warning in case of incorrect command */
+/**
+ * @brief print shell warning in case of incorrect command.
+ * 
+ * @param [in] cmd - given shell command string.
+ */
 void ksh_warning(const char *cmd);
 
-/* clear terminal */
+/** @brief Clear terminal. */
 void ksh_clear(void);
 
-/* display list of available memory */
+/**
+ * @brief Display list of available memory.
+ * 
+ * @param [in] boot_info - given multiboot information structure.
+ */
 void ksh_lsmem(multiboot_t *boot_info);
 
-/* display list of available shell commands */
+/** @brief Display list of available shell commands. */
 void ksh_help(void);
 
-/* change cli theme */
+/**
+ * @brief Change CLI theme.
+ * 
+ * @param [in] theme - given theme type.
+ */
 void ksh_theme(theme_t theme);
 
 #endif /* _NOS_KERNEL_SHELL_H_ */

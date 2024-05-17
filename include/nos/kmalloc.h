@@ -20,6 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  kmalloc.h
+ * @brief Contains declarations for dynamic heap allocation management.
+ * 
+ * @details This header file includes definitions and functions
+ * related to the managing dynamic heap allocation.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_KMALLOC_H_
 #define _NOS_KERNEL_KMALLOC_H_
 
@@ -31,29 +42,51 @@
 
 #define PAGE_SIZE 4096
 
-/* using linked list nodes for blocks of memory */
+/** @brief Structure representing a block of memory for kernel dynamic memory allocation */
 typedef struct kmalloc_block_s {
-    usize size; /* size of memory block */
-    bool is_free; /* is this block of memory is free */
-    struct kmalloc_block_s *next; /* pointer to the next block of memory */
+    usize size;     ///< size of memory block
+    bool is_free;   ///< flag indicating if the block of memory is free
+    struct kmalloc_block_s *next; ///< pointer to the next block of memory
 } kmalloc_block_t;
 
-/* return start of kmalloc blocks linked list */
+/**
+ * @brief Get the start of the kmalloc blocks linked list.
+ * 
+ * @return Pointer to the head of the kmalloc blocks linked list.
+ */
 void *kmalloc_get_head(void);
 
-/* initialize kernel dynamic memory allocation */
-void kmalloc_init(const usize n); 
+/**
+ * @brief Initialize kernel dynamic memory allocation.
+ * 
+ * @param [in] n - given size of memory to initialize.
+ */
+void kmalloc_init(const usize n);
 
-/* split memory block into two by inserting a new block */
+/**
+ * @brief Split a memory block into two by inserting a new block.
+ * 
+ * @param [in] node - given pointer to the memory block to split.
+ * @param [in] size - given size of the new block to insert.
+ */
 void kmalloc_split(kmalloc_block_t *node, const u32 size);
 
-/* find and allocate next block of memory */
+/**
+ * @brief Find and allocate the next block of memory.
+ * 
+ * @param [in] size - given dize of the memory block to allocate.
+ * @return Pointer to the allocated memory block.
+ */
 void *kmalloc_next_block(const u32 size);
 
-/* merge free blocks of memory to (partically) prevent memory fragmentation */
+/** @brief Merge free blocks of memory to partially prevent memory fragmentation. */
 void kmalloc_merge_free_blocks(void);
 
-/* free allocated memory */
+/**
+ * @brief Free allocated memory.
+ * 
+ * @param [in] ptr - given pointer to the memory block to free.
+ */
 void kmalloc_free(void *ptr);
 
 #endif /* _NOS_KERNEL_KMALLOC_H_ */

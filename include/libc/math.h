@@ -20,30 +20,98 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  math.h
+ * @brief Standard mathematical functions and constants.
+ *
+ * @details 
+ * This file contains declarations for standard mathematical functions and constants.
+ * It includes functions for common mathematical operations such as logarithmic functions,
+ * exponential functions, and more. 
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _LIBC_MATH_H_
 #define _LIBC_MATH_H_
 
 #include <stdint.h>
 
-/* math constants */
+/**
+ * @brief The mathematical constant Pi.
+ *
+ * This constant defines the value of Pi (approximately 3.14).
+ */
 #define PI 3.141592653589793
+
+/**
+ * @brief The mathematical constant e (Euler's number).
+ *
+ * This constant defines the value of the mathematical constant e (approximately 2.718).
+ */
 #define E  2.718281828459045
 
+/**
+ * @brief Represents a NaN (Not-a-Number) value.
+ *
+ * This constant represents a NaN value, which is the result of dividing 0.0 by 0.0.
+ */
 #define _NAN (0.0f / 0.0f)
 
+/**
+ * @brief Calculate the absolute value of a given value.
+ *
+ * This macro calculates the absolute value of the given value.
+ *
+ * @param [in] x - given value.
+ * @return the absolute value of the given value.
+ */
 #define abs(x) ((x) < 0 ? -(x) : (x))
+
+/**
+ * @brief Perform ceiling division of two numbers.
+ *
+ * This macro performs ceiling division of two numbers, rounding up to the nearest integer.
+ *
+ * @param [in] x - the dividend.
+ * @param [in] y - the divisor.
+ * @return the result of ceiling division of x by y.
+ */
 #define ceil_div(x, y) (((x + y) - 1) / y)
 
-/* the log() calculates natural logarithm */
+/**
+ * @brief Calculate natural logarithm.
+ * 
+ * @param [in] x - given value.
+ * @return natural logarithm of x.
+ */
 f64 log(f64 x);
 
-/* the pow() equal to 'x^y' in math */
+/**
+ * @brief Calculate the power of a given base raised to the exponent.
+ * 
+ * @param [in] x - base value.
+ * @param [in] y - exponent value.
+ * @return the power of x raised to the y.
+ */
 f64 pow(f64 x, f64 y);
 
-/* the exp() equal to 'e^x' in math */
+/**
+ * @brief Calculate the exponent of given value.
+ * 
+ * @param [in] x - given value.
+ * @return the exponent of x.
+ */
 f64 exp(f64 x);
 
-/* the sqrt() calculates the square root */
+/**
+ * @brief Calculates the square root of given value.
+ * 
+ * @param [in] x - given value.
+ * @return the square root of x.
+ */
 f64 sqrt(f64 x);
+
 
 #endif /* _LIBC_MATH_H_ */

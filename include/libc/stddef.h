@@ -20,16 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file stddef.h
+ * @brief Standard defenitions and constants.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _LIBC_STDDEF_H_
 #define _LIBC_STDDEF_H_
 
 #include <stdint.h>
 
-#define NULL    ((void *)0)
+#define NULL   ((void *)0)
 #define usize  u64
-#define true    1
-#define false   0
-
-typedef u8 bool;
 
 #endif /* _LIBC_STDDEF_H_ */

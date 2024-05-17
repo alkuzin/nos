@@ -20,22 +20,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  stdio.h
+ * @brief Standard input/output functions.
+ *
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   15.05.2024 
+ */
+
 #ifndef _LIBC_STDIO_H_
 #define _LIBC_STDIO_H_
 
 #include <nos/vga.h>
 #include <stdarg.h>
 
-/* print string */
+/**
+ * @brief Print given string on the same line.
+ * 
+ * @param [in] str - given null terminated string
+ */
 void putk(const char *str);
 
-/* print colored string */
+/**
+ * @brief Print colored string and a trailing newline.
+ * 
+ * @param [in] str - given null terminated string 
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
 void cputk(const char *str, vga_color_t fg, vga_color_t bg);
 
-/* print string and a trailing newline */
+/**
+ * @brief Print string and a trailing newline.
+ * 
+ * @param [in] str - given null terminated string
+ */
 void puts(const char *str);
 
-/* The vsnprintf() formats and prints data to buffer */
+/**
+ * @brief Formats and prints data to buffer.
+ * 
+ * @param [out] buf - given buffer for containing formated result.
+ * @param [in] size - given buffer size.
+ * @param [in] fmt - given format string.
+ * @param [in] args - given variable list of arguments.
+ */
 void vsnprintf(char *buf, usize size, const char *fmt, va_list args);
+
 
 #endif /* _LIBC_STDIO_H_ */

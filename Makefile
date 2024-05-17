@@ -51,6 +51,7 @@ fclean: clean
 	rm -f $(NAME)
 	rm -rf $(ISO_DIR) $(NAME_ISO)
 	rm -f $(NAME_ISO)
+	rm -rf docs/doxygen/html/ docs/doxygen/man/ docs/doxygen/rtf/
 
 re: clean all
 

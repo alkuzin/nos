@@ -20,11 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  vga.h
+ * @brief Contains definitions related to screen characters input/output.
+ * 
+ * VGA (Video Graphics Array). It is a standard for displaying graphics 
+ * and video on computer monitors.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_VGA_H_
 #define _NOS_KERNEL_VGA_H_ 
 
 #include <stdint.h>
 
+///< VGA screen information macros.
 #define VIDEO_MEMORY       0xB8000
 #define VGA_SCREEN_WIDTH   80
 #define VGA_SCREEN_HEIGHT  25
@@ -32,6 +44,7 @@
 #define REG_SCREEN_CTRL    0x3D4
 #define REG_SCREEN_DATA    0x3D5
 
+///< VGA colors enumeration.
 typedef enum vga_color {
 	VGA_COLOR_BLACK,
 	VGA_COLOR_BLUE,
@@ -51,14 +64,32 @@ typedef enum vga_color {
 	VGA_COLOR_WHITE
 } vga_color_t;
 
-/* VGA color attribute */
+/**
+ * @brief Creates a VGA color entry based on
+ * the foreground and background colors.
+ * 
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color. 
+ * @return the VGA color entry.
+ */
 u8   vga_entry_color(vga_color_t fg, vga_color_t bg);
 
-/* VGA text buffer entry */
+/**
+ * @brief Creates a VGA entry combining a character
+ * and color information.
+ * 
+ * @param [in] c - given character.
+ * @param [in] color - given color information for the character.
+ * @return the VGA entry combining character and color.
+ */
 u16  vga_entry(u8 c, u8 color);
 
-void port_byte_out(u16 port, u8 data);
-
+/**
+ * @brief Updates the cursor position on the screen.
+ *
+ * @param [in] x - given x position of the cursor.
+ * @param [in] y - given y position of the cursor.
+ */
 void update_cursor(i32 x, i32 y);
 
 #endif /* _NOS_KERNEL_VGA_H_ */

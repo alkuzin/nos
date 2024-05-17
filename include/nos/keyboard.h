@@ -20,6 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+/**
+ * @file  keyboard.h
+ * @brief Contains declarations for keyboard handeling functions and structures.
+ * 
+ * @details This header file includes definitions and functions
+ * related to the managing of keyboard interrupts.
+ * 
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
+
 #ifndef _NOS_KERNEL_KEYBOARD_H_
 #define _NOS_KERNEL_KEYBOARD_H_
 
@@ -30,6 +41,7 @@
 
 #define INPUT_BUFFER_SIZE 256
 
+/** @brief Keyboard special keys enumeration. */
 typedef enum {
     KEY_ESC         = 0x01,
     KEY_BACKSPACE   = 0x0E,
@@ -47,16 +59,24 @@ typedef enum {
     KEY_DOWN_ARROW  = 0x50
 } keycode_t;
 
-/* keyboard initialization */
+/** @brief keyboard initialization */
 void keyboard_init(void);
 
-/* keyboard key press handler */
+/**
+ * @brief Keyboard key press handler.
+ * 
+ * @param [in] regs - given pointer to interrupt register state.
+ */
 void keyboard_handler(int_reg_t *regs);
 
-/* keyboard wait for user to press a key */
+/** @brief Keyboard wait for user to press a key. */
 void keyboard_wait(void);
 
-/* keyboard get character on key press */
+/**
+ * @brief Keyboard get character on key press.
+ * 
+ * @return Character read from the keyboard.
+ */
 u8   keyboard_getchar(void);
 
 #endif /* _NOS_KERNEL_KEYBOARD_H_ */
