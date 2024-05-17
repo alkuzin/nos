@@ -252,7 +252,7 @@ static void print_hex(u64 n, i32 is_upper)
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
-	static const char *digits        = NULL;
+	static const char *digits        = nullptr;
 	i32               i;
 	
 	i = xtoa_len(n);

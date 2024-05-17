@@ -71,7 +71,7 @@ void isr_handler(int_reg_t *regs)
         panic(" %s\n", exception_msgs[regs->int_no]);
 }
 
-static irq_handler_t irq_routines[16] = {NULL};
+static irq_handler_t irq_routines[16] = {nullptr};
 
 void irq_install_handler(i32 irq, irq_handler_t handler) 
 {

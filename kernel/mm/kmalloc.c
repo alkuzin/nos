@@ -27,7 +27,7 @@
 #include <nos/pmm.h>
 #include <nos/vmm.h>
 
-kmalloc_block_t *kmalloc_head = NULL; /* start of kmalloc blocks linked list */
+kmalloc_block_t *kmalloc_head = nullptr; /* start of kmalloc blocks linked list */
 u32 kmalloc_vaddr = 0; /* kmalloc virtual address */
 u32 kmalloc_paddr = 0; /* kmalloc physical address */
 u32 kmalloc_pages = 0; /* total kmalloc pages */
@@ -70,7 +70,7 @@ void kmalloc_init(const usize n) /* n - number of bytes */
     if(kmalloc_head) {
         kmalloc_head->size    = (kmalloc_pages * PAGE_SIZE) - sizeof(kmalloc_block_t);
         kmalloc_head->is_free = true;
-        kmalloc_head->next    = NULL;
+        kmalloc_head->next    = nullptr;
     }
 }
 
@@ -96,11 +96,11 @@ void *kmalloc_next_block(const u32 size)
     u32 *temp_page;
     u8  pages;
 
-    cur  = NULL;
+    cur  = nullptr;
 
     /* nothing to allocate */
     if(size == 0)
-        return NULL;
+        return nullptr;
 
     /* if there is no bytes to allocate - init it first */
     if(!kmalloc_head->size)

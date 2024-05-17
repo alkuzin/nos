@@ -36,7 +36,7 @@ page_dir_t *cur_page_dir = 0;
 u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr)
 {
     if (!pt)
-        return NULL;
+        return nullptr;
 
     return &pt->entries[PT_INDEX(addr)];
 }
@@ -44,7 +44,7 @@ u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr)
 u32 *vmm_get_pd_entry(page_dir_t *pd, const u32 addr)
 {
     if (!pd)
-        return NULL;
+        return nullptr;
 
     return &pd->entries[PT_INDEX(addr)];
 }

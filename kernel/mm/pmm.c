@@ -137,12 +137,12 @@ u32 *pmm_blocks_alloc(u32 n)
     u32 addr;
 
     if((max_blocks - used_blocks) <= n)
-        return NULL; /* not enough of free blocks */
+        return nullptr; /* not enough of free blocks */
     
     starting_block = pmm_find_first_free_blocks(n);
 
     if(starting_block == -1)
-        return NULL; /* there is no n blocks in a row to allocate */
+        return nullptr; /* there is no n blocks in a row to allocate */
 
     for(u32 i = 0; i < n; i++)
         pmm_set_block(starting_block + i);

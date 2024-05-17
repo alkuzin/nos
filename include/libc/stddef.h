@@ -33,7 +33,6 @@
 
 #include <stdint.h>
 
-#define NULL   ((void *)0)
 #define usize  u64
 
 #endif /* _LIBC_STDDEF_H_ */
