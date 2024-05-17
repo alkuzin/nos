@@ -165,7 +165,7 @@ void pmm_free_blocks(u32 *addr, u32 n)
     used_blocks -= n;
 }
 
-void __attribute__((unused)) __display_memory(multiboot_t *boot_info) 
+void pmm_display_memory(multiboot_t *boot_info) 
 {
     multiboot_mmap_entry_t *mmmt;
     u32 free_blocks;

@@ -23,26 +23,26 @@
 #include <stdint.h>
 
 #include <nos/vga.h>
+#include <nos/ports.h>
 
-u8 vga_entry_color(vga_color_t fg, vga_color_t bg) {
+u8 vga_entry_color(vga_color_t fg, vga_color_t bg)
+{
     return (fg | bg << 4);
 }
 
-u16 vga_entry(u8 c, u8 color) {
+u16 vga_entry(u8 c, u8 color)
+{
     return ((u16)c | (u16)color << 8);
 }
 
-void port_byte_out(u16 port, u8 data) {
-	__asm__ volatile ("out %%al, %%dx" : : "a" (data), "d" (port));
-}
-
-void update_cursor(i32 x, i32 y) {
+void update_cursor(i32 x, i32 y)
+{
 	u16 pos;
 
 	pos = y * VGA_SCREEN_WIDTH + x;
 
-	port_byte_out(REG_SCREEN_CTRL, 15);
-	port_byte_out(REG_SCREEN_DATA, (u8)(pos & 0xFF));
-	port_byte_out(REG_SCREEN_CTRL, 14);
-	port_byte_out(REG_SCREEN_DATA, (u8)(pos >> 8) & 0xFF);
+	outb(REG_SCREEN_CTRL, 15);
+	outb(REG_SCREEN_DATA, (u8)(pos & 0xFF));
+	outb(REG_SCREEN_CTRL, 14);
+	outb(REG_SCREEN_DATA, (u8)(pos >> 8) & 0xFF);
 }

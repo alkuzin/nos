@@ -105,7 +105,7 @@ bool caps_is_on, caps_lock_is_on;
 
 void keyboard_init(void)
 {
-    caps_is_on = false;
+    caps_is_on      = false;
     caps_lock_is_on = false;
 
     irq_install_handler(1, &keyboard_handler);
@@ -117,7 +117,7 @@ void keyboard_handler(__attribute__((unused)) int_reg_t *regs)
 }
 
 void keyboard_wait(void) {
-    while((in_port_b(0x64) & 0x01) == 0);
+    while((inb(0x64) & 0x01) == 0);
 }
 
 u8 keyboard_getchar(void) {
@@ -126,10 +126,10 @@ u8 keyboard_getchar(void) {
     keyboard_wait();
 
     /* get code of key that is pressed */
-    scan_code = in_port_b(0x60) & 0x7F;
+    scan_code = inb(0x60) & 0x7F;
 
     /* is key is pressed down or released */
-    press = in_port_b(0x60) & 0x80;
+    press = inb(0x60) & 0x80;
     
     switch(scan_code) {    
         case KEY_UP_ARROW:

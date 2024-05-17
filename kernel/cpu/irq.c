@@ -91,7 +91,7 @@ void irq_handler(int_reg_t *regs)
         handler(regs);
 
     if(regs->int_no >= 40)
-        out_port_b(0xA0, 0x20);
+        outb(0xA0, 0x20);
 
-    out_port_b(0x20, 0x20);
+    outb(0x20, 0x20);
 }

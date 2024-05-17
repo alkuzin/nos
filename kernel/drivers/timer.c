@@ -44,7 +44,7 @@ void timer_init(void)
 
     divisor = 1193180 / freq; /* MHz */
 
-    out_port_b(0x43, 0x36);
-    out_port_b(0x40, (u8)(divisor & 0xFF));
-    out_port_b(0x40, (u8)((divisor >> 8) & 0xFF));
+    outb(0x43, 0x36);
+    outb(0x40, (u8)(divisor & 0xFF));
+    outb(0x40, (u8)((divisor >> 8) & 0xFF));
 }

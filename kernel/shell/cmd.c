@@ -48,7 +48,7 @@ void ksh_clear(void)
 
 void ksh_lsmem(multiboot_t *boot_info)
 {
-    __display_memory(boot_info);
+    pmm_display_memory(boot_info);
 }
 
 void ksh_help(void)
