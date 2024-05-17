@@ -7,5 +7,4 @@ build/
 *.iso
 isodir/
 docs/doxygen/html/
-docs/doxygen/man/
-docs/doxygen/rtf/
+docs/doxygen/latex/
