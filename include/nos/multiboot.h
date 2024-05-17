@@ -93,7 +93,7 @@ struct multiboot_mmap_entry_s {
 #define MULTIBOOT_MEMORY_NVS                    4
 #define MULTIBOOT_MEMORY_BADRAM                 5
     u32 type;       ///< Type of memory region
-} __attribute__((packed));
+} __attribute__((packed)); /*Prevent the compiler from optimizing*/
 
 /** @brief Type representing a memory map entry in multiboot format. */
 typedef struct multiboot_mmap_entry_s multiboot_mmap_entry_t;

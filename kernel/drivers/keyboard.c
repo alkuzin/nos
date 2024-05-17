@@ -111,16 +111,18 @@ void keyboard_init(void)
     irq_install_handler(1, &keyboard_handler);
 }
 
-void keyboard_handler(__attribute__((unused)) int_reg_t *regs)
+void keyboard_handler([[gnu::unused]] int_reg_t *regs)
 {
     /* do nothing */
 }
 
-void keyboard_wait(void) {
+void keyboard_wait(void)
+{
     while((inb(0x64) & 0x01) == 0);
 }
 
-u8 keyboard_getchar(void) {
+u8 keyboard_getchar(void)
+{
     u8 scan_code, press, cc;
     
     keyboard_wait();

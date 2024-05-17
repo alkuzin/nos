@@ -29,6 +29,8 @@
 #include <nos/pmm.h>
 #include <nos/tty.h>
 
+#include <asm/system.h>
+
 page_dir_t *cur_page_dir = 0;
 
 u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr)
@@ -105,8 +107,11 @@ bool vmm_set_page_dir(page_dir_t *pd)
     return true;
 }
 
-void vmm_flush_tlb_entry(u32 vaddr) {
-    __asm__ volatile("cli; invlpg (%0); sti" : : "r"(vaddr));
+void vmm_flush_tlb_entry(u32 vaddr)
+{
+    cli();
+    __asm__ volatile("invlpg (%0);" : : "r"(vaddr));
+    sti();
 }
 
 bool vmm_map_page(void *paddr, void *vaddr)

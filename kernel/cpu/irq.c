@@ -28,6 +28,8 @@
 #include <nos/idt.h>
 #include <nos/irq.h>
 
+#include <asm/system.h>
+
 char *exception_msgs[] = {
     "division by zero",
     "debug",
@@ -74,7 +76,7 @@ static irq_handler_t irq_routines[16] = {NULL};
 void irq_install_handler(i32 irq, irq_handler_t handler) 
 {
     irq_routines[irq] = handler;
-    __asm__ volatile("sti");
+    sti();
 }
 
 void irq_uninstall_handler(i32 irq) {

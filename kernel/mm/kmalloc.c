@@ -32,7 +32,8 @@ u32 kmalloc_vaddr = 0; /* kmalloc virtual address */
 u32 kmalloc_paddr = 0; /* kmalloc physical address */
 u32 kmalloc_pages = 0; /* total kmalloc pages */
 
-void *kmalloc_get_head(void) {
+void *kmalloc_get_head(void)
+{
     return (void *)(kmalloc_head);
 }
 

@@ -20,52 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stdint.h>
-#include <stddef.h>
+/**
+ * @file  system.h
+ * @brief Contains some inline assembly macros and functions.
+ *
+ * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
+ * @date   17.05.2024 
+ */
 
-#include <nos/kmalloc.h>
-#include <nos/unistd.h>
+///< Macro to insert a no-operation (nop) instruction.
+#define nop() __asm__ volatile ("nop")
 
-#include <asm/system.h>
+///< Macro to enable interrupts.
+#define sti() __asm__ volatile ("sti")
 
-
-void *kmalloc(usize n)
-{
-    static void *ptr;
-
-    if(!kmalloc_get_head())
-        kmalloc_init(n);
-
-    ptr = kmalloc_next_block(n);
-    kmalloc_merge_free_blocks();
-
-    return ptr;
-}
-
-void kfree(void *ptr) {
-    if(!ptr)
-        return;
-
-    kmalloc_free(ptr);
-}
-
-void __ksleep(u32 microsec)
-{
-	u32 i;
-
-	for (i = 0; i < microsec * 10000; i++) {
-		for (i = 0; i < microsec * 10000; i++)
-			nop(); /* do nothing */
-	}
-}
-
-void ksleep(u32 sec) {
-	__ksleep(sec * 10000);
-}
-
-void khalt(void) 
-{
-	cli(); /* disable interrupts */
-	for(;;);
-}
+///< Macro to disable interrupts.
+#define cli() __asm__ volatile ("cli")

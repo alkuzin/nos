@@ -31,7 +31,8 @@ u32 ticks;
 const u32 freq = 100;
 
 
-void on_irq0(__attribute__((unused)) int_reg_t *regs) {
+void on_irq0([[gnu::unused]] int_reg_t *regs)
+{
     ticks++;
 }
 
