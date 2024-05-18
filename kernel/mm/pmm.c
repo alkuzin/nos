@@ -167,8 +167,9 @@ void pmm_free_blocks(u32 *addr, u32 n)
 
 void pmm_display_memory(multiboot_t *boot_info) 
 {
+    u32 free_blocks, total_bytes, used_bytes, free_bytes;
     multiboot_mmap_entry_t *mmmt;
-    u32 free_blocks;
+
 
     putk(" ---------------------------------------------------------------------\n"
          " low addr \t| high addr \t| low len \t| high len | size | type |\n"
@@ -204,14 +205,17 @@ void pmm_display_memory(multiboot_t *boot_info)
     }
     
     putk(" ---------------------------------------------------------------------\n");
-    printk(" total: %u KB \t free: %u KB\n", phys_mem_total / 1024, phys_mem_free / 1024);
+    printk(" total: %u KB \t free: %u KB\n", phys_mem_total >> 10, phys_mem_free >> 10);
     putk(" ---------------------------------------------------------------------\n");
 
     free_blocks = max_blocks - used_blocks;
+    total_bytes = max_blocks  * BLOCK_SIZE;
+    used_bytes  = used_blocks * BLOCK_SIZE;
+    free_bytes  = free_blocks * BLOCK_SIZE;
     
-    printk(" total blocks: %u (%u KB)\n", max_blocks, (max_blocks * BLOCK_SIZE) / 1024);
-    printk(" used  blocks: %u (%u KB)\n", used_blocks, (used_blocks * BLOCK_SIZE) / 1024);
-    printk(" free  blocks: %u (%u KB)\n", free_blocks, (free_blocks * BLOCK_SIZE) / 1024);
+    printk(" total blocks: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
+    printk(" used  blocks: %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
+    printk(" free  blocks: %u (%u KB) (%u MB)\n", free_blocks, free_bytes >> 10, free_bytes >> 20);
 }
 
 void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size)
