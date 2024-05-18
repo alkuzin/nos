@@ -4,9 +4,34 @@
 
 ## Description
 
-NOS - hobby Unix-like x86-32 operating system. ([documentation](docs/README.md))
+NOS - hobby Unix-like x86-32 operating system. ([documentation](docs/README.md)).
 
-<img src="res/nos.png">
+Was built on top of ([simple os](https://github.com/alkuzin/simple-os)).
+
+<img src="res/nos_v0_0_2.png">
+
+## Installation
+
+First clone this repository:
+```console
+https://github.com/alkuzin/nos.git
+```
+
+Then move to the `nos/` directory:
+```console
+cd nos/
+```
+
+To build kernel as `.iso` and run on QEMU use:
+```console
+make all && make init
+```
+
+To return everything to original state:
+```console
+make fclean
+```
+
 
 ## License
 
