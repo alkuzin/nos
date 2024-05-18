@@ -26,7 +26,7 @@
 #include <nos/shell/ksh.h>
 #include <nos/multiboot.h>
 #include <nos/keyboard.h>
-#include <nos/unistd.h>
+#include <nos/nosstd.h>
 #include <nos/kernel.h>
 #include <nos/timer.h>
 #include <nos/tty.h>

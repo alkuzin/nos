@@ -20,11 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdlib.h>
+#include <stdint.h>
 #include <stdint.h>
 #include <stddef.h>
 
 #include <nos/kmalloc.h>
+#include <nos/nosstd.h>
+
+#include <asm/system.h>
+
 
 void *kmalloc(usize n)
 {
@@ -44,4 +48,24 @@ void kfree(void *ptr) {
         return;
 
     kmalloc_free(ptr);
+}
+
+void __ksleep(u32 microsec)
+{
+	u32 i;
+
+	for (i = 0; i < microsec * 10000; i++) {
+		for (i = 0; i < microsec * 10000; i++)
+			nop(); /* do nothing */
+	}
+}
+
+void ksleep(u32 sec) {
+	__ksleep(sec * 10000);
+}
+
+void khalt(void) 
+{
+	cli(); /* disable interrupts */
+	for(;;);
 }

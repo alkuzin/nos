@@ -5,7 +5,7 @@ LIBC_DIR    = $(INCLUDE_DIR)/libc
 
 NAME = _kernel.o
 
-SRC  = kernel tty printk unistd panic
+SRC  = kernel tty printk nosstd panic
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

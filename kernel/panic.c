@@ -24,7 +24,7 @@
 #include <stdarg.h>
 
 #include <nos/kernel.h>
-#include <nos/unistd.h>
+#include <nos/nosstd.h>
 #include <nos/tty.h>
 
 

@@ -25,7 +25,7 @@
 
 #include <nos/shell/ksh.h>
 #include <nos/kernel.h> 
-#include <nos/unistd.h> 
+#include <nos/nosstd.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/mm.h>

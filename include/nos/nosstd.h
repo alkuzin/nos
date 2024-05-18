@@ -21,15 +21,15 @@
  * SOFTWARE. */
 
 /**
- * @file  unistd.h
+ * @file  nosstd.h
  * @brief Contains diferent system functions.
  * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_UNISTD_H_
-#define _NOS_UNISTD_H_
+#ifndef _NOS_NOSSTD_H_
+#define _NOS_NOSSTD_H_
 
 #include <stdint.h>
 #include <stddef.h>
@@ -73,4 +73,4 @@ void *kmalloc(usize n);
  */
 void kfree(void *ptr);
 
-#endif /* _NOS_UNISTD_H_ */
+#endif /* _NOS_NOSSTD_H_ */

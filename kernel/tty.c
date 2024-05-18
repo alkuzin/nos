@@ -25,7 +25,7 @@
 #include <ctype.h>
 
 #include <nos/kernel.h>
-#include <nos/unistd.h>
+#include <nos/nosstd.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 
