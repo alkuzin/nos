@@ -29,10 +29,12 @@
 #include <nos/nosstd.h>
 #include <nos/kernel.h>
 #include <nos/timer.h>
+#include <nos/sched.h>
 #include <nos/tty.h>
 #include <nos/gdt.h>
 #include <nos/idt.h>
 #include <nos/mm.h>
+#include <nos/pm.h>
 
 
 void kboot(multiboot_t *boot_info)
@@ -61,6 +63,19 @@ void kboot(multiboot_t *boot_info)
 
     __DISPLAY_OS_INFO();
     __DISPLAY_OS_BUILD_INFO();
+
+    /* initializing process scheduler */
+    sched_init();
+    printk(" %s\n", "kernel: initialized scheduler");	
+
+    /* Create initial system processes */
+    pcb_t *init_proc, *ksh_proc;
+
+    init_proc = pm_create_proc("init", HIGH_PRIORITY);
+    ksh_proc  = pm_create_proc("ksh", MEDIUM_PRIORITY);
+
+    sched_add(init_proc);
+    sched_add(ksh_proc);
 
     /* initializing kernel shell */
     printk(" %s\n", "kernel: initializing kernel shell");

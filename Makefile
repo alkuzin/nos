@@ -8,6 +8,7 @@ BOOT_DIR    = $(KERNEL_DIR)/boot
 CPU_DIR     = $(KERNEL_DIR)/cpu
 DRIVERS_DIR = $(KERNEL_DIR)/drivers
 MM_DIR      = $(KERNEL_DIR)/mm
+PM_DIR      = $(KERNEL_DIR)/pm
 LIBK_DIR    = $(KERNEL_DIR)/libk
 LIBC        = $(LIBC_DIR)/libc.a
 KSH_DIR     = $(KERNEL_DIR)/shell
@@ -21,6 +22,7 @@ OBJS = $(KERNEL_DIR)/_kernel.o \
        $(CPU_DIR)/_cpu.o \
        $(DRIVERS_DIR)/_drivers.o \
        $(MM_DIR)/_mm.o \
+       $(PM_DIR)/_pm.o \
        $(KSH_DIR)/_ksh.o
 
 $(OBJS):
@@ -30,6 +32,7 @@ $(OBJS):
 	$(MAKE) -C $(CPU_DIR) all
 	$(MAKE) -C $(DRIVERS_DIR) all
 	$(MAKE) -C $(MM_DIR) all
+	$(MAKE) -C $(PM_DIR) all
 	$(MAKE) -C $(KSH_DIR) all
 
 $(NAME): $(OBJS)
@@ -45,6 +48,7 @@ clean:
 	$(MAKE) -C $(CPU_DIR) fclean
 	$(MAKE) -C $(DRIVERS_DIR) fclean
 	$(MAKE) -C $(MM_DIR) fclean
+	$(MAKE) -C $(PM_DIR) fclean
 	$(MAKE) -C $(KSH_DIR) fclean
 
 fclean: clean
