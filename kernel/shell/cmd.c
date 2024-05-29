@@ -26,6 +26,7 @@
 #include <nos/shell/ksh.h>
 #include <nos/kernel.h> 
 #include <nos/nosstd.h>
+#include <nos/sched.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/mm.h>
@@ -58,6 +59,7 @@ void ksh_help(void)
            " help         - display this help menu\n"
            " clear        - clear screen\n"
            " lsmem        - display list of memory segments\n"
+           " lsproc       - display list of current processes\n"
            " theme_0      - set CLI theme to default\n"
            " theme_1      - set CLI theme to classic\n"
            "------------------------------------------------------\n");
@@ -87,4 +89,25 @@ void ksh_theme(theme_t theme)
     
     tty_set_color(fg, bg);
     tty_rewrite();    
+}
+
+void ksh_lsproc(void)
+{
+    sched_t *scheduler;
+    pcb_t   *proc;
+
+    scheduler = get_sched();
+
+    puts(" ------------------------------------------\n"
+         " | pid | pr | ppid | name |   base | size |\n"
+         " ------------------------------------------");
+
+    for (i32 i = 0; i < scheduler->rear + 1; i++) {
+        proc = scheduler->processes[i];
+        printk("   %u |  %u  |  %u | %s | %#x | %u \n", proc->pid, proc->priority, 
+        proc->parent_pid, proc->name, proc->base, proc->size);
+    }
+
+    puts(" ------------------------------------------ ");
+    printk(" \n total processes: %d\n", scheduler->rear + 1);   
 }

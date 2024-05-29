@@ -87,4 +87,7 @@ void ksh_help(void);
  */
 void ksh_theme(theme_t theme);
 
+/** @brief Display list of current processes. */
+void ksh_lsproc(void);
+
 #endif /* _NOS_KERNEL_SHELL_H_ */

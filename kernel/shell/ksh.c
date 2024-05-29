@@ -125,6 +125,8 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         ksh_theme(THEME_DEFAULT);
     else if(ksh_is_valid("theme_1", 7, cmd, cmd_len))
         ksh_theme(THEME_CLASSIC);
+    else if(ksh_is_valid("lsproc", 6, cmd, cmd_len))
+        ksh_lsproc();
     else
         ksh_warning((char *)cmd);
 }
