@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <nos/kernel.h>
 #include <nos/nosstd.h>
 #include <sys/types.h>
 #include <nos/gdt.h>
@@ -44,6 +45,10 @@ pcb_t *pm_create_proc(const char *name, i32 priority)
     proc->parent_pid = next_pid - 1;
     proc->pid        = pm_getupid();
     proc->base       = (u32)kmalloc(PROC_MEMORY_SIZE);
+
+    if (!proc->base)
+        panic("%s\n", "memory allocation error");
+
     proc->size       = PROC_MEMORY_SIZE;
     proc->counter    = 0;
     proc->signal     = 0;
