@@ -33,6 +33,7 @@
 #include <nos/tty.h>
 #include <nos/gdt.h>
 #include <nos/idt.h>
+#include <nos/vfs.h>
 #include <nos/mm.h>
 #include <nos/pm.h>
 
@@ -63,6 +64,10 @@ void kboot(multiboot_t *boot_info)
 
     __DISPLAY_OS_INFO();
     __DISPLAY_OS_BUILD_INFO();
+
+    /* initializing Virtual File System */
+    vfs_init();
+    printk(" %s\n", "kernel: initialized Virtual File System");
 
     /* initializing process scheduler */
     sched_init();

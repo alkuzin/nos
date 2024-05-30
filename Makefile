@@ -12,6 +12,7 @@ PM_DIR      = $(KERNEL_DIR)/pm
 LIBK_DIR    = $(KERNEL_DIR)/libk
 LIBC        = $(LIBC_DIR)/libc.a
 KSH_DIR     = $(KERNEL_DIR)/shell
+FS_DIR      = $(KERNEL_DIR)/fs
 
 NAME     = $(BUILD_DIR)/nos.elf
 NAME_ISO = nos.iso
@@ -23,7 +24,8 @@ OBJS = $(KERNEL_DIR)/_kernel.o \
        $(DRIVERS_DIR)/_drivers.o \
        $(MM_DIR)/_mm.o \
        $(PM_DIR)/_pm.o \
-       $(KSH_DIR)/_ksh.o
+       $(KSH_DIR)/_ksh.o \
+       $(FS_DIR)/_fs.o
 
 $(OBJS):
 	$(MAKE) -C $(LIBC_DIR) all
@@ -34,6 +36,7 @@ $(OBJS):
 	$(MAKE) -C $(MM_DIR) all
 	$(MAKE) -C $(PM_DIR) all
 	$(MAKE) -C $(KSH_DIR) all
+	$(MAKE) -C $(FS_DIR) all
 
 $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)
@@ -50,6 +53,7 @@ clean:
 	$(MAKE) -C $(MM_DIR) fclean
 	$(MAKE) -C $(PM_DIR) fclean
 	$(MAKE) -C $(KSH_DIR) fclean
+	$(MAKE) -C $(FS_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)

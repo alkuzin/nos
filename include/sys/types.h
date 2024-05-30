@@ -33,6 +33,12 @@
 
 #include <stdint.h>
 
-typedef i32 pid_t; ///< PID (Process Identificator)
+typedef i32 pid_t;  ///< PID (Process Identificator)
+typedef u32 mode_t; ///< File permission bits.
+
+///< Supported file systems type.
+typedef enum {
+    FAT32
+} fs_type_t;
 
 #endif /* _NOS_SYS_TYPES_H_ */
