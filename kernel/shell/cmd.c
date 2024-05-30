@@ -29,6 +29,7 @@
 #include <nos/sched.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
+#include <nos/exe.h>
 #include <nos/mm.h>
 
 
@@ -110,4 +111,15 @@ void ksh_lsproc(void)
 
     puts(" ------------------------------------------ ");
     printk(" \n total processes: %d\n", scheduler->rear + 1);   
+}
+
+void ksh_readexe(void)
+{
+    // TODO: exstract exe header from file
+
+    // if (!exe_is_valid(header))
+    //     printk(" readexe: not NOS executable file. Incorrect signature: '%s'\n", 
+    //     (char *)header->signature);
+
+    // exe_display_info(header);
 }

@@ -90,4 +90,7 @@ void ksh_theme(theme_t theme);
 /** @brief Display list of current processes. */
 void ksh_lsproc(void);
 
+/** @brief Display executable information. */
+void ksh_readexe(void);
+
 #endif /* _NOS_KERNEL_SHELL_H_ */
