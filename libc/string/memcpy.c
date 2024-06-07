@@ -26,7 +26,7 @@ void *memcpy(void *dest, const void *src, usize n)
 {
     const u8 *csrc;
     u8  *cdest;
-    i32 i;
+    s32 i;
 
     if (n == 0)
         return dest;

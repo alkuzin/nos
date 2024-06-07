@@ -38,7 +38,7 @@
 #ifndef _NOS_KERNEL_GDT_H_
 #define _NOS_KERNEL_GDT_H_
 
-#include <stdint.h>
+#include <nos/types.h>
 
 /**
  * @brief GDT entry (segment descriptor) - tells the CPU the attributes of a given segment.

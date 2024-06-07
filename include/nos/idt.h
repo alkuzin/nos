@@ -35,7 +35,7 @@
 #ifndef _NOS_KERNEL_IDT_H_
 #define _NOS_KERNEL_IDT_H_
 
-#include <stdint.h>
+#include <nos/types.h>
 
 /** @brief Interrupt Descriptor Table entry structure */
 struct idt_entry_s {

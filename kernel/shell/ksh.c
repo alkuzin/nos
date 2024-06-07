@@ -20,8 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -30,6 +28,7 @@
 #include <nos/keyboard.h>
 #include <nos/kernel.h> 
 #include <nos/nosstd.h>
+#include <nos/types.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/mm.h>
@@ -41,8 +40,8 @@ static void ksh_display_prompt(void);
 static bool ksh_is_empty(void);
 
 /* check shell command is valid */
-static i32 ksh_is_valid(const char *cmd, const i32 cmd_len, const char *input,
-                        const i32 input_len);
+static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input,
+                        const s32 input_len);
 
 /* shell commands input buffer */
 static char input_buffer[INPUT_BUFFER_SIZE]; 
@@ -103,14 +102,14 @@ void ksh_init(multiboot_t *boot_info)
     khalt(); 
 }
 
-static i32 ksh_is_valid(const char *cmd, const i32 cmd_len, const char *input, const i32 input_len)
+static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len)
 {
     return (cmd_len == input_len) && (strncmp(cmd, input, cmd_len) == 0);
 }
 
 void ksh_exec(multiboot_t *boot_info, const char *cmd)
 {
-    [[gnu::unused]]i32 cmd_len;
+    [[gnu::unused]]s32 cmd_len;
 
     cmd_len = strlen(cmd);
     

@@ -34,9 +34,7 @@
 #ifndef _NOS_KERNEL_KMALLOC_H_
 #define _NOS_KERNEL_KMALLOC_H_
 
-#include <stdint.h>
-#include <stddef.h>
-
+#include <nos/types.h>
 #include <nos/pmm.h>
 #include <nos/vmm.h>
 

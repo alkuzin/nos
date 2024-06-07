@@ -22,23 +22,41 @@
 
 /**
  * @file  types.h
- * @brief Contains primitive system data types.
+ * @brief Provides definitions for various data types used in kernel programming. 
+ * It includes typedefs for standard data types such as integers, characters, and etc.
  * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   29.05.2024
+ * @date   07.06.2024 
  */
 
-#ifndef _NOS_SYS_TYPES_H_
-#define _NOS_SYS_TYPES_H_
+#ifndef _NOS_TYPES_H_
+#define _NOS_TYPES_H_
 
-#include <stdint.h>
+/* unsigned types */
+typedef unsigned long   u64;
+typedef unsigned int    u32;
+typedef unsigned short  u16;
+typedef unsigned char   u8;
 
-typedef i32 pid_t;  ///< PID (Process Identificator)
+/* signed types */
+typedef long   s64;
+typedef int    s32;
+typedef short  s16;
+typedef char   s8;
+
+/* floating point types */
+typedef double f64;
+typedef float  f32;
+
+#define usize  u64
+#define ssize  s64
+
+typedef s32 pid_t;  ///< PID (Process Identificator)
 typedef u32 mode_t; ///< File permission bits.
 
 ///< Supported file systems type.
 typedef enum {
-    FAT32
+    EXT2
 } fs_type_t;
 
-#endif /* _NOS_SYS_TYPES_H_ */
+#endif /* _NOS_TYPES_H_ */

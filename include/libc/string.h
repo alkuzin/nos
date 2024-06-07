@@ -42,7 +42,7 @@
  * @param [in] str - given null terminated string.
  * @return str length.
  */
-i32   strlen(const char *str);
+s32   strlen(const char *str);
 
 /**
  * @brief Compares the two strings s1 and s2.
@@ -54,7 +54,7 @@ i32   strlen(const char *str);
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-i32   strncmp(const char *s1, const char *s2, usize n);
+s32   strncmp(const char *s1, const char *s2, usize n);
 
 /**
  * @brief Copy a string with truncation.
@@ -85,7 +85,7 @@ usize strncat(char *dest, const char *src, usize size);
  * @param [in] n - given number of buffer bytes to fill.
  * @return filled buffer pointer.
  */
-void  *memset(void *s, i32 c, usize n);
+void  *memset(void *s, s32 c, usize n);
 
 /**
  * @brief Erases the data in the n bytes 
@@ -118,6 +118,6 @@ void  *memcpy(void *dest, const void *src, usize n);
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-i32   memcmp(const void *s1, const void *s2, usize n);
+s32   memcmp(const void *s1, const void *s2, usize n);
 
 #endif /* _LIBC_STRING_H_ */

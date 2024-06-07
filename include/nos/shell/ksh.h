@@ -34,10 +34,8 @@
 #ifndef _NOS_KERNEL_SHELL_H_
 #define _NOS_KERNEL_SHELL_H_
 
-#include <stddef.h>
-#include <stdint.h>
-
 #include <nos/multiboot.h>
+#include <nos/types.h>
 
 /** @brief Enumeration of builtin CLI themes. */
 typedef enum {

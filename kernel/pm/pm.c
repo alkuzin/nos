@@ -20,19 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
 #include <nos/kernel.h>
 #include <nos/nosstd.h>
-#include <sys/types.h>
+#include <nos/types.h>
 #include <nos/gdt.h>
 #include <nos/pm.h>
 
 static pid_t next_pid = 1;
 
-pcb_t *pm_create_proc(const char *name, i32 priority)
+pcb_t *pm_create_proc(const char *name, s32 priority)
 {
     pcb_t *proc;
 

@@ -20,13 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <stdio.h>
 
 #include <nos/shell/ksh.h>
 #include <nos/kernel.h> 
 #include <nos/nosstd.h>
 #include <nos/sched.h>
+#include <nos/types.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/exe.h>
@@ -103,7 +103,7 @@ void ksh_lsproc(void)
          " | pid | pr | ppid | name |   base | size |\n"
          " ------------------------------------------");
 
-    for (i32 i = 0; i < scheduler->rear + 1; i++) {
+    for (s32 i = 0; i < scheduler->rear + 1; i++) {
         proc = scheduler->processes[i];
         printk("   %u |  %u  |  %u | %s | %#x | %u \n", proc->pid, proc->priority, 
         proc->parent_pid, proc->name, proc->base, proc->size);

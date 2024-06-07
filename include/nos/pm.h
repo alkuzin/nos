@@ -34,10 +34,8 @@
 #ifndef _NOS_KERNEL_PM_H_
 #define _NOS_KERNEL_PM_H_
 
-#include <stdint.h>
-
+#include <nos/types.h>
 #include <nos/gdt.h>
-#include <sys/types.h>
 
 #define PROC_NAME_MAX_SIZE 64
 #define PROC_MEMORY_SIZE   1024 /* 1 KB */
@@ -80,10 +78,10 @@ typedef enum task_state_e task_state_t;
  */
 struct pcb_s {
     pid_t pid;          ///< A unique identifier assigned to each process in the system.
-    i32   priority;     ///< Indicates the priority level of the process.
+    s32   priority;     ///< Indicates the priority level of the process.
     pid_t parent_pid;   ///< PID of the parent process that created the curren Task priorityt process.
-    i32   signal;       ///< Signal flag that associated with a process.
-    i32   counter;      ///< Address of the next instruction to be executed by the process.
+    s32   signal;       ///< Signal flag that associated with a process.
+    s32   counter;      ///< Address of the next instruction to be executed by the process.
     task_state_t state; ///< Indicates the current state of the process.
     tss_entry_t  tss;   ///< Task State Segment (TSS) entry.
     char name[PROC_NAME_MAX_SIZE];
@@ -100,7 +98,7 @@ typedef struct pcb_s pcb_t;
  * @param [in] priority - given new process priority.
  * @return pointer to the new PCB.
  */
-pcb_t *pm_create_proc(const char *name, i32 priority);
+pcb_t *pm_create_proc(const char *name, s32 priority);
 
 /**
  * @brief Get unique process identificator. 

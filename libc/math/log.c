@@ -25,7 +25,7 @@
 f64 log(f64 x)
 {
     f64 result, term, square;
-    i32 i;
+    s32 i;
 
     if(x <= 0)
         return _NAN;

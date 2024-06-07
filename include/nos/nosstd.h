@@ -31,8 +31,7 @@
 #ifndef _NOS_NOSSTD_H_
 #define _NOS_NOSSTD_H_
 
-#include <stdint.h>
-#include <stddef.h>
+#include <nos/types.h>
 
 /**
  * @brief Kernel time delay in microseconds.

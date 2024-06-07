@@ -31,19 +31,6 @@
 #ifndef _LIBC_STDINT_H_
 #define _LIBC_STDINT_H_
 
-/* unsigned values */
-typedef unsigned long   u64;
-typedef unsigned int    u32;
-typedef unsigned short  u16;
-typedef unsigned char   u8;
-
-/* signed values */
-typedef long            i64;
-typedef int             i32;
-typedef short           i16;
-typedef char            i8;
-
-typedef double          f64;
-typedef float           f32;
+#include <nos/types.h> // TODO: separate user and kernel space libraries
 
 #endif /* _LIBC_STDINT_H_ */

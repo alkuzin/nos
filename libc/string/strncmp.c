@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-i32 strncmp(const char *s1, const char *s2, usize n)
+s32 strncmp(const char *s1, const char *s2, usize n)
 {
     usize i;
 

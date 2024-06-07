@@ -22,7 +22,7 @@
 
 #include <string.h>
 
-i32 memcmp(const void *s1, const void *s2, usize n)
+s32 memcmp(const void *s1, const void *s2, usize n)
 {
 	while(n--) {
 		if(*(u8 *)s1++ != *(u8 *)s2++)

@@ -34,10 +34,8 @@
 #ifndef _NOS_KERNEL_PMM_H_
 #define _NOS_KERNEL_PMM_H_
 
-#include <stdint.h>
-#include <stddef.h>
-
 #include <nos/multiboot.h>
+#include <nos/types.h>
 
 #define BLOCK_SIZE     4096 /* 4KB */
 #define BITS_PER_BYTE  8
@@ -74,7 +72,7 @@ bool pmm_test_block(u32 bit);
  * @param [in] n - given number of blocks to find.
  * @return the index of the first free block, or -1 if not found. 
  */
-i32 pmm_find_first_free_blocks(u32 n);
+s32 pmm_find_first_free_blocks(u32 n);
 
 /**
  * @brief Initialize the physical memory manager.

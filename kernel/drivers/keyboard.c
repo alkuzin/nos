@@ -20,11 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stddef.h>
 #include <ctype.h>
 
 #include <nos/keyboard.h>
+#include <nos/types.h>
 #include <nos/ports.h>
 #include <nos/irq.h>
 #include <nos/tty.h>

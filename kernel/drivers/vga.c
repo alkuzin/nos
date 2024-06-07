@@ -20,10 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-
-#include <nos/vga.h>
+#include <nos/types.h>
 #include <nos/ports.h>
+#include <nos/vga.h>
 
 u8 vga_entry_color(vga_color_t fg, vga_color_t bg)
 {
@@ -35,7 +34,7 @@ u16 vga_entry(u8 c, u8 color)
     return ((u16)c | (u16)color << 8);
 }
 
-void update_cursor(i32 x, i32 y)
+void update_cursor(s32 x, s32 y)
 {
 	u16 pos;
 

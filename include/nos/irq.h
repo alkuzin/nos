@@ -41,8 +41,7 @@
 #ifndef _NOS_KERNEL_IRQ_H_
 #define _NOS_KERNEL_IRQ_H_
 
-#include <stdint.h>
-
+#include <nos/types.h>
 #include <nos/irq.h>
 
 /** @brief Structure representing interrupt register state */

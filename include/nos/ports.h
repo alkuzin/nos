@@ -35,7 +35,7 @@
 #ifndef _NOS_KERNEL_PORTS_H_
 #define _NOS_KERNEL_PORTS_H_
 
-#include <stdint.h>
+#include <nos/types.h>
 
 /**
  * @brief Output a byte to a specified port.

@@ -34,9 +34,7 @@
 #ifndef _NOS_KERNEL_SCHED_H_
 #define _NOS_KERNEL_SCHED_H_
 
-#include <stdint.h>
-
-#include <sys/types.h>
+#include <nos/types.h>
 #include <nos/gdt.h>
 #include <nos/pm.h>
 
@@ -44,8 +42,8 @@
 
 struct sched_s {
     pcb_t *processes[MAX_PROCESSES]; ///< Array of processes.
-    i32   front;    ///< Index of the front of the queue.
-    i32   rear;     ///< Index of the rear of the queue.
+    s32   front;    ///< Index of the front of the queue.
+    s32   rear;     ///< Index of the rear of the queue.
 };
 
 typedef struct sched_s sched_t;

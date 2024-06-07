@@ -20,7 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <string.h>
 
 #include <nos/shell/ksh.h>
@@ -29,6 +28,7 @@
 #include <nos/nosstd.h>
 #include <nos/kernel.h>
 #include <nos/timer.h>
+#include <nos/types.h>
 #include <nos/sched.h>
 #include <nos/tty.h>
 #include <nos/gdt.h>
@@ -92,5 +92,5 @@ extern void kmain(__attribute__((unused)) u32 magic, multiboot_t *boot_info)
 {
     kboot(boot_info);
 
-	for(;;); /* infinite loop for halting CPU */
+    for(;;); /* infinite loop for halting CPU */
 }

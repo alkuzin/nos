@@ -41,7 +41,7 @@ void putk(const char *str)
 void cputk(const char *str, vga_color_t fg, vga_color_t bg)
 {
     u8  color;
-	i32 i;
+	s32 i;
 
     color = vga_entry_color(fg, bg);
 	i     = 0;

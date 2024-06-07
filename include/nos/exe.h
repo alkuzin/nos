@@ -34,7 +34,7 @@
 #ifndef _NOS_KERNEL_EXE_H_
 #define _NOS_KERNEL_EXE_H_
 
-#include <stdint.h>
+#include <nos/types.h>
 
 #define EXE_SIGNATURE ".NOS_EXE"
 #define EXE_SIGN_SIZE 8 ///< Size of executable signature.

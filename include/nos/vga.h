@@ -34,7 +34,7 @@
 #ifndef _NOS_KERNEL_VGA_H_
 #define _NOS_KERNEL_VGA_H_ 
 
-#include <stdint.h>
+#include <nos/types.h>
 
 ///< VGA screen information macros.
 #define VIDEO_MEMORY       0xB8000
@@ -90,6 +90,6 @@ u16  vga_entry(u8 c, u8 color);
  * @param [in] x - given x position of the cursor.
  * @param [in] y - given y position of the cursor.
  */
-void update_cursor(i32 x, i32 y);
+void update_cursor(s32 x, s32 y);
 
 #endif /* _NOS_KERNEL_VGA_H_ */

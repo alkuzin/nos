@@ -25,7 +25,7 @@
 void bzero(void *s, usize n)
 {
     u8  *src;
-    i32 i;
+    s32 i;
 
     src = (u8 *)s;
     i   = 0;

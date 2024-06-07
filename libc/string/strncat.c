@@ -24,7 +24,7 @@
 
 usize strncat(char *dest, const char *src, usize size)
 {
-    i32   dest_len, src_len;
+    s32   dest_len, src_len;
     usize i;
 
     if (!dest || !src)

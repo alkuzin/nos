@@ -23,7 +23,7 @@
 #include <string.h>
 
 #include <nos/kernel.h>
-#include <sys/types.h>
+#include <nos/types.h>
 #include <nos/vfs.h>
 
 
@@ -31,8 +31,8 @@ static vfs_t vfs;
 
 void vfs_init(void)
 {
-    // TODO: replace nullptr with FAT32 functions
-    vfs_adapter_t fat32_adapter = {
+    // TODO: replace nullptr with EXT2 functions
+    vfs_adapter_t ext2_adapter = {
         .open   = nullptr,
         .close  = nullptr,
         .read   = nullptr,
@@ -41,15 +41,15 @@ void vfs_init(void)
         .unlink = nullptr
     };
 
-    vfs_register(&vfs, FAT32, &fat32_adapter);
+    vfs_register(&vfs, EXT2, &ext2_adapter);
 }
 
 void vfs_register(vfs_t *vfs, fs_type_t type, vfs_adapter_t *fs_adapter)
 {
     switch (type) {
 
-        case FAT32:
-            printk(" kernel: VFS: set filesystem %d (FAT32)\n", type);
+        case EXT2:
+            printk(" kernel: VFS: set filesystem %d (EXT2)\n", type);
             break;
     
         default:
@@ -67,7 +67,7 @@ void vfs_register(vfs_t *vfs, fs_type_t type, vfs_adapter_t *fs_adapter)
     vfs->unlink = fs_adapter->unlink;
 }
 
-i32 vfs_open(const char *pathname, i32 flags, mode_t mode)
+s32 vfs_open(const char *pathname, s32 flags, mode_t mode)
 {
     if (!vfs.open)
         return -1;
@@ -75,7 +75,7 @@ i32 vfs_open(const char *pathname, i32 flags, mode_t mode)
     return vfs.open(pathname, flags, mode);
 }
 
-i32 vfs_close(i32 fd)
+s32 vfs_close(s32 fd)
 {
     if (!vfs.close)
         return -1;
@@ -83,7 +83,7 @@ i32 vfs_close(i32 fd)
     return vfs.close(fd);
 }
 
-i32 vfs_read(i32 fd, void *buf, usize count)
+s32 vfs_read(s32 fd, void *buf, usize count)
 {
     if (!vfs.read)
         return -1;
@@ -91,7 +91,7 @@ i32 vfs_read(i32 fd, void *buf, usize count)
     return vfs.read(fd, buf, count);
 }
 
-i32 vfs_write(i32 fd, void *buf, usize count)
+s32 vfs_write(s32 fd, void *buf, usize count)
 {
     if (!vfs.write)
         return -1;
@@ -99,7 +99,7 @@ i32 vfs_write(i32 fd, void *buf, usize count)
     return vfs.write(fd, buf, count);
 }
 
-i32 vfs_creat(const char* pathname, mode_t mode)
+s32 vfs_creat(const char* pathname, mode_t mode)
 {
     if (!vfs.creat)
         return -1;
@@ -107,7 +107,7 @@ i32 vfs_creat(const char* pathname, mode_t mode)
     return vfs.creat(pathname, mode);
 }
 
-i32 vfs_unlink(const char* pathname)
+s32 vfs_unlink(const char* pathname)
 {
     if (!vfs.unlink)
         return -1;

@@ -24,7 +24,7 @@
 
 f64 exp(f64 x)
 {
-    i32 accuracy, i;
+    s32 accuracy, i;
     f64 exp_sum;
 
     if(x == 0)

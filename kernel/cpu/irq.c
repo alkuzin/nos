@@ -20,9 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stddef.h>
-
 #include <nos/kernel.h>
+#include <nos/types.h>
 #include <nos/ports.h>
 #include <nos/tty.h>
 #include <nos/idt.h>
@@ -73,13 +72,13 @@ void isr_handler(int_reg_t *regs)
 
 static irq_handler_t irq_routines[16] = {nullptr};
 
-void irq_install_handler(i32 irq, irq_handler_t handler) 
+void irq_install_handler(s32 irq, irq_handler_t handler) 
 {
     irq_routines[irq] = handler;
     sti();
 }
 
-void irq_uninstall_handler(i32 irq) {
+void irq_uninstall_handler(s32 irq) {
     irq_routines[irq] = 0;
 }
 

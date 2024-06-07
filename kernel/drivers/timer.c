@@ -20,8 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-
+#include <nos/types.h>
 #include <nos/timer.h>
 #include <nos/ports.h>
 #include <nos/tty.h>

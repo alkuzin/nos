@@ -20,11 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stddef.h>
 #include <string.h>
 
 #include <nos/multiboot.h>
+#include <nos/types.h>
 #include <nos/vmm.h>
 #include <nos/pmm.h>
 #include <nos/tty.h>

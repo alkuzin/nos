@@ -22,9 +22,9 @@
 
 #include <string.h>
 
-i32 strlen(const char *str)
+s32 strlen(const char *str)
 {
-    i32 i;
+    s32 i;
 
     i = 0;
 

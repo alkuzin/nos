@@ -20,13 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
 #include <nos/kernel.h>
 #include <nos/sched.h>
-#include <sys/types.h>
+#include <nos/types.h>
 #include <nos/gdt.h>
 #include <nos/pm.h>
 

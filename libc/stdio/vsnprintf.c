@@ -33,8 +33,8 @@
 typedef struct pinfo_s {
     char  *buf; 
     usize size; /* buffer size */
-    i32   pos; /* current buffer position */
-    i32   pref_flag; /* '#' flag */
+    s32   pos; /* current buffer position */
+    s32   pref_flag; /* '#' flag */
 } pinfo_t;
 
 static pinfo_t  pinfo;
@@ -46,30 +46,30 @@ static void pinfo_init(char *buf, usize size);
 static void  buf_append(char c);
 
 /* %x %X options (hexadecimal) */
-static void  print_hex(u64 n, i32 is_upper);
+static void  print_hex(u64 n, s32 is_upper);
 
 /* hexadecimal to alphanumeric lenght */
-static i32   xtoa_len(u32 n);
+static s32   xtoa_len(u32 n);
 
 /* %i %d options (int) */
-static void  print_int(i32 n);
+static void  print_int(s32 n);
 
-/* i32 to alphanumeric lenght */
-static usize itoa_len(i32 n);
+/* s32 to alphanumeric lenght */
+static usize itoa_len(s32 n);
 
 /* %p option (pointer) */
 static void  print_ptr(u64 p);
 
 /* digit to hex */
-static char  dtoh(i32 v);
+static char  dtoh(s32 v);
 
 /* %u option (unsigned int) */
 static void  print_uint(u32 n);
 
-/* unsigned i32 to alphanumeric lenght */
+/* unsigned s32 to alphanumeric lenght */
 static usize utoa_len(u32 n);
 
-/* pri32 kprintf arguments */
+/* prs32 kprintf arguments */
 static void  print_args(char type, va_list * args);
 
 /* parse kprintf arguments */
@@ -96,7 +96,7 @@ static void buf_append(char c)
 	pinfo.pos++;
 }
 
-/* kprintf unsigned i32 */
+/* kprintf unsigned s32 */
 static usize utoa_len(u32 n)
 {
 	usize len;
@@ -144,7 +144,7 @@ static void print_uint(u32 n)
 }
 
 /* kprintf pointer */
-static char dtoh(i32 v) 
+static char dtoh(s32 v) 
 {
    if (v >= 0 && v < 10)
        return '0' + v;
@@ -154,7 +154,7 @@ static char dtoh(i32 v)
 
 static void print_ptr(u64 p)
 {
-	i32 count, i;
+	s32 count, i;
 		
 	if(p == 0) {
 		i = 0;
@@ -184,8 +184,8 @@ static void print_ptr(u64 p)
 	}
 }
 
-/* kprintf i32 */
-static usize itoa_len(i32 n)
+/* kprintf s32 */
+static usize itoa_len(s32 n)
 {
 	usize len;
 
@@ -207,7 +207,7 @@ static usize itoa_len(i32 n)
 	return len;
 }
 
-static void print_int(i32 n)
+static void print_int(s32 n)
 {
 	usize length, i;
 
@@ -240,20 +240,20 @@ static void print_int(i32 n)
 }
 
 /* kprintf hex */
-static i32 xtoa_len(u32 n)
+static s32 xtoa_len(u32 n)
 {
 	if (n == 0)
 	   return 1;
 	
-	return (i32)(log(n) / log(16)) + 1;
+	return (s32)(log(n) / log(16)) + 1;
 }
 
-static void print_hex(u64 n, i32 is_upper)
+static void print_hex(u64 n, s32 is_upper)
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
 	static const char *digits        = nullptr;
-	i32               i;
+	s32               i;
 	
 	i = xtoa_len(n);
 	char hex[i + 1];
@@ -307,7 +307,7 @@ static void print_args(char type, va_list *args)
 
 		case 's':
 			char *str;
-			i32 i;
+			s32 i;
 			
 			i = 0;
 			str = va_arg(*args, char *);
@@ -338,7 +338,7 @@ static void print_args(char type, va_list *args)
 
 static void parse(const char *str, va_list *args)
 {
-    i32 i;
+    s32 i;
 
     i = -1;
 

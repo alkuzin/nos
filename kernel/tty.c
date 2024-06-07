@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 
 #include <nos/kernel.h>
 #include <nos/nosstd.h>
+#include <nos/types.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 
@@ -48,22 +48,22 @@ void tty_init(void)
     tty.width  = VGA_SCREEN_WIDTH;
 }
 
-i32 tty_get_x(void)
+s32 tty_get_x(void)
 {
     return tty.x_pos;
 }
 
-i32 tty_get_y(void)
+s32 tty_get_y(void)
 {
     return tty.y_pos;
 }
 
-void tty_set_x(i32 x)
+void tty_set_x(s32 x)
 {
     tty.x_pos = x;
 }
 
-void tty_set_y(i32 y)
+void tty_set_y(s32 y)
 {
     tty.y_pos = y;
 }
@@ -85,17 +85,17 @@ void tty_set_color(vga_color_t fg, vga_color_t bg)
     tty.color = (u8)(fg | bg << 4);
 }
 
-i32  tty_get_height(void)
+s32  tty_get_height(void)
 {
     return tty.height;
 }
 
-i32  tty_get_width(void)
+s32  tty_get_width(void)
 {
     return tty.width;
 }
 
-void tty_kputchar_at(char c, u8 color, i32 x, i32 y)
+void tty_kputchar_at(char c, u8 color, s32 x, s32 y)
 {
 	tty.v_mem[y * tty.width + x] = vga_entry(c, color);
 }
@@ -123,7 +123,7 @@ static void __kscroll(void)
 
 void tty_clear(void)
 {
-	i32 i;
+	s32 i;
 
 	i = 0;
 	
@@ -135,7 +135,7 @@ void tty_clear(void)
 
 void tty_rewrite(void)
 {
-	i32 i;
+	s32 i;
 
 	i = 0;
 	
@@ -145,7 +145,7 @@ void tty_rewrite(void)
 	}
 }
 
-void kputchar(const i32 c)
+void kputchar(const s32 c)
 {
 	if(tty.x_pos >= tty.width) {
 		tty.x_pos = 0;

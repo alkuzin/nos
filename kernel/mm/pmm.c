@@ -20,13 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
 #include <nos/multiboot.h>
 #include <nos/kernel.h>
+#include <nos/types.h>
 #include <nos/pmm.h>
 #include <nos/tty.h>
 
@@ -52,9 +51,9 @@ bool pmm_test_block(u32 bit)
     return memory_map[bit/32] & (1 << (bit % 32));
 }
 
-i32 pmm_find_first_free_blocks(u32 n)
+s32 pmm_find_first_free_blocks(u32 n)
 {
-    i32 bit, start_bit;
+    s32 bit, start_bit;
     u32 free_blocks;
 
     /* not able to return memory */
@@ -64,7 +63,7 @@ i32 pmm_find_first_free_blocks(u32 n)
     for(u32 i = 0; i < max_blocks / 32; i++) {
         if(memory_map[i] != 0xFFFFFFFF) {
 
-            for(i32 j = 0; j < 32; j++) {
+            for(s32 j = 0; j < 32; j++) {
                 bit = 1 << j;
 
                 if(!(memory_map[i] & bit)) {
@@ -99,7 +98,7 @@ void pmm_init(u32 start_addr, u32 size)
 
 void pmm_region_init(u32 base_addr, u32 size)
 {
-    i32 align, n; /* n - number of blocks */
+    s32 align, n; /* n - number of blocks */
 
     /* convert memory address to blocks */
     align = base_addr / BLOCK_SIZE;
@@ -117,7 +116,7 @@ void pmm_region_init(u32 base_addr, u32 size)
 
 void pmm_region_deinit(u32 base_addr, u32 size)
 {
-    i32 align, n; /* n - number of blocks */
+    s32 align, n; /* n - number of blocks */
 
     /* convert memory address to blocks */
     align = base_addr / BLOCK_SIZE;
@@ -133,7 +132,7 @@ void pmm_region_deinit(u32 base_addr, u32 size)
 
 u32 *pmm_blocks_alloc(u32 n)
 {
-    i32 starting_block;
+    s32 starting_block;
     u32 addr;
 
     if((max_blocks - used_blocks) <= n)
@@ -155,7 +154,7 @@ u32 *pmm_blocks_alloc(u32 n)
 
 void pmm_free_blocks(u32 *addr, u32 n)
 {
-    i32 starting_block;
+    s32 starting_block;
 
     starting_block = (u32)addr / BLOCK_SIZE;
     

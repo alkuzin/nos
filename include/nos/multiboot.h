@@ -34,7 +34,7 @@
 #ifndef _NOS_KERNEL_MULTIBOOT_H_
 #define _NOS_KERNEL_MULTIBOOT_H_
 
-#include <stdint.h>
+#include <nos/types.h>
 
 /** @brief Structure representing the symbol table for a.out format. */
 struct multiboot_aout_symbol_table_s {

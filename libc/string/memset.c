@@ -22,10 +22,10 @@
 
 #include <string.h>
 
-void *memset(void *s, i32 c, usize n)
+void *memset(void *s, s32 c, usize n)
 {
     u8  *src, cc;
-    i32 i;
+    s32 i;
 
     src = (u8 *)s;
     cc  = (u8)c;

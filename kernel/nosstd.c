@@ -20,14 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stdint.h>
-#include <stddef.h>
-
 #include <nos/kmalloc.h>
 #include <nos/nosstd.h>
-
 #include <asm/system.h>
+#include <nos/types.h>
 
 
 void *kmalloc(usize n)

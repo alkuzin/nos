@@ -34,9 +34,8 @@
 #ifndef _NOS_KERNEL_H_
 #define _NOS_KERNEL_H_
 
-#include <stdint.h>
-
 #include <nos/multiboot.h>
+#include <nos/types.h>
 #include <nos/tty.h>
 
 /** @brief OS information definitions. */

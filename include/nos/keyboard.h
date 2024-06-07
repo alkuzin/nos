@@ -34,8 +34,7 @@
 #ifndef _NOS_KERNEL_KEYBOARD_H_
 #define _NOS_KERNEL_KEYBOARD_H_
 
-#include <stdint.h>
-
+#include <nos/types.h>
 #include <nos/ports.h>
 #include <nos/irq.h>
 

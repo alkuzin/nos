@@ -20,10 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
-#include <stddef.h>
-
 #include <nos/kmalloc.h>
+#include <nos/types.h>
 #include <nos/pmm.h>
 #include <nos/vmm.h>
 
