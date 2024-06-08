@@ -27,24 +27,17 @@
 #include <nos/initrd.h>
 #include <nos/types.h>
 
-initrd_t *initrd = nullptr;
+static initrd_t initrd;
 
 
 void initrd_init(void)
 {
-    initrd = (initrd_t *)kmalloc(sizeof(initrd_t));
+    initrd.files = (initrd_file_t *)kmalloc(sizeof(initrd_file_t) * INITRD_MAX_FILES);
 
-    if (!initrd)
+    if (!initrd.files)
         panic("%s\n", "kmalloc error");
-    
-    initrd->files = (initrd_file_t *)kmalloc(sizeof(initrd_file_t) * INITRD_MAX_FILES);
 
-    if (!initrd->files) {
-        kfree(initrd);
-        panic("%s\n", "kmalloc error");
-    }
-
-    initrd->count = 0;
+    initrd.count = 0;
     
     initrd_creat("temp.tmp", 0);
     initrd_creat("program.c", 0);
@@ -52,74 +45,53 @@ void initrd_init(void)
     
     initrd_write(0, "Hello, World!", 14);
 
-    printk(" data: \"%s\"\n", initrd->files[0].data);
+    printk(" data: \"%s\"\n", initrd.files[0].data);
     
     // TODO: VFS mount initrd
 }
 
 void initrd_ls(void)
 {
-    /* handle unitialized initrd */
-    if (!initrd) {
-        printk(" %s\n", "ls: initrd isn't initialized");
-        return;
-    }
-    
-    for (u32 i = 0; i < initrd->count; i++) {
-        printk(" %s (%u bytes)\n", initrd->files[i].name, initrd->files[i].size);
+    for (u32 i = 0; i < initrd.count; i++) {
+        printk(" %s (%u bytes)\n", initrd.files[i].name, initrd.files[i].size);
     }
 
-    printk(" \n total files: %u/%u\n", initrd->count, INITRD_MAX_FILES);
+    printk(" \n total files: %u/%u\n", initrd.count, INITRD_MAX_FILES);
 }
 
 void initrd_free(void)
 {
-    /* handle unitialized initrd */
-    if (!initrd) {
-        printk(" %s\n", "ls: initrd isn't initialized");
-        return;
-    }
-    
-    kfree(initrd->files);
-    kfree(initrd);
+    kfree(initrd.files);
 }
 
 s32 initrd_creat(const char* pathname, mode_t mode)
 {
     initrd_file_t *file;
     
-    /* handle unitialized initrd */
-    if (!initrd)
-        return -1;
-
     /* handle exceeding total files limit */
-    if (initrd->count + 1 > INITRD_MAX_FILES)
+    if (initrd.count + 1 > INITRD_MAX_FILES)
         return -1; /* file creation error */
 
     /* handle incorrect path/existed path */
     if (!pathname || initrd_is_path(pathname) != -1)
         return -1; /* file creation error */
 
-    file = &initrd->files[initrd->count];
+    file = &initrd.files[initrd.count];
 
     strncpy(file->name, pathname, INITRD_MAX_NAME_SIZE);
     bzero(file->data, INITRD_FILE_SIZE);
     file->size = 0;
     file->mode = mode;
     
-    return initrd->count++;
+    return initrd.count++;
 }
 
 s32 initrd_unlink(const char* pathname)
 {
     s32 fd;
 
-    /* handle unitialized initrd */
-    if (!initrd)
-        return -1;
-
     /* handle missing files */
-    if (initrd->count == 0)
+    if (initrd.count == 0)
         return -1; /* file unlink error */
 
     fd = initrd_is_path(pathname);
@@ -128,28 +100,24 @@ s32 initrd_unlink(const char* pathname)
     if (fd == -1)
         return -1; /* file unlink error */
 
-    bzero(initrd->files[fd].data, INITRD_FILE_SIZE);
+    bzero(initrd.files[fd].data, INITRD_FILE_SIZE);
 
     /* shift remaining files to fill the gap */
-    for (u32 j = fd; j < initrd->count - 1; j++)
-        initrd->files[j] = initrd->files[j + 1];
+    for (u32 j = fd; j < initrd.count - 1; j++)
+        initrd.files[j] = initrd.files[j + 1];
 
-    initrd->count--;    
+    initrd.count--;    
     return 0;
 }
 
 s32 initrd_is_path(const char *pathname)
 {
-    /* handle unitialized initrd */
-    if (!initrd)
-        return -1;
-
     /* handle incorrect path */
     if (!pathname)
         return -1;
 
-    for (u32 i = 0; i < initrd->count; i++) {
-        if (strncmp(initrd->files[i].name, pathname, INITRD_FILE_SIZE) == 0)
+    for (u32 i = 0; i < initrd.count; i++) {
+        if (strncmp(initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
             return i;
     }
     
@@ -161,12 +129,8 @@ s32 initrd_write(s32 fd, void *buf, usize count)
     u8    *buffer;
     usize i;
 
-    /* handle unitialized initrd */
-    if (!initrd)
-        return -1;
-    
     /* handle incorrect file descriptor */
-    if (fd < 0 || (u32)fd >= initrd->count)
+    if (fd < 0 || (u32)fd >= initrd.count)
         return -1;
     
     buffer = (u8 *)buf;
@@ -176,16 +140,16 @@ s32 initrd_write(s32 fd, void *buf, usize count)
 
     i = 0;
 
-    while (initrd->files[fd].data[i])
+    while (initrd.files[fd].data[i])
         i++;
 
     while (i < count - 1 && i < INITRD_FILE_SIZE) {
-        initrd->files[fd].data[i] = buffer[i];
+        initrd.files[fd].data[i] = buffer[i];
         i++;
     }
     
-    initrd->files[fd].data[i] = '\0';
-    initrd->files[fd].size += (i + 1);
+    initrd.files[fd].data[i] = '\0';
+    initrd.files[fd].size += (i + 1);
 
     return i;
 }

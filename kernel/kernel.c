@@ -93,9 +93,10 @@ void kboot(multiboot_t *boot_info)
 }
 
 /* kernel entry point */
-extern void kmain([[gnu::unused]] u32 magic, multiboot_t *boot_info)
+extern void kmain([[gnu::unused]] u32 magic, multiboot_t *mb)
 {
-    kboot(boot_info);
+    multiboot_t boot_info = *mb;
+    kboot(&boot_info);
 
     for(;;); /* infinite loop for halting CPU */
 }

@@ -117,8 +117,8 @@ void kboot(multiboot_t *boot_info);
  * @brief Kernel entry point.
  * 
  * @param [in] magic - given magic number.
- * @param [in] boot_info - given multiboot information structure.
+ * @param [in] mb - given multiboot information structure.
  */
-extern void kmain(u32 magic, multiboot_t *boot_info);
+extern void kmain(u32 magic, multiboot_t *mb);
 
 #endif /* _NOS_KERNEL_H_ */
