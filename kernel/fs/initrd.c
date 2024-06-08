@@ -26,8 +26,10 @@
 #include <nos/kernel.h>
 #include <nos/initrd.h>
 #include <nos/types.h>
+#include <nos/vfs.h>
 
-static initrd_t initrd;
+static vfs_adapter_t initrd_adapter;
+static initrd_t      initrd;
 
 
 void initrd_init(void)
@@ -38,6 +40,13 @@ void initrd_init(void)
         panic("%s\n", "kmalloc error");
 
     initrd.count = 0;
+
+    initrd_adapter.open   = nullptr;
+    initrd_adapter.close  = nullptr;
+    initrd_adapter.creat  = initrd_creat;
+    initrd_adapter.unlink = initrd_unlink;
+    initrd_adapter.read   = nullptr;
+    initrd_adapter.write  = initrd_write;
     
     initrd_creat("temp.tmp", 0);
     initrd_creat("program.c", 0);
@@ -152,4 +161,9 @@ s32 initrd_write(s32 fd, void *buf, usize count)
     initrd.files[fd].size += (i + 1);
 
     return i;
+}
+
+vfs_adapter_t *initrd_get_adapter(void)
+{
+    return &initrd_adapter;
 }

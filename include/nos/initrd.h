@@ -35,6 +35,7 @@
 #define _NOS_KERNEL_INITRD_H_
 
 #include <nos/types.h>
+#include <nos/vfs.h>
 
 
 #define INITRD_MAX_NAME_SIZE 64
@@ -107,5 +108,12 @@ s32 initrd_is_path(const char *pathname);
  * @return -1 in case of error.
  */
 s32 initrd_write(s32 fd, void *buf, usize count);
+
+/**
+ * @brief Get initial ramdisk adapter for VFS.
+ * 
+ * @return VFS adapter structure pointer. 
+ */
+vfs_adapter_t *initrd_get_adapter(void);
 
 #endif /* _NOS_KERNEL_INITRD_H_ */

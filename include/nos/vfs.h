@@ -74,14 +74,18 @@ typedef struct file_s file_t;
 /**
  * @brief Register current active file system.
  * 
- * @param [in] vfs - given VFS interface struct.
  * @param [in] type - given type of file system to register. 
  * @param [in] fs_adapter - given file system adapter. 
  */
-void vfs_register(vfs_t *vfs, fs_type_t type, vfs_adapter_t *fs_adapter);
+void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter);
 
-/** @brief Initialize virtual file system. */
-void vfs_init(void);
+/**
+ * @brief Initialize virtual file system.
+ * 
+ * @param [in] type - given type of file system to register. 
+ * @param [in] fs_adapter - given file system adapter. 
+ */
+void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter);
 
 /**
  * @brief Open file.

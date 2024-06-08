@@ -29,42 +29,36 @@
 
 static vfs_t vfs;
 
-void vfs_init(void)
+void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter)
 {
-    // TODO: replace nullptr with EXT2 functions
-    vfs_adapter_t ext2_adapter = {
-        .open   = nullptr,
-        .close  = nullptr,
-        .read   = nullptr,
-        .write  = nullptr,
-        .creat  = nullptr,
-        .unlink = nullptr
-    };
-
-    vfs_register(&vfs, EXT2, &ext2_adapter);
+    vfs_register(type, fs_adapter);
 }
 
-void vfs_register(vfs_t *vfs, fs_type_t type, vfs_adapter_t *fs_adapter)
+void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter)
 {
     switch (type) {
+        
+        case INITRD:
+            printk(" kernel: VFS: set filesystem %d (INITRD)\n", type);
+            break;
 
         case EXT2:
             printk(" kernel: VFS: set filesystem %d (EXT2)\n", type);
             break;
-    
+        
         default:
             panic("unknown file system: %d\n", type);
             break;
     };
 
-    bzero(vfs, sizeof(vfs_t));
+    bzero(&vfs, sizeof(vfs_t));
 
-    vfs->open   = fs_adapter->open; 
-    vfs->close  = fs_adapter->close;
-    vfs->read   = fs_adapter->read;
-    vfs->write  = fs_adapter->write;
-    vfs->creat  = fs_adapter->creat;
-    vfs->unlink = fs_adapter->unlink;
+    vfs.open   = fs_adapter->open; 
+    vfs.close  = fs_adapter->close;
+    vfs.read   = fs_adapter->read;
+    vfs.write  = fs_adapter->write;
+    vfs.creat  = fs_adapter->creat;
+    vfs.unlink = fs_adapter->unlink;
 }
 
 s32 vfs_open(const char *pathname, s32 flags, mode_t mode)

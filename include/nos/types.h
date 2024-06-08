@@ -56,6 +56,7 @@ typedef u32 mode_t; ///< File permission bits.
 
 ///< Supported file systems type.
 typedef enum {
+    INITRD,
     EXT2
 } fs_type_t;
 

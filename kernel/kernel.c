@@ -66,13 +66,15 @@ void kboot(multiboot_t *boot_info)
     __DISPLAY_OS_INFO();
     __DISPLAY_OS_BUILD_INFO();
 
-    /* initializing Virtual File System */
-    vfs_init();
-    printk(" %s\n", "kernel: initialized Virtual File System");
-
     /* initializing initial ramdisk */
     initrd_init();
     printk(" %s\n", "kernel: initialized initial ramdisk");
+
+    /* initializing Virtual File System */
+    vfs_adapter_t *initrd_adapter = initrd_get_adapter();
+
+    vfs_init(INITRD, initrd_adapter);
+    printk(" %s\n", "kernel: initialized Virtual File System");
 
     /* initializing process scheduler */
     sched_init();
