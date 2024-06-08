@@ -24,6 +24,7 @@
 
 #include <nos/shell/ksh.h>
 #include <nos/kernel.h> 
+#include <nos/initrd.h> 
 #include <nos/nosstd.h>
 #include <nos/sched.h>
 #include <nos/types.h>
@@ -63,6 +64,7 @@ void ksh_help(void)
            " lsproc       - display list of current processes\n"
            " theme_0      - set CLI theme to default\n"
            " theme_1      - set CLI theme to classic\n"
+           " ls           - display list of files\n"
            "------------------------------------------------------\n");
 }
 
@@ -122,4 +124,9 @@ void ksh_readexe(void)
     //     (char *)header->signature);
 
     // exe_display_info(header);
+}
+
+void ksh_ls(void)
+{
+    initrd_ls();
 }

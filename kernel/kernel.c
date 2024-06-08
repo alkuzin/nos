@@ -26,6 +26,7 @@
 #include <nos/multiboot.h>
 #include <nos/keyboard.h>
 #include <nos/nosstd.h>
+#include <nos/initrd.h>
 #include <nos/kernel.h>
 #include <nos/timer.h>
 #include <nos/types.h>
@@ -69,6 +70,10 @@ void kboot(multiboot_t *boot_info)
     vfs_init();
     printk(" %s\n", "kernel: initialized Virtual File System");
 
+    /* initializing initial ramdisk */
+    initrd_init();
+    printk(" %s\n", "kernel: initialized initial ramdisk");
+
     /* initializing process scheduler */
     sched_init();
     printk(" %s\n", "kernel: initialized scheduler");	
@@ -88,7 +93,7 @@ void kboot(multiboot_t *boot_info)
 }
 
 /* kernel entry point */
-extern void kmain(__attribute__((unused)) u32 magic, multiboot_t *boot_info)
+extern void kmain([[gnu::unused]] u32 magic, multiboot_t *boot_info)
 {
     kboot(boot_info);
 

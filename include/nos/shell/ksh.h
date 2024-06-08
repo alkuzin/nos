@@ -91,4 +91,7 @@ void ksh_lsproc(void);
 /** @brief Display executable information. */
 void ksh_readexe(void);
 
+/** @brief Display list of files. */
+void ksh_ls(void);
+
 #endif /* _NOS_KERNEL_SHELL_H_ */

@@ -2,7 +2,7 @@ include ../kernel_common.mk
 
 NAME = _fs.o
 
-SRC  = vfs
+SRC  = vfs initrd
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
