@@ -227,12 +227,8 @@ void ext2_inode_bm_init(inode_bitmap_t *ib);
 /** @brief Initialize ext2 driver. */
 void ext2_init(void);
 
-/**
- * @brief Initialize superblock. 
- * 
- * @param [in] sb - given superblock structure. 
- */
-void ext2_superblock_init(superblock_t *sb);
+/** @brief Initialize superblock. */
+void ext2_superblock_init(void);
 
 /**
  * @brief Initialize root inode. 

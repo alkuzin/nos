@@ -6,9 +6,8 @@ SRC  = vfs initrd
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
-OBJS_DIR = objs/
-OBJS_PREFIXED     = $(addprefix $(OBJS_DIR), $(OBJS))
-OBJS_PREFIXED_ASM = $(addprefix $(OBJS_DIR), $(OBJS_ASM))
+OBJS_DIR 	  = objs/
+OBJS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
 
 $(OBJS_PREFIXED): $(SRCS)
 	mkdir -p $(OBJS_DIR)

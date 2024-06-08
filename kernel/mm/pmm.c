@@ -173,10 +173,10 @@ void pmm_display_memory(multiboot_t *boot_info)
     putk(" ---------------------------------------------------------------------\n"
          " low addr \t| high addr \t| low len \t| high len | size | type |\n"
          " ---------------------------------------------------------------------\n");
-
+         
     for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
        mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
-        
+       
        printk(" <%#x> | <%#x> |  %#x | %#x |  %#x | ", mmmt->addr_low, 
        mmmt->addr_high, mmmt->len_low, mmmt->len_high, mmmt->size);
 

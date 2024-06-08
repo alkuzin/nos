@@ -81,33 +81,33 @@ void ext2_root_dir_init(ext2_dir_t* root_dir, u32 inode_number, const char* path
     strncpy(root_dir->name, pathname, MAX_NAME_SIZE);
 }
 
-void ext2_superblock_init(superblock_t *sb)
+void ext2_superblock_init(void)
 {
-    superblock.inodes                      = FS_MAX_INODES,
-    superblock.blocks                      = FS_MAX_BLOCKS,
-    superblock.reserved_for_root           = 10,
-    superblock.unallocated_blocks          = FS_MAX_BLOCKS - 10,
-    superblock.unallocated_inodes          = FS_MAX_INODES - 1,
-    superblock.superblock_id               = 1,
-    superblock.blocksize_hint              = FS_BLOCK_SIZE >> 10,
-    superblock.fragmentsize_hint           = FS_BLOCK_SIZE >> 11,
-    superblock.blocks_per_group            = 100,
-    superblock.fragments_per_group         = FS_BLOCK_SIZE / FS_MAX_BLOCKS,
-    superblock.inodes_per_group            = FS_MAX_BLOCKS / FS_MAX_INODES,
-    superblock.last_mount                  = 0,
-    superblock.last_write                  = 0,
-    superblock.mounts_since_last_check     = 0,
-    superblock.max_mounts_since_last_check = 0,
-    superblock.signature                   = EXT2_SIGNATURE,
-    superblock.state                       = FS_IS_CLEAN,
-    superblock.on_error                    = FS_ERR_PANIC,
-    superblock.minor_version               = 1,
-    superblock.last_check                  = 0,
-    superblock.checks_interval             = 86400,
-    superblock.os_id                       = NOS_ID,
-    superblock.major_version               = 0,
-    superblock.uid                         = 0,
-    superblock.gid                         = 0
+    superblock.inodes                      = FS_MAX_INODES;
+    superblock.blocks                      = FS_MAX_BLOCKS;
+    superblock.reserved_for_root           = 10;
+    superblock.unallocated_blocks          = FS_MAX_BLOCKS - 10;
+    superblock.unallocated_inodes          = FS_MAX_INODES - 1;
+    superblock.superblock_id               = 1;
+    superblock.blocksize_hint              = FS_BLOCK_SIZE >> 10;
+    superblock.fragmentsize_hint           = FS_BLOCK_SIZE >> 11;
+    superblock.blocks_per_group            = 100;
+    superblock.fragments_per_group         = FS_BLOCK_SIZE / FS_MAX_BLOCKS;
+    superblock.inodes_per_group            = FS_MAX_BLOCKS / FS_MAX_INODES;
+    superblock.last_mount                  = 0;
+    superblock.last_write                  = 0;
+    superblock.mounts_since_last_check     = 0;
+    superblock.max_mounts_since_last_check = 0;
+    superblock.signature                   = EXT2_SIGNATURE;
+    superblock.state                       = FS_IS_CLEAN;
+    superblock.on_error                    = FS_ERR_PANIC;
+    superblock.minor_version               = 1;
+    superblock.last_check                  = 0;
+    superblock.checks_interval             = 86400;
+    superblock.os_id                       = NOS_ID;
+    superblock.major_version               = 0;
+    superblock.uid                         = 0;
+    superblock.gid                         = 0;
 }
 
 void ext2_init(void)
