@@ -70,6 +70,15 @@
 #define abs(x) ((x) < 0 ? -(x) : (x))
 
 /**
+ * @brief Calculate max value between a & b
+ * 
+ * @param [in] a - given value.
+ * @param [in] b - given value.
+ * @return max value of the given values.
+*/
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
+/**
  * @brief Perform ceiling division of two numbers.
  *
  * This macro performs ceiling division of two numbers, rounding up to the nearest integer.
