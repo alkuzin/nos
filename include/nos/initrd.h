@@ -35,6 +35,7 @@
 #define _NOS_KERNEL_INITRD_H_
 
 #include <nos/types.h>
+#include <nos/fcntl.h>
 #include <nos/vfs.h>
 
 
@@ -42,12 +43,20 @@
 #define INITRD_MAX_FILES     3
 #define INITRD_FILE_SIZE     1024 /* 1KB */
 
+/* file states */
+#define INITRD_FILE_OPENED 1
+#define INITRD_FILE_CLOSED 2
+
 /** @brief Initrd file structure. */
 typedef struct {
     char    name[INITRD_MAX_NAME_SIZE]; ///< Name of the file.
     u8      data[INITRD_FILE_SIZE];     ///< File content.
     u32     size;                       ///< Size of the file in bytes.
     mode_t  mode;                       ///< File permissions.
+    s32     fd;                         ///< File descriptor.
+    u32     state;                      ///< File state (e.g. opened/closed/etc.).
+    u32     type;                       ///< File type.
+    s32     flags;                      ///< File handeling flags.
 } initrd_file_t;
 
 /** @brief Initrd main structure. */
@@ -90,15 +99,6 @@ s32 initrd_creat(const char* pathname, mode_t mode);
 s32 initrd_unlink(const char* pathname);
 
 /**
- * @brief Checks is pathname exist. 
- * 
- * @param [in] pathname - given path name to check.
- * @return file descriptor - if path is exist.
- * @return -1 - otherwise.
- */
-s32 initrd_is_path(const char *pathname);
-
-/**
  * @brief Write bytes to file.
  * 
  * @param [in] fd - given file descriptor.
@@ -110,10 +110,65 @@ s32 initrd_is_path(const char *pathname);
 s32 initrd_write(s32 fd, void *buf, usize count);
 
 /**
+ * @brief Read bytes from file.
+ * 
+ * @param [in] fd - given file descriptor.
+ * @param [out] buf - given buffer for read bytes.
+ * @param [in] count - given number of bytes to read. 
+ * @return number of read bytes.
+ * @return -1 in case of error.
+ */
+s32 initrd_read(s32 fd, void *buf, usize count);
+
+/**
  * @brief Get initial ramdisk adapter for VFS.
  * 
  * @return VFS adapter structure pointer. 
  */
 vfs_adapter_t *initrd_get_adapter(void);
+
+/**
+ * @brief Open file.
+ * 
+ * @param [in] pathname - given path to the file to open. 
+ * @param [in] flags - given flags that control how the file is opened.
+ * @return file descriptor.
+ * @return -1 in case of error.
+ */
+s32 initrd_open(const char *pathname, s32 flags);
+
+/**
+ * @brief Close file. 
+ * 
+ * @param [in] fd - given file descriptor to close.
+ * @return 0 - on success.
+ * @return -1 - in case of error.
+ */
+s32 initrd_close(s32 fd);
+
+/**
+ * @brief Get file index in files structure. 
+ * 
+ * @param [in] pathname - given path to the file to find.
+ * @return file index.
+ * @return -1 - in case of error.
+ */
+s32 initrd_get_index(const char *pathname);
+
+/**
+ * @brief Get file index in files structure by file descriptor. 
+ * 
+ * @param [in] fd - given file descriptor.
+ * @return file index.
+ * @return -1 - in case of error.
+ */
+s32 initrd_get_index_by_fd(s32 fd);
+
+/**
+ * @brief Set new file descriptor. 
+ * 
+ * @return new file descriptor.
+ */
+s32 initrd_set_fd(void);
 
 #endif /* _NOS_KERNEL_INITRD_H_ */
