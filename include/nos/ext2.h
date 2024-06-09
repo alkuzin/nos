@@ -159,30 +159,6 @@ struct __inode_s {
 } __attribute__((packed)); /* prevent the compiler from optimizing */
 typedef struct __inode_s inode_t;
 
-// TODO: move macros to nos/stat.h
-
-/** @brief Inode types. */
-#define S_IFIFO  0x1000 ///< FIFO.
-#define S_IFCHR  0x2000 ///< Character device.
-#define S_IFDIR  0x4000 ///< Directory.
-#define S_IFBLK  0x6000 ///< Block device.
-#define S_IFREG  0x8000 ///< Regular file.
-#define S_IFLNK  0xA000 ///< Symbolic link.
-#define S_IFSOCK 0xC000 ///< Unix socket.
-
-/** @brief Inode permissions. */
-#define S_IRUSR 0x100 ///< User—read permission.
-#define S_IWUSR 0x080 ///< User—write permission.
-#define S_IXUSR 0x040 ///< User—execute permission.
-
-#define S_IRGRP 0x020 ///< Group—read permission.
-#define S_IWGRP 0x010 ///< Group—write permission.
-#define S_IXGRP 0x008 ///< Group—execute permission.
-
-#define S_IROTH 0x004 ///< Other—read permission.
-#define S_IWOTH 0x002 ///< Other—write permission.
-#define S_IXOTH 0x001 ///< Other—execute permission.
-
 /**
  * @brief Ext2 directory entry.
  * 
