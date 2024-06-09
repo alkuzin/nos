@@ -61,12 +61,12 @@ void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter)
     vfs.unlink = fs_adapter->unlink;
 }
 
-s32 vfs_open(const char *pathname, s32 flags, mode_t mode)
+s32 vfs_open(const char *pathname, s32 flags)
 {
     if (!vfs.open)
         return -1;
     
-    return vfs.open(pathname, flags, mode);
+    return vfs.open(pathname, flags);
 }
 
 s32 vfs_close(s32 fd)

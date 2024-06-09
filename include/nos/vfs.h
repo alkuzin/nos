@@ -41,7 +41,7 @@
 
 /** @brief VFS interface for different types of file systems. */
 struct vfs_s {
-    s32 (*open)(const char *pathname, s32 flags, mode_t mode);
+    s32 (*open)(const char *pathname, s32 flags);
     s32 (*close)(s32 fd);
     s32 (*read)(s32 fd, void *buf, usize count);
     s32 (*write)(s32 fd, void *buf, usize count);
@@ -53,7 +53,7 @@ typedef struct vfs_s vfs_t;
 
 /** @brief VFS adapter for specific file system. */
 struct vfs_adapter_s {
-    s32 (*open)(const char *pathname, s32 flags, mode_t mode);
+    s32 (*open)(const char *pathname, s32 flags);
     s32 (*close)(s32 fd);
     s32 (*read)(s32 fd, void *buf, usize count);
     s32 (*write)(s32 fd, void *buf, usize count);
@@ -92,16 +92,17 @@ void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter);
  * 
  * @param [in] pathname - given path to the file to open. 
  * @param [in] flags - given flags that control how the file is opened.
- * @param [in] mode - given file permissions.
  * @return file descriptor.
- * @return nullptr - in case of error.
+ * @return -1 - in case of error.
  */
-s32 vfs_open(const char *pathname, s32 flags, mode_t mode);
+s32 vfs_open(const char *pathname, s32 flags);
 
 /**
  * @brief Close file. 
  * 
  * @param [in] fd - given file descriptor to close.
+ * @return 0 - on success.
+ * @return -1 - in case of error.
  */
 s32 vfs_close(s32 fd);
 
