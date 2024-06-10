@@ -245,7 +245,8 @@ s32 initrd_open(const char *pathname, s32 flags)
     file->flags = flags;
     
     initrd_buffer = (u8 *)kmalloc(INITRD_FILE_SIZE);
-
+    
+    bzero(initrd_buffer, INITRD_FILE_SIZE);
     memcpy(initrd_buffer, file->data, file->size);
 
     return file->fd;
