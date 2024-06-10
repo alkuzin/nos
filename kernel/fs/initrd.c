@@ -54,15 +54,6 @@ void initrd_init(void)
     initrd_adapter.write  = initrd_write;
 }
 
-void initrd_ls(void)
-{
-    for (u32 i = 0; i < initrd.count; i++) {
-        printk(" %s (%u bytes)\n", initrd.files[i].name, initrd.files[i].size);
-    }
-
-    printk(" \n total files: %u/%u\n", initrd.count, INITRD_MAX_FILES);
-}
-
 void initrd_free(void)
 {
     kfree(initrd.files);
@@ -88,7 +79,7 @@ s32 initrd_creat(const char* pathname, mode_t mode)
     file->mode  = mode;
     file->type  = S_IFREG;
     file->fd    = initrd_set_fd();
-    file->flags = O_RDWR;
+    file->flags = 0;
 
     initrd.count++;
     return file->fd;
@@ -127,20 +118,6 @@ s32 initrd_unlink(const char* pathname)
     return 0;
 }
 
-s32 initrd_is_path(const char *pathname)
-{
-    /* handle incorrect path */
-    if (!pathname)
-        return -1;
-
-    for (u32 i = 0; i < initrd.count; i++) {
-        if (strncmp(initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
-            return initrd.files[i].fd;
-    }
-    
-    return -1;
-}
-
 s32 initrd_write(s32 fd, void *buf, usize count)
 {
     initrd_file_t *file;
@@ -164,7 +141,7 @@ s32 initrd_write(s32 fd, void *buf, usize count)
         return -1;
     
     /* check if file has write permissions */
-    if (!(file->flags | O_RDONLY))
+    if (!(file->flags | O_RDONLY) || !(file->mode & S_IWUSR))
         return -1; /* no write perrmissions */
 
     i = 0;
@@ -174,14 +151,14 @@ s32 initrd_write(s32 fd, void *buf, usize count)
         while (initrd_buffer[i])
             i++;
         
-        while (j < count - 1 && ((i + j) < INITRD_FILE_SIZE - 1)) {
+        while (j < count && ((i + j) < INITRD_FILE_SIZE - 1)) {
             initrd_buffer[i] = buffer[j];
             i++;
             j++;
         }
     }
     else {
-        while (i < count - 1 && i < INITRD_FILE_SIZE - 1) {
+        while (i < count && i < INITRD_FILE_SIZE - 1) {
             initrd_buffer[i] = buffer[i];
             i++;
         }
@@ -190,9 +167,9 @@ s32 initrd_write(s32 fd, void *buf, usize count)
     while (initrd_buffer[i])
         i++;
     
-    initrd.files[fd].size = (i + 1);
-
-    return i + 1;
+    initrd_buffer[i] = '\0';
+    initrd.files[file_index].size = i - 1;
+    return i - 1;
 }
 
 s32 initrd_read(s32 fd, void *buf, usize count)
@@ -213,7 +190,7 @@ s32 initrd_read(s32 fd, void *buf, usize count)
         return -1; /* error to read closed file */
 
     /* handle incorrect file descriptor */
-    if (fd < 0 || (u32)fd >= initrd.count)
+    if (fd < 0)
         return -1;
     
     buffer = (u8 *)buf;
@@ -222,7 +199,7 @@ s32 initrd_read(s32 fd, void *buf, usize count)
         return -1;
     
     /* check if file has read permissions */
-    if (file->flags & O_WRONLY)
+    if (file->flags & O_WRONLY || !(file->mode & S_IRUSR))
         return -1; /* no read perrmissions */
 
     i = 0;
@@ -231,18 +208,13 @@ s32 initrd_read(s32 fd, void *buf, usize count)
     if (count >= INITRD_FILE_SIZE)
         count = INITRD_FILE_SIZE;
 
-    while (initrd_buffer[i] && i < count - 1) {
+    while (initrd_buffer[i] && i < count) {
         buffer[i] = initrd_buffer[i];
         i++;
     }
 
     buffer[i] = '\0';
-    return i + 1;
-}
-
-vfs_adapter_t *initrd_get_adapter(void)
-{
-    return &initrd_adapter;
+    return i;
 }
 
 s32 initrd_open(const char *pathname, s32 flags)
@@ -279,6 +251,32 @@ s32 initrd_open(const char *pathname, s32 flags)
     return file->fd;
 }
 
+s32 initrd_close(s32 fd)
+{
+    initrd_file_t *file;
+    s32 file_index; /* index of the file in files structure */
+
+    file_index = initrd_get_index_by_fd(fd);
+    
+    if (file_index == -1)
+        return -1; /* file opening error */
+    
+    file = &initrd.files[file_index];
+
+    /* handle already closed file */
+    if (file->state == INITRD_FILE_CLOSED)
+        return -1;
+    
+    file->state = INITRD_FILE_CLOSED;
+
+    /* copy data from temporary buffer to file */
+    for (u32 i = 0; i < INITRD_FILE_SIZE; i++)
+        file->data[i] = initrd_buffer[i];
+
+    kfree(initrd_buffer);
+    return 0;
+}
+
 s32 initrd_get_index(const char *pathname)
 {
     /* handle incorrect path */
@@ -307,33 +305,21 @@ s32 initrd_get_index_by_fd(s32 fd)
     return -1;
 }
 
-s32 initrd_close(s32 fd)
-{
-    initrd_file_t *file;
-    s32 file_index; /* index of the file in files structure */
-
-    file_index = initrd_get_index_by_fd(fd);
-    
-    if (file_index == -1)
-        return -1; /* file opening error */
-    
-    file = &initrd.files[file_index];
-
-    /* handle already closed file */
-    if (file->state == INITRD_FILE_CLOSED)
-        return -1;
-    
-    file->state = INITRD_FILE_CLOSED;
-
-    /* copy data from temporary buffer to file */
-    for (u32 i = 0; i < INITRD_FILE_SIZE; i++)
-        file->data[i] = initrd_buffer[i];
-
-    kfree(initrd_buffer);
-    return 0;
-}
-
 s32 initrd_set_fd(void)
 {
     return initrd_next_fd++;
+}
+
+void initrd_ls(void)
+{
+    for (u32 i = 0; i < initrd.count; i++) {
+        printk(" fd: %d  %s (%u bytes)\n", initrd.files[i].fd, initrd.files[i].name, initrd.files[i].size);
+    }
+
+    printk(" \n total files: %u/%u\n", initrd.count, INITRD_MAX_FILES);
+}
+
+vfs_adapter_t *initrd_get_adapter(void)
+{
+    return &initrd_adapter;
 }

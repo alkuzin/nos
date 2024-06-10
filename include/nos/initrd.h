@@ -40,7 +40,7 @@
 
 
 #define INITRD_MAX_NAME_SIZE 64
-#define INITRD_MAX_FILES     3
+#define INITRD_MAX_FILES     16
 #define INITRD_FILE_SIZE     1024 /* 1KB */
 
 /* file states */
@@ -72,9 +72,6 @@ typedef struct {
  * @param [in] end_paddr - given end physical address.
  */
 void initrd_init(void);
-
-/** @brief Display list of files. */
-void initrd_ls(void);
 
 /** @brief Free all allocated memory for initrd. */
 void initrd_free(void);
@@ -121,13 +118,6 @@ s32 initrd_write(s32 fd, void *buf, usize count);
 s32 initrd_read(s32 fd, void *buf, usize count);
 
 /**
- * @brief Get initial ramdisk adapter for VFS.
- * 
- * @return VFS adapter structure pointer. 
- */
-vfs_adapter_t *initrd_get_adapter(void);
-
-/**
  * @brief Open file.
  * 
  * @param [in] pathname - given path to the file to open. 
@@ -170,5 +160,15 @@ s32 initrd_get_index_by_fd(s32 fd);
  * @return new file descriptor.
  */
 s32 initrd_set_fd(void);
+
+/** @brief Display list of files. */
+void initrd_ls(void);
+
+/**
+ * @brief Get initial ramdisk adapter for VFS.
+ * 
+ * @return VFS adapter structure pointer. 
+ */
+vfs_adapter_t *initrd_get_adapter(void);
 
 #endif /* _NOS_KERNEL_INITRD_H_ */

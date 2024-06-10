@@ -35,6 +35,8 @@
 #define _NOS_KERNEL_VFS_H_
 
 #include <nos/types.h>
+#include <nos/fcntl.h>
+#include <nos/stat.h>
 
 #define MAX_PATH_SIZE 64
 
