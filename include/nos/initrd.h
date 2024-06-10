@@ -36,6 +36,7 @@
 
 #include <nos/types.h>
 #include <nos/fcntl.h>
+#include <nos/stat.h>
 #include <nos/vfs.h>
 
 
@@ -161,14 +162,39 @@ s32 initrd_get_index_by_fd(s32 fd);
  */
 s32 initrd_set_fd(void);
 
-/** @brief Display list of files. */
-void initrd_ls(void);
-
 /**
  * @brief Get initial ramdisk adapter for VFS.
  * 
  * @return VFS adapter structure pointer. 
  */
 vfs_adapter_t *initrd_get_adapter(void);
+
+/**
+ * @brief Get file information. 
+ * 
+ * @param [in] pathname - given path name.
+ * @param [in] sb - given file information structure to fill. 
+ * @return 0 - in case of success.
+ * @return -1 - in case of error.
+ */
+s32 initrd_stat(const char *pathname, stat_t *sb);
+
+/**
+ * @brief Get total number of files. 
+ * 
+ * @return total number of initrd files.
+ */
+u32 initrd_get_count(void);
+
+/**
+ * @brief Get file information.
+ * 
+ * @param [in] pathname - given directory name.
+ * @param [in] sb - given file information structure to fill. 
+ * @return 0 - in case of success.
+ * @return -1 - in case of error.
+ */
+s32 initrd_opendir(const char *pathname, stat_t *sb);
+
 
 #endif /* _NOS_KERNEL_INITRD_H_ */

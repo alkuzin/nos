@@ -94,9 +94,6 @@ void ksh_lsproc(void);
 /** @brief Display executable information. */
 void ksh_readexe(void);
 
-/** @brief Display list of files. */
-void ksh_ls(void);
-
 /**
  * @brief Read file. 
  * 

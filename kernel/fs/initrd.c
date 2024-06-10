@@ -34,6 +34,7 @@ static vfs_adapter_t initrd_adapter; ///< Initrd adapter for VFS.
 static initrd_t      initrd;         ///< Main initrd structure.
 static u8            *initrd_buffer; ///< Temporary buffer for file operations.
 static s32           initrd_next_fd;
+static u32           cur_file_index; /* for initrd_opendir() */
 
 
 void initrd_init(void)
@@ -92,7 +93,7 @@ s32 initrd_unlink(const char* pathname)
     
     /* handle incorrect path */
     if (!pathname)
-        return -1; /* file opening error */
+        return -1; /* file unlink error */
     
     /* handle missing files */
     if (initrd.count == 0)
@@ -245,7 +246,7 @@ s32 initrd_open(const char *pathname, s32 flags)
     file->flags = flags;
     
     initrd_buffer = (u8 *)kmalloc(INITRD_FILE_SIZE);
-    
+
     bzero(initrd_buffer, INITRD_FILE_SIZE);
     memcpy(initrd_buffer, file->data, file->size);
 
@@ -260,7 +261,7 @@ s32 initrd_close(s32 fd)
     file_index = initrd_get_index_by_fd(fd);
     
     if (file_index == -1)
-        return -1; /* file opening error */
+        return -1; /* file closing error */
     
     file = &initrd.files[file_index];
 
@@ -311,16 +312,59 @@ s32 initrd_set_fd(void)
     return initrd_next_fd++;
 }
 
-void initrd_ls(void)
-{
-    for (u32 i = 0; i < initrd.count; i++) {
-        printk(" fd: %d  %s (%u bytes)\n", initrd.files[i].fd, initrd.files[i].name, initrd.files[i].size);
-    }
-
-    printk(" \n total files: %u/%u\n", initrd.count, INITRD_MAX_FILES);
-}
-
 vfs_adapter_t *initrd_get_adapter(void)
 {
     return &initrd_adapter;
+}
+
+s32 initrd_stat(const char *pathname, stat_t *sb)
+{
+    initrd_file_t *file;
+    s32 file_index; /* index of the file in files structure */
+    
+    /* handle incorrect path */
+    if (!pathname)
+        return -1; /* get file stat error */
+    
+    file_index = initrd_get_index(pathname);
+    
+    if (file_index == -1)
+        return -1; /* get file stat error */
+
+    file = &initrd.files[file_index];
+
+    strncpy(sb->name, file->name, INITRD_MAX_NAME_SIZE);
+    sb->size  = file->size;
+    sb->mode  = file->mode;
+    sb->type  = file->type;
+    sb->fd    = file->fd;
+
+    return 0;
+}
+
+u32 initrd_get_count(void)
+{
+    return initrd.count;
+}
+
+s32 initrd_opendir(const char *pathname, stat_t *sb)
+{
+    initrd_file_t *file;
+    s32 ret;
+
+    // TODO: remove after implementing directories
+    if (strncmp(".", pathname, 1) != 0) {
+        printk("%s\n", "incorrect path");
+        return -1;
+    }
+    
+    if (cur_file_index >= initrd.count)
+        cur_file_index = 0;
+    
+    file = &initrd.files[cur_file_index];
+
+    ret = initrd_stat(file->name, sb);
+
+    cur_file_index++;
+    return ret;
 }

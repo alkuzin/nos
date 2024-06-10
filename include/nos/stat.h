@@ -34,7 +34,10 @@
 #ifndef _NOS_KERNEL_STAT_H_
 #define _NOS_KERNEL_STAT_H_
 
+#include <nos/types.h>
+
 /** @brief File types. */
+#define S_IFMT   0xF000 ///< Bits that determine file type.
 #define S_IFIFO  0x1000 ///< FIFO.
 #define S_IFCHR  0x2000 ///< Character device.
 #define S_IFDIR  0x4000 ///< Directory.
@@ -56,6 +59,12 @@
 #define S_IWOTH  0x002 ///< Other—write permission.
 #define S_IXOTH  0x001 ///< Other—execute permission.
 
-// TODO: implement stat structure and lstat(pathname, stat_t *sb)
+typedef struct {
+    char    name[64]; ///< Name of the file.
+    u32     size;     ///< Size of the file in bytes.
+    mode_t  mode;     ///< File permissions.
+    s32     fd;       ///< File descriptor.
+    u32     type;     ///< File type.
+} stat_t;
 
 #endif /* _NOS_KERNEL_STAT_H_ */

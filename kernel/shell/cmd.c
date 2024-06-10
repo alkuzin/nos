@@ -43,10 +43,6 @@ void ksh_warning(const char *cmd)
 void ksh_clear(void)
 {
     tty_clear();
-
-    tty_set_x(0);
-    tty_set_y(0);
-    update_cursor(0, 0);
 }
 
 void ksh_lsmem(multiboot_t *boot_info)
@@ -138,11 +134,6 @@ void ksh_readexe(void)
     //     (char *)header->signature);
 
     // exe_display_info(header);
-}
-
-void ksh_ls(void)
-{
-    initrd_ls();
 }
 
 void ksh_cat(const char *pathname)

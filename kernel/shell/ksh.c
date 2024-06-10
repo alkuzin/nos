@@ -25,6 +25,7 @@
 #include <stdio.h>
 
 #include <nos/shell/ksh.h>
+#include <nos/shell/ls.h>
 #include <nos/keyboard.h>
 #include <nos/kernel.h> 
 #include <nos/nosstd.h>
@@ -151,7 +152,7 @@ void ksh_exec(multiboot_t *boot_info, char *cmd)
 
 static void ksh_display_prompt(void)
 {
-    putk(" sh: ");
+    putk(USERNAME "@nos: ");
 }
 
 static bool ksh_is_empty(void)

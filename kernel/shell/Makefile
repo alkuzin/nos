@@ -2,7 +2,7 @@ include ../kernel_common.mk
 
 NAME = _ksh.o
 
-SRC  = ksh cmd
+SRC  = ksh cmd ls
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
