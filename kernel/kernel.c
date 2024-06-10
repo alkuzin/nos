@@ -31,6 +31,7 @@
 #include <nos/timer.h>
 #include <nos/types.h>
 #include <nos/sched.h>
+#include <nos/login.h>
 #include <nos/tty.h>
 #include <nos/gdt.h>
 #include <nos/idt.h>
@@ -38,6 +39,33 @@
 #include <nos/mm.h>
 #include <nos/pm.h>
 
+
+static void test_initrd(void)
+{
+    s32 fd, ret;
+
+    fd = vfs_creat("example.txt", S_IFREG | S_IRUSR | S_IWUSR);
+    
+    if (fd == -1)
+        printk(" %s\n", "vfs_creat: error to create file");
+    
+    fd = vfs_creat("text.txt", S_IFREG | S_IRUSR | S_IWUSR);
+    
+    if (fd == -1)
+        printk(" %s\n", "vfs_creat: error to create file");
+    
+    fd = vfs_open("text.txt", O_RDWR);
+    
+    if (fd == -1)
+        printk(" %s\n", "vfs_open: error to open file");
+    
+    ret = vfs_write(fd, "Hello, World!\n", 15);
+
+    if (ret == -1)
+        printk(" %s\n", "vfs_read: error to read file");
+    
+    vfs_close(fd);
+}
 
 void kboot(multiboot_t *boot_info)
 {
@@ -63,9 +91,6 @@ void kboot(multiboot_t *boot_info)
     memory_init(boot_info);
     printk(" %s\n", "kernel: initialized memory management");
 
-    __DISPLAY_OS_INFO();
-    __DISPLAY_OS_BUILD_INFO();
-
     /* initializing initial ramdisk */
     initrd_init();
     printk(" %s\n", "kernel: initialized initial ramdisk");
@@ -75,6 +100,8 @@ void kboot(multiboot_t *boot_info)
 
     vfs_init(INITRD, initrd_adapter);
     printk(" %s\n", "kernel: initialized Virtual File System");
+
+    test_initrd();
 
     /* initializing process scheduler */
     sched_init();
@@ -88,9 +115,15 @@ void kboot(multiboot_t *boot_info)
 
     sched_add(init_proc);
     sched_add(ksh_proc);
+    
+    login_init();
+    printk("Logged in at %s \n", __TIME__);
+    printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);
+    
+    printk("%s\n", "The programs included in NOS are free software.\n"
+    "The software is provided \"as is\", without warranty of any kind.\n");
 
     /* initializing kernel shell */
-    printk(" %s\n", "kernel: initializing kernel shell");
     ksh_init(boot_info);
 }
 

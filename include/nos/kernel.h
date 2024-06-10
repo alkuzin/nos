@@ -39,13 +39,19 @@
 #include <nos/tty.h>
 
 /** @brief OS information definitions. */
-#define __OS_NAME__            "nos"
+#define __OS_NAME__            "NOS"
 #define __OS_VERSION__         "v0.0.2"
 #define __OS_ARCH__            "x86_32"
 #define __OS_BUILD_DATE__      __DATE__
 #define __OS_BUILD_TIME__      __TIME__
-#define __OS_INFO_FMT__        " %s (%s %s) (c) @alkuzin - 2024\n"
+#define __OS_INFO_FMT__        "%s (%s %s) (c) @alkuzin - 2024\n"
 #define __OS_BUILD_INFO_FMT__  "%s %s <%s>\n"
+
+#define MAX_USERNAME_SIZE 5
+#define USERNAME          "alex"
+
+#define SUPER_SECURE_PASSWORD      "12345"
+#define SUPER_SECURE_PASSWORD_SIZE 6
 
 /**
  * @brief Macro for displaying main OS info: name, version 
@@ -59,7 +65,7 @@ printk(__OS_INFO_FMT__, __OS_NAME__, __OS_VERSION__, __OS_ARCH__)
  * and build date.
  */
 #define __DISPLAY_OS_BUILD_INFO() \
-printk(__OS_BUILD_INFO_FMT__, " Build time:", __OS_BUILD_TIME__, __OS_BUILD_DATE__)
+printk(__OS_BUILD_INFO_FMT__, "Build time:", __OS_BUILD_TIME__, __OS_BUILD_DATE__)
 
 /**
  * @brief Macro for kernel panic (detecting an internal fatal error).

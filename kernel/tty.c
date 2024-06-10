@@ -131,6 +131,10 @@ void tty_clear(void)
 		tty.v_mem[i] = vga_entry(' ', tty.color);
 		i++;
 	}
+	
+    tty_set_x(0);
+    tty_set_y(0);
+    update_cursor(0, 0);
 }
 
 void tty_rewrite(void)
