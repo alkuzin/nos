@@ -73,3 +73,6 @@ init-iso:
 	qemu-system-i386 -m 2024 -cdrom $(NAME_ISO)
 
 init: init-iso
+
+debug: 
+	qemu-system-i386 -s -S -m 2024 -cdrom $(NAME_ISO) & gdb $(NAME) -ex "target remote localhost:1234" -tui
