@@ -120,4 +120,37 @@ void  *memcpy(void *dest, const void *src, usize n);
  */
 s32   memcmp(const void *s1, const void *s2, usize n);
 
+/**
+ * @brief Breaks a string into a sequence of zero or more nonempty tokens.
+ * 
+ * On the first call to strtok(), the string to be parsed should be specified in str.
+ * In each subsequent call that should parse the same string, str must be nullptr.
+ * 
+ * @param [in] str - given string to parse. 
+ * @param [in] delim - given set of bytes that delimit the tokens in the parsed string.
+ * @return pointer to the next token.
+ * @return nullptr if there are no more tokens.
+ */
+char *strtok(char *str, const char *delim);
+
+/**
+ * @brief Search a string for any of a set of bytes.
+ * 
+ * @param [in] str - given string.
+ * @param [in] accept - given string to find.
+ * @return pointer to the byte in s that matches one of the bytes in accept.
+ * @return nullptr if no such byte is found.
+ */
+char *strpbrk(const char *str, const char *accept);
+
+// TODO: move to stdlib.h
+
+/**
+ * @brief Convert string to integer. 
+ * 
+ * @param [in] str - given string to convert. 
+ * @return integer converted from string.
+ */
+s32 atoi(char *str);
+
 #endif /* _LIBC_STRING_H_ */
