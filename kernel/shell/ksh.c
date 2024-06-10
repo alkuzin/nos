@@ -107,7 +107,7 @@ static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, c
     return (cmd_len == input_len) && (strncmp(cmd, input, cmd_len) == 0);
 }
 
-void ksh_exec(multiboot_t *boot_info, const char *cmd)
+void ksh_exec(multiboot_t *boot_info, char *cmd)
 {
     [[gnu::unused]]s32 cmd_len;
 
@@ -119,15 +119,32 @@ void ksh_exec(multiboot_t *boot_info, const char *cmd)
         ksh_clear();
     else if(ksh_is_valid("help", 4, cmd, cmd_len))
         ksh_help();
-        // TODO: make shell arguments parser
-    else if(ksh_is_valid("theme_0", 7, cmd, cmd_len))
-        ksh_theme(THEME_DEFAULT);
-    else if(ksh_is_valid("theme_1", 7, cmd, cmd_len))
-        ksh_theme(THEME_CLASSIC);
+    else if(ksh_is_valid("theme", 5, cmd, 5)) {
+        char *theme_type;
+
+        theme_type = strtok(cmd, " ");
+        theme_type = strtok(nullptr, " ");
+
+        if (theme_type)
+            ksh_theme(atoi(theme_type));
+        else
+            printk(" theme: %s\n", "incorrect argument\n");
+    }
     else if(ksh_is_valid("lsproc", 6, cmd, cmd_len))
         ksh_lsproc();
     else if(ksh_is_valid("ls", 2, cmd, cmd_len))
         ksh_ls();
+    else if(ksh_is_valid("cat", 3, cmd, 3)) {
+        char *pathname;
+
+        pathname = strtok(cmd, " ");
+        pathname = strtok(nullptr, " ");
+
+        if (pathname)
+            ksh_cat(pathname);
+        else
+            printk(" cat: %s\n", "incorrect argument\n");
+    }
     else
         ksh_warning((char *)cmd);
 }

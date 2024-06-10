@@ -62,8 +62,7 @@ void ksh_help(void)
            " clear        - clear screen\n"
            " lsmem        - display list of memory segments\n"
            " lsproc       - display list of current processes\n"
-           " theme_0      - set CLI theme to default\n"
-           " theme_1      - set CLI theme to classic\n"
+           " theme        - set CLI theme\n"
            " ls           - display list of files\n"
            "------------------------------------------------------\n");
 }
@@ -72,8 +71,8 @@ void ksh_theme(theme_t theme)
 {
     vga_color_t fg, bg;
 
-    switch (theme)
-    {
+    switch (theme) {
+
         case THEME_DEFAULT:
             fg = VGA_COLOR_WHITE;
             bg = VGA_COLOR_BLACK;
@@ -83,9 +82,24 @@ void ksh_theme(theme_t theme)
             fg = VGA_COLOR_WHITE;
             bg = VGA_COLOR_BLUE;
             break;
+        
+        case THEME_GREEN_BLACK:
+            fg = VGA_COLOR_LIGHT_GREEN;
+            bg = VGA_COLOR_BLACK;
+            break;
+        
+        case THEME_BROWN_BLACK:
+            fg = VGA_COLOR_BROWN;
+            bg = VGA_COLOR_BLACK;
+            break;
+        
+        case THEME_PURPLE_BLACK:
+            fg = VGA_COLOR_LIGHT_MAGENTA;
+            bg = VGA_COLOR_BLACK;
+            break;
     
         default:
-            printk(" ksh: incorrect theme \"%d\"\n ksh: type \"help\""
+            printk(" theme: incorrect theme \"%d\"\n ksh: type \"help\""
                     " to see list of available commands\n", theme);
             return;
     }
@@ -129,4 +143,29 @@ void ksh_readexe(void)
 void ksh_ls(void)
 {
     initrd_ls();
+}
+
+void ksh_cat(const char *pathname)
+{
+    char buffer[INITRD_FILE_SIZE];
+    s32 fd, ret;
+
+    fd = vfs_open(pathname, O_RDONLY);
+
+    if (fd == -1) {
+        printk(" cat: error to open file \"%s\"\n", pathname);
+        return;
+    }
+
+    ret = vfs_read(fd, buffer, INITRD_FILE_SIZE);
+
+    if (ret == -1)
+        printk(" cat: error to read file \"%s\"\n", pathname);
+    
+    printk("%s", buffer);
+
+    ret = vfs_close(fd);
+
+    if (ret == -1)
+        printk(" cat: error to close file \"%s\"\n", pathname);
 }

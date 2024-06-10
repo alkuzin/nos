@@ -40,7 +40,10 @@
 /** @brief Enumeration of builtin CLI themes. */
 typedef enum {
     THEME_DEFAULT,
-    THEME_CLASSIC
+    THEME_CLASSIC,
+    THEME_GREEN_BLACK,
+    THEME_BROWN_BLACK,
+    THEME_PURPLE_BLACK
 } theme_t;
 
 /**
@@ -56,7 +59,7 @@ void ksh_init(multiboot_t *boot_info);
  * @param [in] boot_info - given multiboot information structure.
  * @param [in] cmd - given shell command string.
  */
-void ksh_exec(multiboot_t *boot_info, const char *cmd);
+void ksh_exec(multiboot_t *boot_info, char *cmd);
 
 /**
  * @brief print shell warning in case of incorrect command.
@@ -93,5 +96,12 @@ void ksh_readexe(void);
 
 /** @brief Display list of files. */
 void ksh_ls(void);
+
+/**
+ * @brief Read file. 
+ * 
+ * @param [in] pathname - given file path.
+ */
+void ksh_cat(const char *pathname);
 
 #endif /* _NOS_KERNEL_SHELL_H_ */
