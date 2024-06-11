@@ -46,20 +46,15 @@ typedef enum {
     THEME_PURPLE_BLACK
 } theme_t;
 
-/**
- * @brief Initialize kernel shell.
- * 
- * @param [in] boot_info - given multiboot information structure.
- */
-void ksh_init(multiboot_t *boot_info);
+/** @brief Initialize kernel shell. */
+void ksh_init(void);
 
 /**
  * @brief Execute builtin shell commands.
  * 
- * @param [in] boot_info - given multiboot information structure.
  * @param [in] cmd - given shell command string.
  */
-void ksh_exec(multiboot_t *boot_info, char *cmd);
+void ksh_exec(char *cmd);
 
 /**
  * @brief print shell warning in case of incorrect command.
@@ -71,12 +66,8 @@ void ksh_warning(const char *cmd);
 /** @brief Clear terminal. */
 void ksh_clear(void);
 
-/**
- * @brief Display list of available memory.
- * 
- * @param [in] boot_info - given multiboot information structure.
- */
-void ksh_lsmem(multiboot_t *boot_info);
+/** @brief Display list of available memory. */
+void ksh_lsmem(void);
 
 /** @brief Display list of available shell commands. */
 void ksh_help(void);

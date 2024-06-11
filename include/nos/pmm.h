@@ -125,10 +125,31 @@ u32 *pmm_blocks_alloc(u32 n);
 void pmm_free_blocks(u32 *addr, u32 n);
 
 /**
- * @brief Display memory information.
+ * @brief Get max possible number of blocks.
  * 
- * @param [in] boot_info - given multiboot information structure.
+ * @return max number of blocks. 
  */
-void pmm_display_memory(multiboot_t *boot_info);
+u32 pmm_get_max_blocks(void);
+
+/**
+ * @brief Get number of used physical memory blocks.
+ * 
+ * @return number of used blocks. 
+ */
+u32 pmm_get_used_blocks(void);
+
+/**
+ * @brief Get RAM size.
+ * 
+ * @return total amount of physical memory in bytes.
+ */
+u32 pmm_get_phys_mem_total(void);
+
+/**
+ * @brief Get free RAM size.
+ * 
+ * @return amount of available physical memory in bytes.
+ */
+u32 pmm_get_phys_mem_free(void);
 
 #endif /* _NOS_KERNEL_PMM_H_ */

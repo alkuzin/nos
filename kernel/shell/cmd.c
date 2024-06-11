@@ -36,8 +36,7 @@
 
 void ksh_warning(const char *cmd)
 {
-    printk(" ksh: incorrect command \"%s\"\n ksh: type \"help\""
-           " to see list of available commands\n", cmd);
+    printk("ksh: %s: command not found \n", cmd);
 }
 
 void ksh_clear(void)
@@ -45,22 +44,37 @@ void ksh_clear(void)
     tty_clear();
 }
 
-void ksh_lsmem(multiboot_t *boot_info)
+void ksh_lsmem(void)
 {
-    pmm_display_memory(boot_info);
+    u32 max_blocks, used_blocks, phys_mem_total, phys_mem_free; 
+    u32 free_blocks, total_bytes, used_bytes, free_bytes;
+    
+    max_blocks     = pmm_get_max_blocks();
+    used_blocks    = pmm_get_used_blocks();
+    phys_mem_total = pmm_get_phys_mem_total();
+    phys_mem_free  = pmm_get_phys_mem_free();
+    free_blocks    = max_blocks - used_blocks;
+    total_bytes    = max_blocks  * BLOCK_SIZE;
+    used_bytes     = used_blocks * BLOCK_SIZE;
+    free_bytes     = free_blocks * BLOCK_SIZE;
+
+    printk(" \nMem: \n\t total: %u KB   free: %u KB   used: %u KB \n \n", phys_mem_total >> 10, 
+    phys_mem_free >> 10, (phys_mem_total - phys_mem_free) >> 10);
+    putk("Blocks: \n \n");
+    printk(" \ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
+    printk(" \tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
+    printk(" \tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
 }
 
 void ksh_help(void)
 {
     /* TODO: add command for displaying kernel info */
-    putk("----------------------< help >------------------------\n"
-           " help         - display this help menu\n"
-           " clear        - clear screen\n"
-           " lsmem        - display list of memory segments\n"
-           " lsproc       - display list of current processes\n"
-           " theme        - set CLI theme\n"
-           " ls           - display list of files\n"
-           "------------------------------------------------------\n");
+    putk(" \nhelp         - display this help\n"
+         "clear        - clear screen\n"
+         "lsmem        - display list of memory segments\n"
+         "lsproc       - display list of current processes\n"
+         "theme        - set CLI theme\n"
+         "ls           - display list of files\n \n");
 }
 
 void ksh_theme(theme_t theme)
@@ -95,8 +109,8 @@ void ksh_theme(theme_t theme)
             break;
     
         default:
-            printk(" theme: incorrect theme \"%d\"\n ksh: type \"help\""
-                    " to see list of available commands\n", theme);
+            printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
+                   " to see list of available commands\n", theme);
             return;
     }
     
@@ -106,23 +120,24 @@ void ksh_theme(theme_t theme)
 
 void ksh_lsproc(void)
 {
-    sched_t *scheduler;
-    pcb_t   *proc;
+    putk("comming soon ...\n");
+    // sched_t *scheduler;
+    // pcb_t   *proc;
 
-    scheduler = get_sched();
+    // scheduler = get_sched();
 
-    puts(" ------------------------------------------\n"
-         " | pid | pr | ppid | name |   base | size |\n"
-         " ------------------------------------------");
+    // puts(" ------------------------------------------\n"
+    //      " | pid | pr | ppid | name |   base | size |\n"
+    //      " ------------------------------------------");
 
-    for (s32 i = 0; i < scheduler->rear + 1; i++) {
-        proc = scheduler->processes[i];
-        printk("   %u |  %u  |  %u | %s | %#x | %u \n", proc->pid, proc->priority, 
-        proc->parent_pid, proc->name, proc->base, proc->size);
-    }
+    // for (s32 i = 0; i < scheduler->rear + 1; i++) {
+    //     proc = scheduler->processes[i];
+    //     printk("   %u |  %u  |  %u | %s | %#x | %u \n", proc->pid, proc->priority, 
+    //     proc->parent_pid, proc->name, proc->base, proc->size);
+    // }
 
-    puts(" ------------------------------------------ ");
-    printk(" \n total processes: %d\n", scheduler->rear + 1);   
+    // puts(" ------------------------------------------ ");
+    // printk(" \n total processes: %d\n", scheduler->rear + 1);   
 }
 
 void ksh_readexe(void)
@@ -144,19 +159,19 @@ void ksh_cat(const char *pathname)
     fd = vfs_open(pathname, O_RDONLY);
 
     if (fd == -1) {
-        printk(" cat: error to open file \"%s\"\n", pathname);
+        printk("cat: error to open file \"%s\"\n", pathname);
         return;
     }
 
     ret = vfs_read(fd, buffer, INITRD_FILE_SIZE);
 
     if (ret == -1)
-        printk(" cat: error to read file \"%s\"\n", pathname);
+        printk("cat: error to read file \"%s\"\n", pathname);
     
     printk("%s", buffer);
 
     ret = vfs_close(fd);
 
     if (ret == -1)
-        printk(" cat: error to close file \"%s\"\n", pathname);
+        printk("cat: error to close file \"%s\"\n", pathname);
 }
