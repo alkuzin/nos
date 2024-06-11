@@ -162,8 +162,14 @@ void ksh_exec(char *cmd)
 
 static void ksh_display_prompt(void)
 {
-    // TODO: add colored prompt + function tty_printc(str, fg, bg)
-    putk(USERNAME "@nos: ");
+    // TODO: add primary and secondary colors
+    // TODO: handle different themes.
+
+    // putk(USERNAME "@nos:-/ ");
+    tty_printc(USERNAME, VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    kputchar('@');
+    tty_printc("nos", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    putk(":-/ ");
 }
 
 static bool ksh_is_empty(void)
