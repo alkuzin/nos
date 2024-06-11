@@ -42,28 +42,19 @@
 
 static void test_initrd(void)
 {
-    s32 fd, ret;
+    s32 fd;
+    char *author_content = " \nAuthor: Alexander (@alkuzin) \n"
+                           "GitHub: https://github.com/alkuzin \n";    
 
-    fd = vfs_creat("example.txt", S_IFREG | S_IRUSR | S_IWUSR);
+    vfs_creat("AUTHOR", S_IFREG | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    vfs_creat("hw.txt", S_IFREG | S_IRUSR | S_IWUSR);
     
-    if (fd == -1)
-        printk(" %s\n", "vfs_creat: error to create file");
+    fd = vfs_open("AUTHOR", O_RDWR);
+    vfs_write(fd, author_content, 69);
+    vfs_close(fd);
     
-    fd = vfs_creat("text.txt", S_IFREG | S_IRUSR | S_IWUSR);
-    
-    if (fd == -1)
-        printk(" %s\n", "vfs_creat: error to create file");
-    
-    fd = vfs_open("text.txt", O_RDWR);
-    
-    if (fd == -1)
-        printk(" %s\n", "vfs_open: error to open file");
-    
-    ret = vfs_write(fd, "Hello, World!\n", 15);
-
-    if (ret == -1)
-        printk(" %s\n", "vfs_read: error to read file");
-    
+    fd = vfs_open("hw.txt", O_RDWR);
+    vfs_write(fd, "Hello, World!\n", 15);
     vfs_close(fd);
 }
 
@@ -103,19 +94,6 @@ void kboot(multiboot_t *boot_info)
 
     test_initrd();
 
-    /* initializing process scheduler */
-    sched_init();
-    printk(" %s\n", "kernel: initialized scheduler");	
-
-    /* Create initial system processes */
-    pcb_t *init_proc, *ksh_proc;
-
-    init_proc = pm_create_proc("init", HIGH_PRIORITY);
-    ksh_proc  = pm_create_proc("ksh", MEDIUM_PRIORITY);
-
-    sched_add(init_proc);
-    sched_add(ksh_proc);
-    
     login_init();
     printk("Logged in at %s \n", __TIME__);
     printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);
@@ -124,7 +102,7 @@ void kboot(multiboot_t *boot_info)
     "The software is provided \"as is\", without warranty of any kind.\n");
 
     /* initializing kernel shell */
-    ksh_init(boot_info);
+    ksh_init();
 }
 
 /* kernel entry point */
