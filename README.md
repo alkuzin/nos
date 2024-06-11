@@ -8,7 +8,9 @@ NOS - hobby Unix-like x86-32 operating system. ([documentation](docs/README.md))
 
 Was built on top of ([simple os](https://github.com/alkuzin/simple-os)).
 
-<img src="res/nos_v0_0_2.png">
+List of updates in [CHANGELOG.md](CHANGELOG.md)
+
+<img src="res/nos_v0_0_3.gif">
 
 ## Installation
 
