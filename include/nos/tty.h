@@ -147,4 +147,21 @@ void tty_kputchar_at(char c, u8 color, s32 x, s32 y);
  */
 void kputchar(const s32 c);
 
+/**
+ * @brief Print colored string to the screen.
+ * 
+ * @param [in] str - given string to print.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
+void tty_printc(const char *str, vga_color_t fg, vga_color_t bg);
+
+/**
+ * @brief Print colored character on screen.
+ * 
+ * @param [in] c - given character to print.
+ * @param [in] color - given custom color.
+ */
+void kputchar_c(const s32 c, u8 color);
+
 #endif /* _NOS_KERNEL_TTY_H_ */

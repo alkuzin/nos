@@ -43,7 +43,7 @@ void tty_init(void)
     tty.y_pos  = 0;
     tty.fg     = TTY_FG_COLOR;
     tty.bg     = TTY_BG_COLOR;
-    tty.color  = (u8)(tty.fg | tty.bg << 4);
+    tty.color  = vga_entry_color(tty.fg, tty.bg);
     tty.height = VGA_SCREEN_HEIGHT;
     tty.width  = VGA_SCREEN_WIDTH;
 }
@@ -151,6 +151,11 @@ void tty_rewrite(void)
 
 void kputchar(const s32 c)
 {
+	kputchar_c(c, tty.color);
+}
+
+void kputchar_c(const s32 c, u8 color)
+{
 	if(tty.x_pos >= tty.width) {
 		tty.x_pos = 0;
 		tty.y_pos++;
@@ -187,16 +192,30 @@ void kputchar(const s32 c)
                 tty.x_pos = tty.width;
             }
 			
-            tty_kputchar_at(' ', tty.color, tty.x_pos, tty.y_pos);
+            tty_kputchar_at(' ', color, tty.x_pos, tty.y_pos);
 			break;
 		
 		default:
             if(isprint(c)) {
-			    tty_kputchar_at(c, tty.color, tty.x_pos, tty.y_pos);
+			    tty_kputchar_at(c, color, tty.x_pos, tty.y_pos);
 			    tty.x_pos++;
             }
 			break;
 	};
 
 	update_cursor(tty.x_pos, tty.y_pos);	
+}
+
+void tty_printc(const char *str, vga_color_t fg, vga_color_t bg)
+{
+	u8  color;
+    u32 i;
+
+	color = vga_entry_color(fg, bg);
+    i = 0;
+
+    while(str[i]) {
+        kputchar_c(str[i], color);
+        i++;
+	}
 }
