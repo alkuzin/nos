@@ -58,7 +58,32 @@
 - separated libc and kernel library
 - modified kernel TTY
 - added CLI themes
-- switched project to new C23 standard
+- switched project to new `C23` standard
 - added Doxygen documentation for header files
 
 <img src="res/nos_v0_0_2.png">
+
+> NOS (v0.0.3):
+
+- moved some inline assembly commands in `include/asm/` directory
+- fixed issue with freeing available blocks of memory
+- replaced `unistd.h` with `nosstd.h`
+- made preparations for implementing `process manager` and `scheduler`
+- made preparations for `kernel executable` structure
+- added `Virtual File System`
+- started implementation of `ext2` file system
+- added `initial ramdisk`
+- moved file types & permissions into `stat.h`
+- added some file handeling functions like `open()`, `close()`, etc.
+- added debug option to main makefile (GDB + QEMU)
+- added `atoi()`, `strpbrk()` & `strtok()` functions
+- added `cat` command (only for reading files) & new themes:
+
+<img src="res/nos_themes.gif">
+
+- added `ls` command
+- added OS login
+- added `tty_printc()` and `kputchar_c()` functions
+- added colored shell prompt
+
+<img src="res/nos_v0_0_3.gif">
