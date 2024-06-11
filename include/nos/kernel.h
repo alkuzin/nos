@@ -40,7 +40,7 @@
 
 /** @brief OS information definitions. */
 #define __OS_NAME__            "NOS"
-#define __OS_VERSION__         "v0.0.2"
+#define __OS_VERSION__         "v0.0.3"
 #define __OS_ARCH__            "x86_32"
 #define __OS_BUILD_DATE__      __DATE__
 #define __OS_BUILD_TIME__      __TIME__
