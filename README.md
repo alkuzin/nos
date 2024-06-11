@@ -32,6 +32,12 @@ To return everything to original state:
 make fclean
 ```
 
+To initialize kernel in debug mode run:
+```console
+make debug
+```
+<img src="res/nos_debug.png">
+
 
 ## License
 
