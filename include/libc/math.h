@@ -207,4 +207,28 @@ f64 sin(f64 x);
  */
 f64 tan(f64 x);
 
+/**
+ * @brief Calculate the hyperbolic cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic cosine of the @a x.
+ */
+f64 cosh(f64 x);
+
+/**
+ * @brief Calculate the hyperbolic sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic sine of the @a x.
+ */
+f64 sinh(f64 x);
+
+/**
+ * @brief Calculate the hyperbolic tangent of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic tangent of the @a x.
+ */
+f64 tanh(f64 x);
+
 #endif /* _LIBC_MATH_H_ */
