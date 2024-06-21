@@ -67,7 +67,7 @@ f64 nos_asin(f64 x)
     return M_PI_2 - nos_acos(x);
 }
 
-// f64 nos_atan(f64 x)
-// {
-
-// }
+f64 nos_atan(f64 x)
+{
+    return nos_atan2(x, 1);
+}

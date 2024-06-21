@@ -20,18 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdio.h>
-#include "test.h"
+#include <math.h>
 
 
-int main(void)
+f64 atan(f64 x)
 {
-    // test_acos();
-    // test_atan2();
-    // test_asin();
-    test_atan();
-
-    test_display_result();
-
-    return 0;
+    return atan2(x, 1);
 }

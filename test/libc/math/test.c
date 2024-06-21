@@ -36,6 +36,34 @@ static s32 test_number       = 0;
 static void test_cmp(f64 expected, f64 actual);
 
 
+void test_atan(void)
+{
+    puts("-----------------------------------------");
+    test_atan_s(10);
+    test_atan_s(-10);
+    test_atan_s(0.00324);
+    test_atan_s(-0.00324);
+    test_atan_s(0.00001);
+    test_atan_s(-0.00001);
+    test_atan_s(-10);
+    test_atan_s(1);
+    test_atan_s(-1);
+    test_atan_s(0);
+    test_atan_s(0.3456);
+    test_atan_s(-0.4567);
+    test_atan_s(-0.231589);
+    test_atan_s(-0.295024);
+    test_atan_s(-0.312828);
+    test_atan_s(-0.602383);
+    test_atan_s(0.512116);
+    test_atan_s(0.903607);
+    test_atan_s(0.506905);
+    test_atan_s(0.311673);
+    test_atan_s(-0.535603);
+    test_atan_s(-0.316148);
+    puts("-----------------------------------------");
+}
+
 void test_acos(void)
 {
     puts("-----------------------------------------");
@@ -119,9 +147,9 @@ void test_asin(void)
 }
 
 
-void test_acos_s(double x)
+void test_acos_s(f64 x)
 {
-    double expected, actual;
+    f64 expected, actual;
 
     expected = nos_acos(x);
     actual   = acos(x);
@@ -135,9 +163,9 @@ void test_acos_s(double x)
     test_cmp(expected, actual);
 }
 
-void test_atan2_s(double y, double x)
+void test_atan2_s(f64 y, f64 x)
 {
-    double expected, actual;
+    f64 expected, actual;
 
     expected = nos_atan2(y, x);
     actual   = atan2(y, x);
@@ -152,9 +180,9 @@ void test_atan2_s(double y, double x)
     test_cmp(expected, actual);
 }
 
-void test_asin_s(double x)
+void test_asin_s(f64 x)
 {
-    double expected, actual;
+    f64 expected, actual;
 
     expected = nos_asin(x);
     actual   = asin(x);
@@ -190,4 +218,21 @@ static void test_cmp(f64 expected, f64 actual)
         puts("test result: < FAIL >\n\n");
         failed_tests++;
     }
+}
+
+
+void test_atan_s(f64 x)
+{
+    f64 expected, actual;
+
+    expected = nos_atan(x);
+    actual   = atan(x);
+    
+    test_number++;
+    printf(":::: TEST %d ::::\n\n", test_number);
+    printf("x:        %lf\n", x);
+    printf("nos_atan: %.*lf \n", TEST_MATH_PRECISION, expected);
+    printf("atan:     %.*lf \n", TEST_MATH_PRECISION, actual);
+
+    test_cmp(expected, actual);
 }

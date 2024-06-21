@@ -157,11 +157,25 @@ f64 fmin(f64 x, f64 y);
  * @return arc cosine of @a x. 
  */
 f64 acos(f64 x);
+
+/**
+ * @brief Calculates the arc sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return arc sine of @a x. 
+ */
 f64 asin(f64 x);
+
+/**
+ * @brief Calculate the principal value of the arctangent of @a x.
+ *
+ * @param [in] x - given value.
+ * @return principal value of the arctangent of @a x in the range [-pi/2, pi/2].
+ */
 f64 atan(f64 x);
 
 /**
- * @brief Compute the principal value of the arctangent of y/x.
+ * @brief Calculate the principal value of the arctangent of y/x.
  * 
  * @param [in] y - given y-coordinate of the point.
  * @param [in] x - given y-coordinate of the point.

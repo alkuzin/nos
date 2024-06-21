@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "../../../include/nos/types.h"
+
 #define TEST_MATH_PRECISION 5
 #define TEST_MATH_EPSILON   1e-5
 
@@ -43,12 +45,16 @@ void test_atan2(void);
 /** @brief Run all custom asin() tests. */
 void test_asin(void);
 
+/** @brief Run all custom atan() tests. */
+void test_atan(void);
+
+
 /**
  * @brief Test custom acos() with glibc acos().
  * 
  * @param [in] x - given value.
  */
-void test_acos_s(double x);
+void test_acos_s(f64 x);
 
 /**
  * @brief Test custom atan2() with glibc atan2().
@@ -56,13 +62,20 @@ void test_acos_s(double x);
  * @param [in] x - given value.
  * @param [in] y - given value.
  */
-void test_atan2_s(double y, double x);
+void test_atan2_s(f64 y, f64 x);
 
 /**
  * @brief Test custom asin() with glibc asin().
  * 
  * @param [in] x - given value.
  */
-void test_asin_s(double x);
+void test_asin_s(f64 x);
+
+/**
+ * @brief Test custom atan() with glibc atan().
+ * 
+ * @param [in] x - given value.
+ */
+void test_atan_s(f64 x);
 
 #endif /* _LIBC_MATH_TEST_H_ */
