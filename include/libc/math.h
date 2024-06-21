@@ -57,7 +57,7 @@
  *
  * This constant represents a NaN value, which is the result of dividing 0.0 by 0.0.
  */
-#define _NAN (0.0f / 0.0f)
+#define NAN (0.0f / 0.0f)
 
 /**
  * @brief Calculate the absolute value of a given value.
@@ -122,5 +122,41 @@ f64 exp(f64 x);
  */
 f64 sqrt(f64 x);
 
+/**
+ * @brief Calculate the absolute value of a floating point number.
+ *
+ * @param [in] x - given floating point number.
+ * @return the absolute value of @a x.
+ */
+f64 fabs(f64 x);
+
+/**
+ * @brief Calculate the max value of given floating point numbers.
+ * 
+ * @param [in] x - first given floating point number to compare.
+ * @param [in] y - second given floating point number to compare.
+ * @return max value of the given values.
+ */
+f64 fmax(f64 x, f64 y);
+
+/**
+ * @brief Calculate the min value of given floating point numbers.
+ * 
+ * @param [in] x - first given floating point number to compare.
+ * @param [in] y - second given floating point number to compare.
+ * @return min value of the given values.
+ */
+f64 fmin(f64 x, f64 y);
+
+/**
+ * @brief Calculates the arc cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return arc cosine of @a x. 
+ */
+f64 acos(f64 x);
+f64 asin(f64 x);
+f64 atan(f64 x);
+f64 atan2(f64 y, f64 x);
 
 #endif /* _LIBC_MATH_H_ */
