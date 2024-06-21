@@ -146,6 +146,34 @@ void test_asin(void)
     puts("-----------------------------------------");
 }
 
+void test_sin(void)
+{
+    puts("-----------------------------------------");
+    test_sin_s(10);
+    test_sin_s(-10);
+    test_sin_s(0.00324);
+    test_sin_s(-0.00324);
+    test_sin_s(0.00001);
+    test_sin_s(-0.00001);
+    test_sin_s(-10);
+    test_sin_s(1);
+    test_sin_s(-1);
+    test_sin_s(0);
+    test_sin_s(0.3456);
+    test_sin_s(-0.4567);
+    test_sin_s(-0.231589);
+    test_sin_s(-0.295024);
+    test_sin_s(-0.312828);
+    test_sin_s(-0.602383);
+    test_sin_s(0.512116);
+    test_sin_s(0.903607);
+    test_sin_s(0.506905);
+    test_sin_s(0.311673);
+    test_sin_s(-0.535603);
+    test_sin_s(-0.316148);
+    puts("-----------------------------------------");
+}
+
 
 void test_acos_s(f64 x)
 {
@@ -233,6 +261,66 @@ void test_atan_s(f64 x)
     printf("x:        %lf\n", x);
     printf("nos_atan: %.*lf \n", TEST_MATH_PRECISION, expected);
     printf("atan:     %.*lf \n", TEST_MATH_PRECISION, actual);
+
+    test_cmp(expected, actual);
+}
+
+void test_sin_s(f64 x)
+{
+    f64 expected, actual;
+
+    expected = nos_sin(x);
+    actual   = sin(x);
+    
+    test_number++;
+    printf(":::: TEST %d ::::\n\n", test_number);
+    printf("x:       %lf\n", x);
+    printf("nos_sin: %.*lf \n", TEST_MATH_PRECISION, expected);
+    printf("sin:     %.*lf \n", TEST_MATH_PRECISION, actual);
+
+    test_cmp(expected, actual);
+}
+
+void test_cos(void)
+{
+    puts("-----------------------------------------");
+    test_cos_s(10);
+    test_cos_s(-10);
+    test_cos_s(0.00324);
+    test_cos_s(-0.00324);
+    test_cos_s(0.00001);
+    test_cos_s(-0.00001);
+    test_cos_s(-10);
+    test_cos_s(1);
+    test_cos_s(-1);
+    test_cos_s(0);
+    test_cos_s(0.3456);
+    test_cos_s(-0.4567);
+    test_cos_s(-0.231589);
+    test_cos_s(-0.295024);
+    test_cos_s(-0.312828);
+    test_cos_s(-0.602383);
+    test_cos_s(0.512116);
+    test_cos_s(0.903607);
+    test_cos_s(0.506905);
+    test_cos_s(0.311673);
+    test_cos_s(-0.535603);
+    test_cos_s(-0.316148);
+    puts("-----------------------------------------");
+}
+
+void test_cos_s(f64 x)
+{
+    f64 expected, actual;
+
+    expected = nos_cos(x);
+    actual   = cos(x);
+    
+    test_number++;
+    printf(":::: TEST %d ::::\n\n", test_number);
+    printf("x:        %lf\n", x);
+    printf("nos_cos: %.*lf \n", TEST_MATH_PRECISION, expected);
+    printf("cos:     %.*lf \n", TEST_MATH_PRECISION, actual);
 
     test_cmp(expected, actual);
 }

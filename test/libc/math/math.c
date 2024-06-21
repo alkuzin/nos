@@ -71,3 +71,36 @@ f64 nos_atan(f64 x)
 {
     return nos_atan2(x, 1);
 }
+
+f64 nos_sin(f64 x)
+{
+    f64 cur, acc, fact, pow;
+    s32 i;
+
+    cur  = x;
+    acc  = 1;
+    fact = 1;
+    pow  = x;
+    i    = 1;
+
+    while (fabs(acc) > 1e-8 && i < 100) {
+        fact *= ((2*i)*(2*i+1));
+        pow  *= -1 * x*x; 
+        acc  =  pow / fact;
+        cur  += acc;
+        i++;
+    }
+
+    return cur;
+}
+
+
+f64 nos_cos(f64 x)
+{
+    return nos_sin(x + M_PI_2);
+}
+
+f64 nos_tan(f64 x)
+{
+    return nos_sin(x) / nos_cos(x);
+}

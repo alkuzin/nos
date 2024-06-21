@@ -48,6 +48,12 @@ void test_asin(void);
 /** @brief Run all custom atan() tests. */
 void test_atan(void);
 
+/** @brief Run all custom sin() tests. */
+void test_sin(void);
+
+/** @brief Run all custom cos() tests. */
+void test_cos(void);
+
 
 /**
  * @brief Test custom acos() with glibc acos().
@@ -77,5 +83,19 @@ void test_asin_s(f64 x);
  * @param [in] x - given value.
  */
 void test_atan_s(f64 x);
+
+/**
+ * @brief Test custom sin() with glibc asin().
+ * 
+ * @param [in] x - given value.
+ */
+void test_sin_s(f64 x);
+
+/**
+ * @brief Test custom cos() with glibc cos().
+ * 
+ * @param [in] x - given value.
+ */
+void test_cos_s(f64 x);
 
 #endif /* _LIBC_MATH_TEST_H_ */
