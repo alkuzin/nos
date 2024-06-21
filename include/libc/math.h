@@ -183,4 +183,28 @@ f64 atan(f64 x);
  */
 f64 atan2(f64 y, f64 x);
 
+/**
+ * @brief Calculates the cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return cosine of @a x. 
+ */
+f64 cos(f64 x);
+
+/**
+ * @brief Calculates the sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return sine of @a x. 
+ */
+f64 sin(f64 x);
+
+/**
+ * @brief Calculate the tangent of an angle.
+ * 
+ * @param [in] x - given angle in radians.
+ * @return tangent of @a x.
+ */
+f64 tan(f64 x);
+
 #endif /* _LIBC_MATH_H_ */
