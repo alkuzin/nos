@@ -7,8 +7,6 @@
 1. [Introduction](#1-introduction)
 2. [Tools installation](#2-tools-installation)
 3. [Installation](#3-installation)
-4. [Project structure](#4-project-structure)
-5. [Headers overview](#5-headers-overview)
 
 ## 1. Introduction
 NOS - hobby Unix-like x86-32 operating system.
