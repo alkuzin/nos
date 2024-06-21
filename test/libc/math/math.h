@@ -20,34 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <math.h>
+#include "../../../include/nos/types.h"
 
+#define M_PI 3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+#define M_PI_4 0.78539816339744830962
 
-f64 log(f64 x)
-{
-    f64 result, term, square;
-    s32 i;
-
-    if(x <= 0)
-        return NAN;
-
-    if(x == 1)
-        return 0;
-
-    if(x == M_E)
-        return 1;
-
-    i      = 1;
-    result = 0;
-    term   = (x - 1) / (x + 1);
-    square = term * term;
-
-    while(i <= 60000) {
-        result += term / i;
-        term   *= square;
-        i++;
-        i++;
-    }
-
-    return (2 * result);
-}
+f64 nos_atan2(f64 y, f64 x);
+f64 nos_acos(f64 x);
+f64 nos_asin(f64 x);
+f64 nos_atan(f64 x);
+f64 nos_sin(f64 x);
+f64 nos_cos(f64 x);
+f64 nos_tan(f64 x);
+f64 nos_cosh(f64 x);
+f64 nos_sinh(f64 x);
+f64 nos_tanh(f64 x);
+f64 nos_log10(f64 x);
+f64 nos_log2(f64 x);
+f64 nos_ceil(f64 x);
+f64 nos_floor(f64 x);

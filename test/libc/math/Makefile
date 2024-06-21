@@ -1,12 +1,10 @@
-include ../libc_common.mk
+include ../common.mk
 
-NAME = libc_math.o
-
-SRC  = exp log pow sqrt fabs fmax fmin acos atan2 asin atan sin cos tan \
-	   cosh sinh tanh log10 ceil floor
-
-SRCS = $(addsuffix .c, $(SRC))
-OBJS = $(addsuffix .o, $(SRC))
+NAME  = test_math
+LINKS = -lm
+SRC   = main test math
+SRCS  = $(addsuffix .c, $(SRC))
+OBJS  = $(addsuffix .o, $(SRC))
 
 OBJS_DIR = objs/
 OBJS_PREFIXED = $(addprefix $(OBJS_DIR), $(OBJS))
@@ -17,7 +15,7 @@ $(OBJS_PREFIXED): $(SRCS)
 	mv *.o $(OBJS_DIR)
 
 $(NAME): $(OBJS_PREFIXED)
-	ld $(LFLAGS) $(OBJS_PREFIXED) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS_PREFIXED) -o $(NAME) $(LINKS)
 
 all: $(NAME) 
 

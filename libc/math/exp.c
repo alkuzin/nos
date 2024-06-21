@@ -31,7 +31,7 @@ f64 exp(f64 x)
         return 1;
 
     if(x == 1)
-        return E;
+        return M_E;
 
     if(x <= -15.0)
         return 0;

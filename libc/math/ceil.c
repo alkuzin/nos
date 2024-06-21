@@ -23,31 +23,16 @@
 #include <math.h>
 
 
-f64 log(f64 x)
+f64 ceil(f64 x)
 {
-    f64 result, term, square;
-    s32 i;
+    s32 int_part;
 
-    if(x <= 0)
-        return NAN;
-
-    if(x == 1)
-        return 0;
-
-    if(x == M_E)
-        return 1;
-
-    i      = 1;
-    result = 0;
-    term   = (x - 1) / (x + 1);
-    square = term * term;
-
-    while(i <= 60000) {
-        result += term / i;
-        term   *= square;
-        i++;
-        i++;
-    }
-
-    return (2 * result);
+    int_part = (s32)x;
+    
+    if (x == int_part)
+        return x;
+    else if (x > 0)
+        return int_part + 1;
+    else
+        return int_part;
 }

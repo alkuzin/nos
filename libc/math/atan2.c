@@ -23,31 +23,29 @@
 #include <math.h>
 
 
-f64 log(f64 x)
+f64 atan2(f64 y, f64 x)
 {
-    f64 result, term, square;
-    s32 i;
+    double t0, t1, t3, t4;
 
-    if(x <= 0)
-        return NAN;
+    t3 = fabs(x);
+    t1 = fabs(y);
+    t0 = fmax(t3, t1);
+    t1 = fmin(t3, t1);
+    t3 = (f64)1 / t0;
+    t3 = t1 * t3;
 
-    if(x == 1)
-        return 0;
+    t4 = t3 * t3;
+    t0 =         - (f64)0.013480470;
+    t0 = t0 * t4 + (f64)0.057477314;
+    t0 = t0 * t4 - (f64)0.121239071;
+    t0 = t0 * t4 + (f64)0.195635925;
+    t0 = t0 * t4 - (f64)0.332994597;
+    t0 = t0 * t4 + (f64)0.999995630;
+    t3 = t0 * t3;
 
-    if(x == M_E)
-        return 1;
-
-    i      = 1;
-    result = 0;
-    term   = (x - 1) / (x + 1);
-    square = term * term;
-
-    while(i <= 60000) {
-        result += term / i;
-        term   *= square;
-        i++;
-        i++;
-    }
-
-    return (2 * result);
+    t3 = (fabs(y) > fabs(x)) ? (f64)1.570796327 - t3 : t3;
+    t3 = (x < 0) ?  (f64)3.141592654 - t3 : t3;
+    t3 = (y < 0) ? -t3 : t3;
+    
+    return t3;
 }

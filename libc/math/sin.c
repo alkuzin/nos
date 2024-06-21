@@ -23,31 +23,24 @@
 #include <math.h>
 
 
-f64 log(f64 x)
+f64 sin(f64 x)
 {
-    f64 result, term, square;
+    f64 cur, acc, fact, pow;
     s32 i;
 
-    if(x <= 0)
-        return NAN;
+    cur  = x;
+    acc  = 1;
+    fact = 1;
+    pow  = x;
+    i    = 1;
 
-    if(x == 1)
-        return 0;
-
-    if(x == M_E)
-        return 1;
-
-    i      = 1;
-    result = 0;
-    term   = (x - 1) / (x + 1);
-    square = term * term;
-
-    while(i <= 60000) {
-        result += term / i;
-        term   *= square;
-        i++;
+    while (fabs(acc) > 1e-8 && i < 100) {
+        fact *= ((2*i)*(2*i+1));
+        pow  *= -1 * x*x; 
+        acc  =  pow / fact;
+        cur  += acc;
         i++;
     }
-
-    return (2 * result);
+    
+    return cur;
 }

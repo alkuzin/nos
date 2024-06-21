@@ -20,34 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <math.h>
+#include <stdio.h>
+#include "test.h"
 
 
-f64 log(f64 x)
+int main(void)
 {
-    f64 result, term, square;
-    s32 i;
+    // test_acos();
+    // test_atan2();
+    // test_asin();
+    // test_atan();
+    // test_sin();
+    // test_cos();
+    // test_cosh();
+    // test_sinh();
+    // test_tanh();
+    // test_log10();
+    // test_log2();
+    test_ceil();
+    test_floor();
 
-    if(x <= 0)
-        return NAN;
+    test_display_result();
 
-    if(x == 1)
-        return 0;
-
-    if(x == M_E)
-        return 1;
-
-    i      = 1;
-    result = 0;
-    term   = (x - 1) / (x + 1);
-    square = term * term;
-
-    while(i <= 60000) {
-        result += term / i;
-        term   *= square;
-        i++;
-        i++;
-    }
-
-    return (2 * result);
+    return 0;
 }

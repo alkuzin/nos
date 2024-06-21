@@ -38,26 +38,28 @@
 
 #include <stdint.h>
 
-/**
- * @brief The mathematical constant Pi.
- *
- * This constant defines the value of Pi (approximately 3.14).
- */
-#define PI 3.141592653589793
+/** @brief The mathematical constant Pi. */
+#define M_PI 3.14159265358979323846
+
+/** @brief The mathematical constant Pi divided by 2.*/
+#define M_PI_2 1.57079632679489661923
+
+/** @brief The mathematical constant Pi divided by 4.*/
+#define M_PI_4 0.78539816339744830962
 
 /**
  * @brief The mathematical constant e (Euler's number).
  *
  * This constant defines the value of the mathematical constant e (approximately 2.718).
  */
-#define E  2.718281828459045
+#define M_E  2.7182818284590452354
 
 /**
  * @brief Represents a NaN (Not-a-Number) value.
  *
  * This constant represents a NaN value, which is the result of dividing 0.0 by 0.0.
  */
-#define _NAN (0.0f / 0.0f)
+#define NAN (0.0f / 0.0f)
 
 /**
  * @brief Calculate the absolute value of a given value.
@@ -122,5 +124,143 @@ f64 exp(f64 x);
  */
 f64 sqrt(f64 x);
 
+/**
+ * @brief Calculate the absolute value of a floating point number.
+ *
+ * @param [in] x - given floating point number.
+ * @return the absolute value of @a x.
+ */
+f64 fabs(f64 x);
+
+/**
+ * @brief Calculate the max value of given floating point numbers.
+ * 
+ * @param [in] x - first given floating point number to compare.
+ * @param [in] y - second given floating point number to compare.
+ * @return max value of the given values.
+ */
+f64 fmax(f64 x, f64 y);
+
+/**
+ * @brief Calculate the min value of given floating point numbers.
+ * 
+ * @param [in] x - first given floating point number to compare.
+ * @param [in] y - second given floating point number to compare.
+ * @return min value of the given values.
+ */
+f64 fmin(f64 x, f64 y);
+
+/**
+ * @brief Calculates the arc cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return arc cosine of @a x. 
+ */
+f64 acos(f64 x);
+
+/**
+ * @brief Calculates the arc sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return arc sine of @a x. 
+ */
+f64 asin(f64 x);
+
+/**
+ * @brief Calculate the principal value of the arctangent of @a x.
+ *
+ * @param [in] x - given value.
+ * @return principal value of the arctangent of @a x in the range [-pi/2, pi/2].
+ */
+f64 atan(f64 x);
+
+/**
+ * @brief Calculate the principal value of the arctangent of y/x.
+ * 
+ * @param [in] y - given y-coordinate of the point.
+ * @param [in] x - given y-coordinate of the point.
+ * @return principal value of the arctangent of y/x in the range [-pi, pi].
+ */
+f64 atan2(f64 y, f64 x);
+
+/**
+ * @brief Calculates the cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return cosine of @a x. 
+ */
+f64 cos(f64 x);
+
+/**
+ * @brief Calculates the sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return sine of @a x. 
+ */
+f64 sin(f64 x);
+
+/**
+ * @brief Calculate the tangent of an angle.
+ * 
+ * @param [in] x - given angle in radians.
+ * @return tangent of @a x.
+ */
+f64 tan(f64 x);
+
+/**
+ * @brief Calculate the hyperbolic cosine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic cosine of the @a x.
+ */
+f64 cosh(f64 x);
+
+/**
+ * @brief Calculate the hyperbolic sine of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic sine of the @a x.
+ */
+f64 sinh(f64 x);
+
+/**
+ * @brief Calculate the hyperbolic tangent of given value.
+ * 
+ * @param [in] x - given value.
+ * @return hyperbolic tangent of the @a x.
+ */
+f64 tanh(f64 x);
+
+/**
+ * @brief Calculate the base-10 logarithm of a given value.
+ * 
+ * @param [in] x - given value.
+ * @return base-10 logarithm of @a x.
+ */
+f64 log10(f64 x);
+
+/**
+ * @brief Calculate the base-2 logarithm of a given value.
+ * 
+ * @param [in] x - given value.
+ * @return base-2 logarithm of @a x.
+ */
+f64 log2(f64 x);
+
+/**
+ * @brief Calculates the smallest integer value >= the given value.
+ * 
+ * @param [in] x - given value to ceil.
+ * @return ceil value of @a x.
+ */
+f64 ceil(f64 x);
+
+/**
+ * @brief Calculates the largest integer value <= to the given double value.
+ * 
+ * @param [in] x - given value to floor.
+ * @return floor value of @a x.
+ */
+f64 floor(f64 x);
 
 #endif /* _LIBC_MATH_H_ */
