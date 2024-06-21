@@ -22,6 +22,7 @@
 
 #include <math.h>
 
+
 f64 log(f64 x)
 {
     f64 result, term, square;
@@ -33,7 +34,7 @@ f64 log(f64 x)
     if(x == 1)
         return 0;
 
-    if(x == E)
+    if(x == M_E)
         return 1;
 
     i      = 1;

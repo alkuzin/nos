@@ -69,6 +69,12 @@ void test_log10(void);
 /** @brief Run all custom log2() tests. */
 void test_log2(void);
 
+/** @brief Run all custom ceil() tests. */
+void test_ceil(void);
+
+/** @brief Run all custom floor() tests. */
+void test_floor(void);
+
 
 
 /**

@@ -131,3 +131,31 @@ f64 nos_log2(f64 x)
 {
     return log(x) / log(2);
 }
+
+f64 nos_ceil(f64 x)
+{
+    s32 int_part;
+
+    int_part = (s32)x;
+    
+    if (x == int_part)
+        return x;
+    else if (x > 0)
+        return int_part + 1;
+    else
+        return int_part;
+}
+
+f64 nos_floor(f64 x)
+{
+    s32 int_part; 
+    
+    int_part = (int)x;
+    
+    if (x == int_part)
+        return x;
+    else if (x > 0)
+        return int_part;
+    else
+        return int_part - 1;
+}

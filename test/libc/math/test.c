@@ -171,6 +171,22 @@ void test_log2(void)
     puts("-----------------------------------------");
 }
 
+void test_ceil(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_ceil, ceil, "nos_ceil", "ceil", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_floor(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_floor, floor, "nos_floor", "floor", test_values[i]);
+    puts("-----------------------------------------");
+}
+
 void test_atan2(void)
 {
     puts("-----------------------------------------");

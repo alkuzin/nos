@@ -36,7 +36,9 @@ int main(void)
     // test_sinh();
     // test_tanh();
     // test_log10();
-    test_log2();
+    // test_log2();
+    test_ceil();
+    test_floor();
 
     test_display_result();
 

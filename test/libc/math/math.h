@@ -38,3 +38,5 @@ f64 nos_sinh(f64 x);
 f64 nos_tanh(f64 x);
 f64 nos_log10(f64 x);
 f64 nos_log2(f64 x);
+f64 nos_ceil(f64 x);
+f64 nos_floor(f64 x);
