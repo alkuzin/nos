@@ -2,7 +2,9 @@ include ../libc_common.mk
 
 NAME = libc_math.o
 
-SRC  = exp log pow sqrt fabs fmax fmin acos atan2 asin atan sin cos tan cosh sinh tanh
+SRC  = exp log pow sqrt fabs fmax fmin acos atan2 asin atan sin cos tan \
+	   cosh sinh tanh log10
+	   
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

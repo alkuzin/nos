@@ -231,4 +231,20 @@ f64 sinh(f64 x);
  */
 f64 tanh(f64 x);
 
+/**
+ * @brief Calculate the base-10 logarithm of a given value.
+ * 
+ * @param [in] x - given value.
+ * @return base-10 logarithm of @a x.
+ */
+f64 log10(f64 x);
+
+/**
+ * @brief Calculate the base-2 logarithm of a given value.
+ * 
+ * @param [in] x - given value.
+ * @return base-2 logarithm of @a x.
+ */
+f64 log2(f64 x);
+
 #endif /* _LIBC_MATH_H_ */

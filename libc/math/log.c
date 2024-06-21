@@ -28,7 +28,7 @@ f64 log(f64 x)
     s32 i;
 
     if(x <= 0)
-        return _NAN;
+        return NAN;
 
     if(x == 1)
         return 0;

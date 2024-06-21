@@ -22,28 +22,8 @@
 
 #include <math.h>
 
-f64 exp(f64 x)
+
+f64 log10(f64 x)
 {
-    s32 accuracy, i;
-    f64 exp_sum;
-
-    if(x == 0)
-        return 1;
-
-    if(x == 1)
-        return M_E;
-
-    if(x <= -15.0)
-        return 0;
-
-    accuracy = 1000;
-    exp_sum  = 1;
-    i        = accuracy - 1;
-    
-	while (i > 0) {
-        exp_sum = 1 + x * exp_sum / i;
-        i--;
-    }
-
-    return exp_sum;
+    return log(x) / 2.3025850929940456840179914546843642076011014886287729760333279009;
 }
