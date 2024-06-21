@@ -27,6 +27,14 @@ static s32 successfull_tests = 0;
 static s32 failed_tests      = 0;
 static s32 test_number       = 0;
 
+/**
+ * @brief Compare expected and actual results of test.
+ * 
+ * @param [in] expected - given result. 
+ * @param [in] actual - given result. 
+ */
+static void test_cmp(f64 expected, f64 actual);
+
 
 void test_acos(void)
 {
@@ -82,6 +90,35 @@ void test_atan2(void)
     puts("-----------------------------------------");
 }
 
+void test_asin(void)
+{
+    puts("-----------------------------------------");
+    test_asin_s(10);
+    test_asin_s(-10);
+    test_asin_s(0.00324);
+    test_asin_s(-0.00324);
+    test_asin_s(0.00001);
+    test_asin_s(-0.00001);
+    test_asin_s(-10);
+    test_asin_s(1);
+    test_asin_s(-1);
+    test_asin_s(0);
+    test_asin_s(0.3456);
+    test_asin_s(-0.4567);
+    test_asin_s(-0.231589);
+    test_asin_s(-0.295024);
+    test_asin_s(-0.312828);
+    test_asin_s(-0.602383);
+    test_asin_s(0.512116);
+    test_asin_s(0.903607);
+    test_asin_s(0.506905);
+    test_asin_s(0.311673);
+    test_asin_s(-0.535603);
+    test_asin_s(-0.316148);
+    puts("-----------------------------------------");
+}
+
+
 void test_acos_s(double x)
 {
     double expected, actual;
@@ -89,26 +126,13 @@ void test_acos_s(double x)
     expected = nos_acos(x);
     actual   = acos(x);
     
-    test++;
+    test_number++;
     printf(":::: TEST %d ::::\n\n", test_number);
     printf("x:        %lf\n", x);
     printf("nos_acos: %.*lf \n", TEST_MATH_PRECISION, expected);
     printf("acos:     %.*lf \n", TEST_MATH_PRECISION, actual);
 
-    if (isnan(actual) && isnan(expected)) {
-        puts("test: atan2: [ SUCCESS ]\n\n");
-        successfull_tests++;
-        return;
-    }
-
-    if (fabs(expected - actual) < TEST_MATH_EPSILON) {
-        puts("test: atan2: [ SUCCESS ]\n\n");
-        successfull_tests++;
-    }
-    else {
-        puts("test: atan2: < FAIL >\n\n");
-        failed_tests++;
-    }
+    test_cmp(expected, actual);
 }
 
 void test_atan2_s(double y, double x)
@@ -118,31 +142,52 @@ void test_atan2_s(double y, double x)
     expected = nos_atan2(y, x);
     actual   = atan2(y, x);
     
-    test++;
+    test_number++;
     printf(":::: TEST %d ::::\n\n", test_number);
     printf("y:         %lf\n", y);
     printf("x:         %lf\n", x);
     printf("nos_atan2: %.*lf \n", TEST_MATH_PRECISION, expected);
     printf("atan2:     %.*lf \n", TEST_MATH_PRECISION, actual);
+    
+    test_cmp(expected, actual);
+}
 
-    if (isnan(actual) && isnan(expected)) {
-        puts("test: atan2: [ SUCCESS ]\n\n");
-        successfull_tests++;
-        return;
-    }
+void test_asin_s(double x)
+{
+    double expected, actual;
 
-    if (fabs(expected - actual) < TEST_MATH_EPSILON) {
-        puts("test: atan2: [ SUCCESS ]\n\n");
-        successfull_tests++;
-    }
-    else {
-        puts("test: atan2: < FAIL >\n\n");
-        failed_tests++;
-    }
+    expected = nos_asin(x);
+    actual   = asin(x);
+    
+    test_number++;
+    printf(":::: TEST %d ::::\n\n", test_number);
+    printf("x:        %lf\n", x);
+    printf("nos_asin: %.*lf \n", TEST_MATH_PRECISION, expected);
+    printf("asin:     %.*lf \n", TEST_MATH_PRECISION, actual);
+
+    test_cmp(expected, actual);
 }
 
 void test_display_result(void)
 {
     printf("test: total: %d \t successfull: %d failed: %d\n", 
     successfull_tests + failed_tests, successfull_tests, failed_tests);
+}
+
+static void test_cmp(f64 expected, f64 actual)
+{
+    if (isnan(actual) && isnan(expected)) {
+        puts("test result: [ SUCCESS ]\n\n");
+        successfull_tests++;
+        return;
+    }
+
+    if (fabs(expected - actual) < TEST_MATH_EPSILON) {
+        puts("test result: [ SUCCESS ]\n\n");
+        successfull_tests++;
+    }
+    else {
+        puts("test result: < FAIL >\n\n");
+        failed_tests++;
+    }
 }

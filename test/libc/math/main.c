@@ -26,8 +26,9 @@
 
 int main(void)
 {
-    test_acos();
-    test_atan2();
+    // test_acos();
+    // test_atan2();
+    test_asin();
 
     test_display_result();
 

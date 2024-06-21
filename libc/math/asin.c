@@ -20,49 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#ifndef _LIBC_MATH_TEST_H_
-#define _LIBC_MATH_TEST_H_
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 
-#define TEST_MATH_PRECISION 5
-#define TEST_MATH_EPSILON   1e-5
 
+f64 asin(f64 x)
+{
+    if (x < -1.0 || x > 1.0)
+        return NAN;
 
-/** @brief Display total, successfull & failed number of tests. */
-void test_display_result(void);
-
-/** @brief Run all custom acos() tests. */
-void test_acos(void);
-
-/** @brief Run all custom atan2() tests. */
-void test_atan2(void);
-
-/** @brief Run all custom asin() tests. */
-void test_asin(void);
-
-/**
- * @brief Test custom acos() with glibc acos().
- * 
- * @param [in] x - given value.
- */
-void test_acos_s(double x);
-
-/**
- * @brief Test custom atan2() with glibc atan2().
- * 
- * @param [in] x - given value.
- * @param [in] y - given value.
- */
-void test_atan2_s(double y, double x);
-
-/**
- * @brief Test custom asin() with glibc asin().
- * 
- * @param [in] x - given value.
- */
-void test_asin_s(double x);
-
-#endif /* _LIBC_MATH_TEST_H_ */
+    return M_PI_2 - acos(x);
+}

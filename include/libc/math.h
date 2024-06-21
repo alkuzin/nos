@@ -38,19 +38,21 @@
 
 #include <stdint.h>
 
-/**
- * @brief The mathematical constant Pi.
- *
- * This constant defines the value of Pi (approximately 3.14).
- */
-#define PI 3.141592653589793
+/** @brief The mathematical constant Pi. */
+#define M_PI 3.14159265358979323846
+
+/** @brief The mathematical constant Pi divided by 2.*/
+#define M_PI_2 1.57079632679489661923
+
+/** @brief The mathematical constant Pi divided by 4.*/
+#define M_PI_4 0.78539816339744830962
 
 /**
  * @brief The mathematical constant e (Euler's number).
  *
  * This constant defines the value of the mathematical constant e (approximately 2.718).
  */
-#define E  2.718281828459045
+#define M_E  2.7182818284590452354
 
 /**
  * @brief Represents a NaN (Not-a-Number) value.
@@ -157,6 +159,14 @@ f64 fmin(f64 x, f64 y);
 f64 acos(f64 x);
 f64 asin(f64 x);
 f64 atan(f64 x);
+
+/**
+ * @brief Compute the principal value of the arctangent of y/x.
+ * 
+ * @param [in] y - given y-coordinate of the point.
+ * @param [in] x - given y-coordinate of the point.
+ * @return principal value of the arctangent of y/x in the range [-pi, pi].
+ */
 f64 atan2(f64 y, f64 x);
 
 #endif /* _LIBC_MATH_H_ */

@@ -22,7 +22,13 @@
 
 #include "../../../include/nos/types.h"
 
-#define PI 3.141592653589793
+#define M_PI 3.14159265358979323846
+
+#define M_PI_2 1.57079632679489661923
+
+#define M_PI_4 0.78539816339744830962
 
 f64 nos_atan2(f64 y, f64 x);
 f64 nos_acos(f64 x);
+f64 nos_asin(f64 x);
+f64 nos_atan(f64 x);

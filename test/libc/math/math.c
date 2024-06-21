@@ -58,3 +58,16 @@ f64 nos_acos(f64 x)
 
     return nos_atan2(sqrt(1.0 - x * x), x);
 }
+
+f64 nos_asin(f64 x)
+{
+    if (x < -1.0 || x > 1.0)
+        return NAN;
+
+    return M_PI_2 - nos_acos(x);
+}
+
+// f64 nos_atan(f64 x)
+// {
+
+// }
