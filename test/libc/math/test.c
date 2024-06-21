@@ -27,6 +27,14 @@ static s32 successfull_tests = 0;
 static s32 failed_tests      = 0;
 static s32 test_number       = 0;
 
+#define TEST_VALUES_1_SIZE 22
+
+static const f64 test_values[TEST_VALUES_1_SIZE] = {
+        0, -10, 0.00324, -0.00324, 0.00001, -0.00001, 10, 1, -1, 0,
+        0.3456, -0.4567,  0.231589, -0.295024, -0.312828, -0.602383,
+        0.512116, 0.903607, 0.506905, 0.311673, -0.535603, -0.316148
+};
+
 /**
  * @brief Compare expected and actual results of test.
  * 
@@ -34,61 +42,94 @@ static s32 test_number       = 0;
  * @param [in] actual - given result. 
  */
 static void test_cmp(f64 expected, f64 actual);
+    
 
+
+void test_f(f64 (*test_func)(f64), f64 (*orig_func)(f64), const char *test_f, const char *orig_f, f64 x)
+{
+    f64 expected, actual;
+
+    expected = test_func(x);
+    actual   = orig_func(x);
+    
+    test_number++;
+    printf(":::: TEST %d ::::\n\n", test_number);
+    printf("x:\t\t%lf\n", x);
+    printf("%s:\t%.*lf \n", test_f, TEST_MATH_PRECISION, expected);
+    printf("%s:\t\t%.*lf \n", orig_f, TEST_MATH_PRECISION, actual);
+
+    test_cmp(expected, actual);
+}
+
+void test_display_result(void)
+{
+    printf("test: total: %d \t successfull: %d failed: %d\n", 
+    successfull_tests + failed_tests, successfull_tests, failed_tests);
+}
+
+static void test_cmp(f64 expected, f64 actual)
+{
+    if (isnan(actual) && isnan(expected)) {
+        puts("test result: [ SUCCESS ]\n\n");
+        successfull_tests++;
+        return;
+    }
+
+    if (fabs(expected - actual) < TEST_MATH_EPSILON) {
+        puts("test result: [ SUCCESS ]\n\n");
+        successfull_tests++;
+    }
+    else {
+        puts("test result: < FAIL >\n\n");
+        failed_tests++;
+    }
+}
 
 void test_atan(void)
 {
-    puts("-----------------------------------------");
-    test_atan_s(10);
-    test_atan_s(-10);
-    test_atan_s(0.00324);
-    test_atan_s(-0.00324);
-    test_atan_s(0.00001);
-    test_atan_s(-0.00001);
-    test_atan_s(-10);
-    test_atan_s(1);
-    test_atan_s(-1);
-    test_atan_s(0);
-    test_atan_s(0.3456);
-    test_atan_s(-0.4567);
-    test_atan_s(-0.231589);
-    test_atan_s(-0.295024);
-    test_atan_s(-0.312828);
-    test_atan_s(-0.602383);
-    test_atan_s(0.512116);
-    test_atan_s(0.903607);
-    test_atan_s(0.506905);
-    test_atan_s(0.311673);
-    test_atan_s(-0.535603);
-    test_atan_s(-0.316148);
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_atan, atan, "nos_atan", "atan", test_values[i]);
     puts("-----------------------------------------");
 }
 
 void test_acos(void)
 {
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_acos, acos, "nos_acos", "acos", test_values[i]);
     puts("-----------------------------------------");
-    test_acos_s(10);
-    test_acos_s(-10);
-    test_acos_s(0.00324);
-    test_acos_s(-0.00324);
-    test_acos_s(0.00001);
-    test_acos_s(-0.00001);
-    test_acos_s(-10);
-    test_acos_s(1);
-    test_acos_s(-1);
-    test_acos_s(0);
-    test_acos_s(0.3456);
-    test_acos_s(-0.4567);
-    test_acos_s(-0.231589);
-    test_acos_s(-0.295024);
-    test_acos_s(-0.312828);
-    test_acos_s(-0.602383);
-    test_acos_s(0.512116);
-    test_acos_s(0.903607);
-    test_acos_s(0.506905);
-    test_acos_s(0.311673);
-    test_acos_s(-0.535603);
-    test_acos_s(-0.316148);
+}
+
+void test_asin(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_asin, asin, "nos_asin", "asin", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_sin(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_sin, sin, "nos_sin", "sin", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_cos(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_cos, cos, "nos_cos", "cos", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_cosh(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_cosh, cosh, "nos_cosh", "cosh", test_values[i]);
     puts("-----------------------------------------");
 }
 
@@ -118,79 +159,6 @@ void test_atan2(void)
     puts("-----------------------------------------");
 }
 
-void test_asin(void)
-{
-    puts("-----------------------------------------");
-    test_asin_s(10);
-    test_asin_s(-10);
-    test_asin_s(0.00324);
-    test_asin_s(-0.00324);
-    test_asin_s(0.00001);
-    test_asin_s(-0.00001);
-    test_asin_s(-10);
-    test_asin_s(1);
-    test_asin_s(-1);
-    test_asin_s(0);
-    test_asin_s(0.3456);
-    test_asin_s(-0.4567);
-    test_asin_s(-0.231589);
-    test_asin_s(-0.295024);
-    test_asin_s(-0.312828);
-    test_asin_s(-0.602383);
-    test_asin_s(0.512116);
-    test_asin_s(0.903607);
-    test_asin_s(0.506905);
-    test_asin_s(0.311673);
-    test_asin_s(-0.535603);
-    test_asin_s(-0.316148);
-    puts("-----------------------------------------");
-}
-
-void test_sin(void)
-{
-    puts("-----------------------------------------");
-    test_sin_s(10);
-    test_sin_s(-10);
-    test_sin_s(0.00324);
-    test_sin_s(-0.00324);
-    test_sin_s(0.00001);
-    test_sin_s(-0.00001);
-    test_sin_s(-10);
-    test_sin_s(1);
-    test_sin_s(-1);
-    test_sin_s(0);
-    test_sin_s(0.3456);
-    test_sin_s(-0.4567);
-    test_sin_s(-0.231589);
-    test_sin_s(-0.295024);
-    test_sin_s(-0.312828);
-    test_sin_s(-0.602383);
-    test_sin_s(0.512116);
-    test_sin_s(0.903607);
-    test_sin_s(0.506905);
-    test_sin_s(0.311673);
-    test_sin_s(-0.535603);
-    test_sin_s(-0.316148);
-    puts("-----------------------------------------");
-}
-
-
-void test_acos_s(f64 x)
-{
-    f64 expected, actual;
-
-    expected = nos_acos(x);
-    actual   = acos(x);
-    
-    test_number++;
-    printf(":::: TEST %d ::::\n\n", test_number);
-    printf("x:        %lf\n", x);
-    printf("nos_acos: %.*lf \n", TEST_MATH_PRECISION, expected);
-    printf("acos:     %.*lf \n", TEST_MATH_PRECISION, actual);
-
-    test_cmp(expected, actual);
-}
-
 void test_atan2_s(f64 y, f64 x)
 {
     f64 expected, actual;
@@ -205,122 +173,5 @@ void test_atan2_s(f64 y, f64 x)
     printf("nos_atan2: %.*lf \n", TEST_MATH_PRECISION, expected);
     printf("atan2:     %.*lf \n", TEST_MATH_PRECISION, actual);
     
-    test_cmp(expected, actual);
-}
-
-void test_asin_s(f64 x)
-{
-    f64 expected, actual;
-
-    expected = nos_asin(x);
-    actual   = asin(x);
-    
-    test_number++;
-    printf(":::: TEST %d ::::\n\n", test_number);
-    printf("x:        %lf\n", x);
-    printf("nos_asin: %.*lf \n", TEST_MATH_PRECISION, expected);
-    printf("asin:     %.*lf \n", TEST_MATH_PRECISION, actual);
-
-    test_cmp(expected, actual);
-}
-
-void test_display_result(void)
-{
-    printf("test: total: %d \t successfull: %d failed: %d\n", 
-    successfull_tests + failed_tests, successfull_tests, failed_tests);
-}
-
-static void test_cmp(f64 expected, f64 actual)
-{
-    if (isnan(actual) && isnan(expected)) {
-        puts("test result: [ SUCCESS ]\n\n");
-        successfull_tests++;
-        return;
-    }
-
-    if (fabs(expected - actual) < TEST_MATH_EPSILON) {
-        puts("test result: [ SUCCESS ]\n\n");
-        successfull_tests++;
-    }
-    else {
-        puts("test result: < FAIL >\n\n");
-        failed_tests++;
-    }
-}
-
-
-void test_atan_s(f64 x)
-{
-    f64 expected, actual;
-
-    expected = nos_atan(x);
-    actual   = atan(x);
-    
-    test_number++;
-    printf(":::: TEST %d ::::\n\n", test_number);
-    printf("x:        %lf\n", x);
-    printf("nos_atan: %.*lf \n", TEST_MATH_PRECISION, expected);
-    printf("atan:     %.*lf \n", TEST_MATH_PRECISION, actual);
-
-    test_cmp(expected, actual);
-}
-
-void test_sin_s(f64 x)
-{
-    f64 expected, actual;
-
-    expected = nos_sin(x);
-    actual   = sin(x);
-    
-    test_number++;
-    printf(":::: TEST %d ::::\n\n", test_number);
-    printf("x:       %lf\n", x);
-    printf("nos_sin: %.*lf \n", TEST_MATH_PRECISION, expected);
-    printf("sin:     %.*lf \n", TEST_MATH_PRECISION, actual);
-
-    test_cmp(expected, actual);
-}
-
-void test_cos(void)
-{
-    puts("-----------------------------------------");
-    test_cos_s(10);
-    test_cos_s(-10);
-    test_cos_s(0.00324);
-    test_cos_s(-0.00324);
-    test_cos_s(0.00001);
-    test_cos_s(-0.00001);
-    test_cos_s(-10);
-    test_cos_s(1);
-    test_cos_s(-1);
-    test_cos_s(0);
-    test_cos_s(0.3456);
-    test_cos_s(-0.4567);
-    test_cos_s(-0.231589);
-    test_cos_s(-0.295024);
-    test_cos_s(-0.312828);
-    test_cos_s(-0.602383);
-    test_cos_s(0.512116);
-    test_cos_s(0.903607);
-    test_cos_s(0.506905);
-    test_cos_s(0.311673);
-    test_cos_s(-0.535603);
-    test_cos_s(-0.316148);
-    puts("-----------------------------------------");
-}
-
-void test_cos_s(f64 x)
-{
-    f64 expected, actual;
-
-    expected = nos_cos(x);
-    actual   = cos(x);
-    
-    test_number++;
-    printf(":::: TEST %d ::::\n\n", test_number);
-    printf("x:        %lf\n", x);
-    printf("nos_cos: %.*lf \n", TEST_MATH_PRECISION, expected);
-    printf("cos:     %.*lf \n", TEST_MATH_PRECISION, actual);
-
     test_cmp(expected, actual);
 }

@@ -54,13 +54,9 @@ void test_sin(void);
 /** @brief Run all custom cos() tests. */
 void test_cos(void);
 
+/** @brief Run all custom cosh() tests. */
+void test_cosh(void);
 
-/**
- * @brief Test custom acos() with glibc acos().
- * 
- * @param [in] x - given value.
- */
-void test_acos_s(f64 x);
 
 /**
  * @brief Test custom atan2() with glibc atan2().
@@ -71,31 +67,14 @@ void test_acos_s(f64 x);
 void test_atan2_s(f64 y, f64 x);
 
 /**
- * @brief Test custom asin() with glibc asin().
+ * @brief Function for testing math functions with 1 argument.
  * 
- * @param [in] x - given value.
+ * @param [in] test_func - given test function pointer.
+ * @param [in] orig_func - given original function pointer.
+ * @param [in] test_f - given test function name.
+ * @param [in] orig_f - given original function name.
+ * @param [in] x  - given value.
  */
-void test_asin_s(f64 x);
-
-/**
- * @brief Test custom atan() with glibc atan().
- * 
- * @param [in] x - given value.
- */
-void test_atan_s(f64 x);
-
-/**
- * @brief Test custom sin() with glibc asin().
- * 
- * @param [in] x - given value.
- */
-void test_sin_s(f64 x);
-
-/**
- * @brief Test custom cos() with glibc cos().
- * 
- * @param [in] x - given value.
- */
-void test_cos_s(f64 x);
+void test_f(f64 (*test_func)(f64), f64 (*orig_func)(f64), const char *test_f, const char *orig_f, f64 x);
 
 #endif /* _LIBC_MATH_TEST_H_ */
