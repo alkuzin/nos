@@ -69,6 +69,12 @@ void test_display_result(void)
 
 static void test_cmp(f64 expected, f64 actual)
 {
+    if (isinf(actual) && isinf(expected)) {
+        puts("test result: [ SUCCESS ]\n\n");
+        successfull_tests++;
+        return;
+    }
+
     if (isnan(actual) && isnan(expected)) {
         puts("test result: [ SUCCESS ]\n\n");
         successfull_tests++;
@@ -146,6 +152,22 @@ void test_tanh(void)
     puts("-----------------------------------------");   
     for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
         test_f(nos_tanh, tanh, "nos_tanh", "tanh", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_log10(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_log10, log10, "nos_log10", "log10", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_log2(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_log2, log2, "nos_log2", "log2", test_values[i]);
     puts("-----------------------------------------");
 }
 

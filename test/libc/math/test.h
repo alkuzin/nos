@@ -63,6 +63,13 @@ void test_sinh(void);
 /** @brief Run all custom tanh() tests. */
 void test_tanh(void);
 
+/** @brief Run all custom log10() tests. */
+void test_log10(void);
+
+/** @brief Run all custom log2() tests. */
+void test_log2(void);
+
+
 
 /**
  * @brief Test custom atan2() with glibc atan2().

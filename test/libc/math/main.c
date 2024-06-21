@@ -34,7 +34,9 @@ int main(void)
     // test_cos();
     // test_cosh();
     // test_sinh();
-    test_tanh();
+    // test_tanh();
+    // test_log10();
+    test_log2();
 
     test_display_result();
 

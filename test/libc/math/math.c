@@ -121,3 +121,13 @@ f64 nos_tanh(f64 x)
   exp2x = exp(2 * x);
   return (exp2x - 1) / (exp2x + 1);
 }
+
+f64 nos_log10(f64 x)
+{
+    return log(x) / 2.3025850929940456840179914546843642076011014886287729760333279009;
+}
+
+f64 nos_log2(f64 x)
+{
+    return log(x) / log(2);
+}
