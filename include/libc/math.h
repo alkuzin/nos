@@ -247,4 +247,20 @@ f64 log10(f64 x);
  */
 f64 log2(f64 x);
 
+/**
+ * @brief Calculates the smallest integer value >= the given value.
+ * 
+ * @param [in] x - given value to ceil.
+ * @return ceil value of @a x.
+ */
+f64 ceil(f64 x);
+
+/**
+ * @brief Calculates the largest integer value <= to the given double value.
+ * 
+ * @param [in] x - given value to floor.
+ * @return floor value of @a x.
+ */
+f64 floor(f64 x);
+
 #endif /* _LIBC_MATH_H_ */
