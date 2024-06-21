@@ -57,6 +57,12 @@ void test_cos(void);
 /** @brief Run all custom cosh() tests. */
 void test_cosh(void);
 
+/** @brief Run all custom sinh() tests. */
+void test_sinh(void);
+
+/** @brief Run all custom tanh() tests. */
+void test_tanh(void);
+
 
 /**
  * @brief Test custom atan2() with glibc atan2().

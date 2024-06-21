@@ -133,6 +133,22 @@ void test_cosh(void)
     puts("-----------------------------------------");
 }
 
+void test_sinh(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_sinh, sinh, "nos_sinh", "sinh", test_values[i]);
+    puts("-----------------------------------------");
+}
+
+void test_tanh(void)
+{
+    puts("-----------------------------------------");   
+    for (usize i = 0; i < TEST_VALUES_1_SIZE; i++)
+        test_f(nos_tanh, tanh, "nos_tanh", "tanh", test_values[i]);
+    puts("-----------------------------------------");
+}
+
 void test_atan2(void)
 {
     puts("-----------------------------------------");

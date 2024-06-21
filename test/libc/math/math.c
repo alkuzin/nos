@@ -94,7 +94,6 @@ f64 nos_sin(f64 x)
     return cur;
 }
 
-
 f64 nos_cos(f64 x)
 {
     return nos_sin(x + M_PI_2);
@@ -103,4 +102,22 @@ f64 nos_cos(f64 x)
 f64 nos_tan(f64 x)
 {
     return nos_sin(x) / nos_cos(x);
+}
+
+f64 nos_cosh(f64 x)
+{
+    return 0.5 * (exp(x) + exp(-x));
+}
+
+f64 nos_sinh(f64 x)
+{
+    return 0.5 * (exp(x) - exp(-x));
+}
+
+f64 nos_tanh(f64 x)
+{
+  f64 exp2x;
+  
+  exp2x = exp(2 * x);
+  return (exp2x - 1) / (exp2x + 1);
 }

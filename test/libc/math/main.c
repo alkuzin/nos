@@ -29,9 +29,12 @@ int main(void)
     // test_acos();
     // test_atan2();
     // test_asin();
-    //test_atan();
+    // test_atan();
     // test_sin();
-    test_cos();
+    // test_cos();
+    // test_cosh();
+    // test_sinh();
+    test_tanh();
 
     test_display_result();
 
