@@ -20,55 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-/**
- * @file  stdlib.h
- * @brief Defines general functions.
- * 
- * @details This file declares functions designed to convert numbers, 
- * query memory and other tasks.
- * 
- * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   22.06.2024
- */
-
-#ifndef _LIBC_STDLIB_H_
-#define _LIBC_STDLIB_H_
-
-#include <stddef.h>
+#include <stdlib.h>
 
 
-/** @brief The largest number rand will return.  */
-#define	RAND_MAX 2147483647
+static u64 next = 1;
 
-/**
- * @brief Convert string to integer. 
- * 
- * @param [in] str - given string to convert. 
- * @return integer converted from string.
- */
-s32 atoi(const char *str);
+s32 rand(void)
+{
+    next = next * 1103515245 + 12345;
+    return (u32)(next / 65536) % RAND_MAX;
+}
 
-/**
- * @brief Convert string to double. 
- * 
- * @param [in] str - given string to convert. 
- * @return double converted from string.
- */
-f64 atof(const char *str);
-
-/**
- * @brief Calculates the sequence of pseudo random numbers
- * from 0 to RAND_MAX.
- * 
- * @return pseudo random number. 
- */
-s32 rand(void);
-
-/**
- * @brief Set seed for the sequence of pseudo random numbers.
- * 
- * @param [in] seed - given new beginning of the sequence of pseudo random numbers.
- */
-void srand(u32 seed);
-
-#endif /* _LIBC_STDLIB_H_ */
+void srand(u32 seed)
+{
+    next = seed;
+}
