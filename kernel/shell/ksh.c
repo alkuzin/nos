@@ -118,7 +118,7 @@ static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, c
     return (cmd_len == input_len) && (strncmp(cmd, input, cmd_len) == 0);
 }
 
-void ksh_exec(char *cmd)
+s32 ksh_exec(char *cmd)
 {
     [[gnu::unused]]s32 cmd_len;
 
@@ -156,8 +156,12 @@ void ksh_exec(char *cmd)
         else
             printk("cat: %s\n", "incorrect argument\n");
     }
-    else
+    else {
         ksh_warning((char *)cmd);
+        return -1;
+    }
+
+    return 0;
 }
 
 static void ksh_display_prompt(void)
