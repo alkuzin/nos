@@ -23,7 +23,7 @@
 #include <stdlib.h>
 
 
-s32 atoi(char *str)
+s32 atoi(const char *str)
 {
     s32 is_negative, i, res;
 

@@ -20,37 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-/**
- * @file  stdlib.h
- * @brief Defines general functions.
- * 
- * @details This file declares functions designed to convert numbers, 
- * query memory and other tasks.
- * 
- * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   22.06.2024
- */
-
-#ifndef _LIBC_STDLIB_H_
-#define _LIBC_STDLIB_H_
-
-#include <stddef.h>
+#include <stdlib.h>
 
 
-/**
- * @brief Convert string to integer. 
- * 
- * @param [in] str - given string to convert. 
- * @return integer converted from string.
- */
-s32 atoi(const char *str);
+f64 atof(const char *str)
+{
+    f64 res, fraction;
+    s32 sign, decimal;
 
-/**
- * @brief Convert string to double. 
- * 
- * @param [in] str - given string to convert. 
- * @return double converted from string.
- */
-f64 atof(const char *str);
+    res      = 0;
+    fraction = 1;
+    sign     = 1;
+    decimal  = 0;
 
-#endif /* _LIBC_STDLIB_H_ */
+    while (*str == ' ')
+        str++;
+
+    if (*str == '-') {
+        sign = -1;
+        str++;
+    } 
+    else if (*str == '+')
+        str++;
+
+    while (*str != '\0') {
+
+        if (*str >= '0' && *str <= '9') {
+            res = res * 10 + (*str - '0');
+
+            if (decimal)
+                fraction *= 10;
+        } 
+        else if (*str == '.')
+            decimal = 1;
+        else
+            break;
+
+        str++;
+    }
+    
+    return (sign * res) / fraction;
+}
