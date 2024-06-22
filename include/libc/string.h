@@ -143,6 +143,26 @@ char *strtok(char *str, const char *delim);
  */
 char *strpbrk(const char *str, const char *accept);
 
+/**
+ * @brief Returns a pointer to the first occurrence of the character @a c in the string @a s.
+ * 
+ * @param [in] s - given source string.
+ * @param [in] c - given character to find.
+ * @return pointer to the first occurrence of @a c in @a s - in case of success.
+ * @return nullptr - otherwise.
+ */
+char *strchr(const char *s, s32 c);
+
+/**
+ * @brief Returns a pointer to the last occurrence of the character @a c in the string @a s.
+ * 
+ * @param [in] s - given source string.
+ * @param [in] c - given character to find.
+ * @return pointer to the last occurrence of @a c in @a s - in case of success.
+ * @return nullptr - otherwise.
+ */
+char *strrchr(const char *s, s32 c);
+
 // TODO: move to stdlib.h
 
 /**
@@ -152,5 +172,6 @@ char *strpbrk(const char *str, const char *accept);
  * @return integer converted from string.
  */
 s32 atoi(char *str);
+
 
 #endif /* _LIBC_STRING_H_ */
