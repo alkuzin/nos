@@ -2,7 +2,7 @@ include ../libc_common.mk
 
 NAME = libc_stdlib.o
 
-SRC  = atoi atof rand
+SRC  = atoi atof rand qsort
 
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))

@@ -38,7 +38,10 @@
 
 
 /** @brief The largest number rand will return.  */
-#define	RAND_MAX 2147483647
+#define	RAND_MAX 32767
+
+/** @brief Threshold of size of array to sort, below which insertion sort is used. */
+#define QSORT_THRESHOLD 16
 
 /**
  * @brief Convert string to integer. 
@@ -70,5 +73,18 @@ s32 rand(void);
  * @param [in] seed - given new beginning of the sequence of pseudo random numbers.
  */
 void srand(u32 seed);
+
+/**
+ * @brief Sorts an array with @a nmemb elements of size @a size.
+ * 
+ * There is Radix sort inside, what makes this algorithm even faster,
+ * than GNU libc qsort() (only for integers).
+ * 
+ * @param [in] base - given pointer to the first element of the sequence to sort.
+ * @param [in] nmemb - given number of elements in the sequence.
+ * @param [in] size - given size of each element in sequence in bytes.
+ * @param [in] cmp - given comparison function pointer.
+ */
+void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
 
 #endif /* _LIBC_STDLIB_H_ */
