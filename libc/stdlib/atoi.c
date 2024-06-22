@@ -20,8 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-#include <nos/types.h>
+#include <stdlib.h>
 
 
 s32 atoi(char *str)

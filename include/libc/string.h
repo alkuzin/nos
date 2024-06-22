@@ -196,15 +196,4 @@ void  *memset(void *s, s32 c, usize n);
  */
 void *memchr(const void *s, s32 c, usize n);
 
-// TODO: move to stdlib.h
-
-/**
- * @brief Convert string to integer. 
- * 
- * @param [in] str - given string to convert. 
- * @return integer converted from string.
- */
-s32 atoi(char *str);
-
-
 #endif /* _LIBC_STRING_H_ */
