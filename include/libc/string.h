@@ -163,6 +163,18 @@ char *strchr(const char *s, s32 c);
  */
 char *strrchr(const char *s, s32 c);
 
+
+/**
+ * @brief Locates the first occurrence of the null-terminated string @a little
+ * in the string @a big, where not more than @a len characters are searched.
+ * 
+ * @param [in] big - given string to find.
+ * @param [in] little - given source string.
+ * @param [in] len - given number of characters of @a little to search.
+ * @return pointer to the first occurrence of the string @a little in string @a big.
+ */
+char *strnstr(const char *big, const char *little, usize len);
+
 // TODO: move to stdlib.h
 
 /**

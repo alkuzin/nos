@@ -3,7 +3,7 @@ include ../libc_common.mk
 NAME = libc_string.o
 
 SRC  = strlen strncmp strncpy strncat memset bzero memcpy memcmp strtok strpbrk atoi \
-	   strchr strrchr
+	   strchr strrchr strnstr
 
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
