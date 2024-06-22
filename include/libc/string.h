@@ -77,50 +77,6 @@ usize strncpy(char *dest, const char *src, usize size);
 usize strncat(char *dest, const char *src, usize size);
 
 /**
- * @brief Fills the first n bytes of the memory of the area pointed to by s 
- * with the constant byte c.
- * 
- * @param [out] s - given buffer pointer.
- * @param [in] c - given byte for filling buffer.
- * @param [in] n - given number of buffer bytes to fill.
- * @return filled buffer pointer.
- */
-void  *memset(void *s, s32 c, usize n);
-
-/**
- * @brief Erases the data in the n bytes 
- * of the memory of the area pointed to by s, 
- * by writing '\0' bytes to that area.
- * 
- * @param [out] s - given buffer pointer.
- * @param [in] n - given number of buffer bytes to erase.
- */
-void  bzero(void *s, usize n);
-
-/**
- * @brief Copies n bytes from memory area src to memory area dest.
- * 
- * @param [out] dest - given destination buffer.
- * @param [in] src - given source buffer.
- * @param [in] n - given number of bytes to copy.
- * @return destination buffer pointer.
- */
-void  *memcpy(void *dest, const void *src, usize n);
-
-/**
- * @brief Compares the first n bytes (each interpreted as unsigned char) 
- * of the memory areas s1 and s2.
- * 
- * @param [in] s1 - first given memory area pointer.
- * @param [in] s2 - second given memory area pointer.
- * @param [in] n - given number of bytes to compare.
- * @return 0, if s1 and s2 are equal;
- * @return a negative value if s1 is less than s2;
- * @return a positive value if s1 is greater than s2.
- */
-s32   memcmp(const void *s1, const void *s2, usize n);
-
-/**
  * @brief Breaks a string into a sequence of zero or more nonempty tokens.
  * 
  * On the first call to strtok(), the string to be parsed should be specified in str.
@@ -163,7 +119,6 @@ char *strchr(const char *s, s32 c);
  */
 char *strrchr(const char *s, s32 c);
 
-
 /**
  * @brief Locates the first occurrence of the null-terminated string @a little
  * in the string @a big, where not more than @a len characters are searched.
@@ -174,6 +129,72 @@ char *strrchr(const char *s, s32 c);
  * @return pointer to the first occurrence of the string @a little in string @a big.
  */
 char *strnstr(const char *big, const char *little, usize len);
+
+/**
+ * @brief Erases the data in the n bytes 
+ * of the memory of the area pointed to by s, 
+ * by writing '\0' bytes to that area.
+ * 
+ * @param [out] s - given buffer pointer.
+ * @param [in] n - given number of buffer bytes to erase.
+ */
+void  bzero(void *s, usize n);
+
+/**
+ * @brief Copies n bytes from memory area src to memory area dest.
+ * 
+ * @param [out] dest - given destination buffer.
+ * @param [in] src - given source buffer.
+ * @param [in] n - given number of bytes to copy.
+ * @return destination buffer pointer.
+ */
+void  *memcpy(void *dest, const void *src, usize n);
+
+/**
+ * @brief Copies @a n bytes from memory area @a src to memory area @a dest.
+ * 
+ * @param [out] dest - given destination buffer.
+ * @param [in] src - given source buffer.
+ * @param [in] n - given number of bytes to copy.
+ * @return destination buffer pointer.
+ */
+void *memmove(void *dest, const void *src, usize n);
+
+/**
+ * @brief Compares the first n bytes (each interpreted as unsigned char) 
+ * of the memory areas s1 and s2.
+ * 
+ * @param [in] s1 - first given memory area pointer.
+ * @param [in] s2 - second given memory area pointer.
+ * @param [in] n - given number of bytes to compare.
+ * @return 0, if s1 and s2 are equal;
+ * @return a negative value if s1 is less than s2;
+ * @return a positive value if s1 is greater than s2.
+ */
+s32   memcmp(const void *s1, const void *s2, usize n);
+
+/**
+ * @brief Fills the first n bytes of the memory of the area pointed to by s 
+ * with the constant byte c.
+ * 
+ * @param [out] s - given buffer pointer.
+ * @param [in] c - given byte for filling buffer.
+ * @param [in] n - given number of buffer bytes to fill.
+ * @return filled buffer pointer.
+ */
+void  *memset(void *s, s32 c, usize n);
+
+/**
+ * @brief Scans the initial @a n bytes of the memory area 
+ * pointed to by @a s for the first instance of @a c.
+ * 
+ * @param [in] s - given pointer to the memory block to be searched.
+ * @param [in] c - given character to be located.
+ * @param [in] n - given number of bytes to be searched.
+ * @return pointer to the located character in case of success.
+ * @return nullptr - otherwise.
+ */
+void *memchr(const void *s, s32 c, usize n);
 
 // TODO: move to stdlib.h
 
