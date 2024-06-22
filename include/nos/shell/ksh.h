@@ -53,8 +53,10 @@ void ksh_init(void);
  * @brief Execute builtin shell commands.
  * 
  * @param [in] cmd - given shell command string.
+ * @return 0 - in case of success.
+ * @return -1 - in case of error.
  */
-void ksh_exec(char *cmd);
+s32 ksh_exec(char *cmd);
 
 /**
  * @brief print shell warning in case of incorrect command.

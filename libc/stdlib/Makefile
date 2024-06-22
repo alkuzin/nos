@@ -1,9 +1,8 @@
 include ../libc_common.mk
 
-NAME = libc_string.o
+NAME = libc_stdlib.o
 
-SRC  = strlen strncmp strncpy strncat memset bzero memcpy memcmp strtok strpbrk \
-	   strchr strrchr strnstr memmove memchr
+SRC  = atoi atof rand qsort system
 
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))

@@ -21,30 +21,23 @@
  * SOFTWARE. */
 
 #include <string.h>
-#include <nos/types.h>
 
-
-s32 atoi(char *str)
+    
+char *strrchr(const char *s, s32 c)
 {
-    s32 is_negative, i, res;
-
-    i           = 0;
-    res         = 0;
-    is_negative = 0;
+    int i;
     
-    if(str[i] == '-') {
-        is_negative = 1;
-        i++;
+    
+    i = strlen(s);
+    
+    if(s[i] == c)
+        return ((char *)(s + i));
+
+    while(i >= 0) {
+        if(s[i] == c)
+            return ((char *)(s + i));
+        i--;
     }
     
-    while(str[i] && (str[i] >= '0' && str[i] <= '9')) {
-        res *= 10;
-        res += ((int)str[i] - '0');
-        i++;
-    }
-
-    if(is_negative)
-        return -res;
-    
-    return res;
+    return nullptr;
 }
