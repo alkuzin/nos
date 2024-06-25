@@ -95,6 +95,6 @@ void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const v
  * @return 1 - if @a str is nullptr (means that command handler is exist).
  * @return -1 - otherwise.
  */
-s32 system(const char *str);
+s32 system(char *str);
 
 #endif /* _LIBC_STDLIB_H_ */

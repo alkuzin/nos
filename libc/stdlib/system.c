@@ -24,7 +24,7 @@
 #include <nos/shell/ksh.h>
 
 
-s32 system(const char *str)
+s32 system(char *str)
 {
     s32 ret;
 
