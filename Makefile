@@ -13,6 +13,8 @@ LIBK_DIR    = $(KERNEL_DIR)/libk
 LIBC        = $(LIBC_DIR)/libc.a
 KSH_DIR     = $(KERNEL_DIR)/shell
 FS_DIR      = $(KERNEL_DIR)/fs
+COMMON_DIR  = $(KERNEL_DIR)/common
+GFX_DIR     = $(KERNEL_DIR)/gfx
 
 NAME     = $(BUILD_DIR)/nos.elf
 NAME_ISO = nos.iso
@@ -25,7 +27,9 @@ OBJS = $(KERNEL_DIR)/_kernel.o \
        $(MM_DIR)/_mm.o \
        $(PM_DIR)/_pm.o \
        $(KSH_DIR)/_ksh.o \
-       $(FS_DIR)/_fs.o
+       $(FS_DIR)/_fs.o \
+       $(COMMON_DIR)/_common.o \
+       $(GFX_DIR)/_gfx.o
 
 $(OBJS):
 	$(MAKE) -C $(LIBC_DIR) all
@@ -37,10 +41,12 @@ $(OBJS):
 	$(MAKE) -C $(PM_DIR) all
 	$(MAKE) -C $(KSH_DIR) all
 	$(MAKE) -C $(FS_DIR) all
+	$(MAKE) -C $(COMMON_DIR) all
+	$(MAKE) -C $(GFX_DIR) all
 
 $(NAME): $(OBJS)
 	mkdir -p $(BUILD_DIR)
-	ld $(LFLAGS) $(KERNEL_DIR)/linker.ld -o $(NAME) $(OBJS) $(LIBC)
+	ld $(LFLAGS) $(BOOT_DIR)/linker.ld -o $(NAME) $(OBJS) $(LIBC)
 
 all: $(NAME) build-iso
 
@@ -54,6 +60,8 @@ clean:
 	$(MAKE) -C $(PM_DIR) fclean
 	$(MAKE) -C $(KSH_DIR) fclean
 	$(MAKE) -C $(FS_DIR) fclean
+	$(MAKE) -C $(COMMON_DIR) fclean
+	$(MAKE) -C $(GFX_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)
