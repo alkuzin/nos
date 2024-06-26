@@ -40,4 +40,11 @@ void timer_init(void);
 /** @brief Interrupt service routine for IRQ0. */
 void on_irq0(int_reg_t *regs);
 
+/**
+ * @brief Delay time. 
+ * 
+ * @param [in] seconds - given number of seconds to delay.
+ */
+void timer_delay(u32 seconds);
+
 #endif /* _NOS_KERNEL_TIMER_H_ */

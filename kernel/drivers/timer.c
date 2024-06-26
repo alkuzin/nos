@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+#include <nos/kernel.h>
 #include <nos/types.h>
 #include <nos/timer.h>
 #include <nos/ports.h>
@@ -29,6 +30,11 @@
 u32 ticks;
 const u32 freq = 100;
 
+void timer_delay(u32 seconds)
+{
+    (void)seconds;
+    // TODO: implement
+}
 
 void on_irq0([[gnu::unused]] int_reg_t *regs)
 {
