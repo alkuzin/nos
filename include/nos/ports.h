@@ -49,6 +49,17 @@ static inline void outb(u16 port, u8 data)
 }
 
 /**
+ * @brief Output a 16-bit value to a specified port.
+ * 
+ * @param [in] port -given port to which the data will be written.
+ * @param [in] data - given data byte to be written to the port.
+ */
+static inline void outw(u16 port, u16 data)
+{
+    __asm__ volatile("outw %0, %1" : : "a"(data), "Nd"(port));
+}
+
+/**
  * @brief Receive a byte of data from a specified input/output port.
  *
  * @param port - given port from which the data will be read.
@@ -60,5 +71,6 @@ static inline u8 inb(u16 port)
     __asm__ volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
     return rv;
 }
+
 
 #endif /* _NOS_KERNEL_PORTS_H_ */
