@@ -23,12 +23,14 @@
 #include <string.h>
 
 #include <nos/multiboot.h>
+#include <nos/memlayout.h>
 #include <nos/types.h>
 #include <nos/vmm.h>
 #include <nos/pmm.h>
 #include <nos/tty.h>
 
 #include <asm/system.h>
+
 
 page_dir_t *cur_page_dir = 0;
 
@@ -101,7 +103,7 @@ bool vmm_set_page_dir(page_dir_t *pd)
     cur_page_dir = pd;
 
     /* cr3 register contains address of the current page directory */
-    __asm__ volatile("mov %0, %%cr3" :: "r"((u32)pd));
+    __asm__ volatile("movl %%eax, %%cr3" :: "a"((u32)cur_page_dir));
 
     return true;
 }
@@ -143,6 +145,8 @@ bool vmm_map_page(void *paddr, void *vaddr)
     SET_ATTRIBUTE(page, PTE_PRESENT);
     SET_FRAME(page, (u32)paddr);
 
+    vmm_flush_tlb_entry((u32)vaddr);
+
     return true;
 }
 
@@ -154,6 +158,8 @@ void vmm_unmap_page(void *vaddr)
 
     SET_FRAME(page, 0);
     CLEAR_ATTRIBUTE(page, PTE_PRESENT);
+    
+    vmm_flush_tlb_entry((u32)vaddr);
 }
 
 bool vmm_init(void)
@@ -210,7 +216,7 @@ bool vmm_init(void)
         vaddr += PAGE_SIZE;
     }
     
-    frame = KERNEL_ADDR;
+    frame = KERNEL_START_PADDR;
     vaddr = 0xC0000000;
 
     for(u32 i = 0; i < 1024; i++) {
@@ -242,14 +248,10 @@ bool vmm_init(void)
     /* default directory entry points to 3GB page table*/
     SET_FRAME(entry2, (u32)table3G);
 
-    cur_page_dir = dir;
+    vmm_set_page_dir(dir);
 
     /* enable paging */
-    __asm__ volatile(
-        "movl %cr0, %eax;"
-        "orl $0x80000001, %eax;"
-        "movl %eax, %cr0;"
-    );
+    __asm__ volatile("movl %cr0, %eax; orl $0x80000001, %eax; movl %eax, %cr0;");
 
     return true;
 }

@@ -166,25 +166,25 @@ void pmm_free_blocks(u32 *addr, u32 n)
 
 void pmm_get_memory(const multiboot_t *boot_info, u32 *start_addr, u32 *size)
 {
-    multiboot_mmap_entry_t *mmmt;
+    multiboot_memory_map_t *mmmt;
     u32 max_entry_size;
 
     max_entry_size = 0;
 
-    for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_mmap_entry_t)) {
-       mmmt = (multiboot_mmap_entry_t *)(boot_info->mmap_addr + i);
+    for(u32 i = 0; i < boot_info->mmap_length; i += sizeof(multiboot_memory_map_t)) {
+       mmmt = (multiboot_memory_map_t *)(boot_info->mmap_addr + i);
         
        if(mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
-            phys_mem_free += mmmt->len_low;
+            phys_mem_free += mmmt->len;
     
-           if(mmmt->len_low > max_entry_size)
-                max_entry_size = mmmt->len_low;
+           if(mmmt->len > max_entry_size)
+                max_entry_size = mmmt->len;
        }
 
-       phys_mem_total += mmmt->len_low;
+       phys_mem_total += mmmt->len;
     }
 
-    *start_addr = _kernel_end;
+    *start_addr = KERNEL_END_PADDR;
     *size       = max_entry_size;
 }
 

@@ -35,13 +35,11 @@
 #define _NOS_KERNEL_PMM_H_
 
 #include <nos/multiboot.h>
+#include <nos/memlayout.h>
 #include <nos/types.h>
 
 #define BLOCK_SIZE     4096 /* 4KB */
 #define BITS_PER_BYTE  8
-
-///< Kernel end address.
-extern u32 _kernel_end;
 
 /**
  * @brief Set block in the memory map.

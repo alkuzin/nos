@@ -45,8 +45,6 @@
 #define PAGES_PER_TABLE 1024 ///< 1 KB
 #define PAGE_SIZE       4096 ///< 4 KB
 
-#define KERNEL_ADDR 0x50000 // TODO: move to other header file
-
 #define PD_INDEX(addr) ((addr) >> 22)
 #define PT_INDEX(addr) (((addr) >> 12) & 0x3FF) /* max index 1023 (0x3FF) */
 #define PAGE_PADDRESS(dir_entry) ((*dir_entry) & ~0xFFF)
