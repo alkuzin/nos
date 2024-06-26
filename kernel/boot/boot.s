@@ -29,10 +29,10 @@ MBOOT_MAGIC      equ 0x1BADB002
 ; adjusting power management settings
 MBOOT_PAGE_ALIGN equ 1 << 0
 MBOOT_MEM_INFO   equ 1 << 1
-MBOOT_USE_GFX    equ 0
+MBOOT_USE_GFX    equ 1 << 2 ; VBE mode flag.
 
 ; indicates a bootable device
-MBOOT_FLAGS      equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_USE_GFX 
+MBOOT_FLAGS      equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_USE_GFX
 
 ; the purpose of checksum is to ensure OS stability & security
 ; by detecting any unauthorised changes to the BIOS firmware
@@ -45,10 +45,10 @@ align 4 ; aligns next data element/instruction that is multiple of 4 bytes
     dd MBOOT_CHECKSUM ; declare double word (32-bit) of Magic number checksum
     dd 0, 0, 0, 0, 0
 
-    dd 0   ; linear graphics mode
-    dd 800 ; screen width
-    dd 600 ; screen height
-    dd 32  ; depth
+    dd 0    ; linear graphics mode
+    dd 1024 ; screen width
+    dd 768  ; screen height
+    dd 32   ; depth
 
 ; .bss section is used for declaring statically allocated variables
 ; that are not initialized with a value
@@ -59,32 +59,11 @@ stack_bottom:
     RESB 16384 * 8
 stack_top:
 
-section .boot
-
-; boot entry point
-global boot
-boot:
-    mov ecx, (initial_page_dir - 0xC0000000)
-    
-    ; cr3 -control register telling the CPU where the location of the page directory
-    ; and page tables for the current task
-    mov cr3, ecx 
-
-    ; physical address extension
-    mov ecx, cr4
-    or ecx, 0x10
-    mov cr4, ecx
-
-    ; enabling paging
-    mov ecx, cr0
-    or ecx, 0x80000000
-    mov cr0, ecx
-
-    jmp higher_half
-
 ; .text section contains executable instructions of a program
 section .text
-higher_half:
+
+global boot
+boot:
     mov esp, stack_top
     push ebx     ; multiboot info
     push eax     ; magic number
@@ -92,6 +71,7 @@ higher_half:
     ; call kernel entry point 'kmain' from kernel/lernel.c
     extern kmain
     call kmain 
+    cli
 
 halt:
     hlt	     ; this instruction halts the CPU 
@@ -100,13 +80,3 @@ halt:
 
 section .data
 align 4096 ; 4 Mb
-global initial_page_dir ; page table entry
-initial_page_dir:
-    dd 10000011b
-    times 768-1 dd 0
-
-    dd (0 << 22) | 10000011b
-    dd (1 << 22) | 10000011b
-    dd (2 << 22) | 10000011b
-    dd (3 << 22) | 10000011b
-    times 256-4 dd 0
