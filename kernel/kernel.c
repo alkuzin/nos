@@ -36,6 +36,8 @@
 #include <nos/gdt.h>
 #include <nos/idt.h>
 #include <nos/vfs.h>
+#include <nos/vbe.h>
+#include <nos/gfx.h>
 #include <nos/mm.h>
 #include <nos/pm.h>
 
@@ -60,12 +62,6 @@ static void test_initrd(void)
 
 void kboot(multiboot_t *boot_info)
 {
-    /* initializing kernel TTY */
-    tty_init();
-    tty_set_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
-	tty_clear(); 
-    printk(" %s\n", "kernel: initialized TTY");	
-
     /* initializing Global Descriptor Table */
     gdt_init();
     printk(" %s\n", "kernel: initialized Global Descriptor Table");
@@ -93,23 +89,39 @@ void kboot(multiboot_t *boot_info)
     printk(" %s\n", "kernel: initialized Virtual File System");
 
     test_initrd();
+}
+
+/* kernel entry point */
+extern void kmain(u32 magic, multiboot_t *mboot)
+{
+    multiboot_t boot_info = *mboot;
+    
+    vbe_init(&boot_info);
+    printk(" %s\n", "kernel: initialized VBE mode"); // TODO: add kmesg() for logs: "[ OK ] ..."
+
+    tty_init();
+    tty_set_color(RGB(255, 255, 255), RGB(0, 0, 0)); // TODO: define colors
+	tty_clear(); 
+    printk(" %s\n", "kernel: initialized TTY");
+    	
+    printk("kernel: magic: %#X\n", magic);
+    
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
+        printk(" kernel: Invalid magic number: %#X\n", magic);
+        return;
+    }
+
+    kboot(&boot_info);
 
     login_init();
+
     printk("Logged in at %s \n", __TIME__);
     printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);
-    
     printk("%s\n", "The programs included in NOS are free software.\n"
     "The software is provided \"as is\", without warranty of any kind.\n");
 
     /* initializing kernel shell */
     ksh_init();
-}
 
-/* kernel entry point */
-extern void kmain([[gnu::unused]] u32 magic, multiboot_t *mb)
-{
-    multiboot_t boot_info = *mb;
-    kboot(&boot_info);
-
-    for(;;); /* infinite loop for halting CPU */
+    khalt();
 }

@@ -125,6 +125,6 @@ void kboot(multiboot_t *boot_info);
  * @param [in] magic - given magic number.
  * @param [in] mb - given multiboot information structure.
  */
-extern void kmain(u32 magic, multiboot_t *mb);
+extern void kmain(u32 magic, multiboot_t *mboot);
 
 #endif /* _NOS_KERNEL_H_ */
