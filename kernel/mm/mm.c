@@ -32,7 +32,6 @@
 void memory_init(multiboot_t *boot_info)
 {
     u32  start_addr, size;
-    bool vmm_status;
 
     if(!(boot_info->flags >> 6 & 0x1))
         panic("%s\n", "invalid memory map given by GRUB bootloader");
@@ -46,10 +45,4 @@ void memory_init(multiboot_t *boot_info)
     
     /* free some available blocks of memory */
     pmm_region_init(start_addr, size);
-    
-    /* initializing virtual memory manager */
-    vmm_status = vmm_init();
-
-    if(!vmm_status)
-        panic("%s\n", "virtual memory manager initialization error");
 }
