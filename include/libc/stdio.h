@@ -31,7 +31,7 @@
 #ifndef _LIBC_STDIO_H_
 #define _LIBC_STDIO_H_
 
-#include <nos/vga.h>
+#include <nos/gfx.h>
 #include <stdarg.h>
 
 /**
@@ -48,7 +48,7 @@ void putk(const char *str);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void cputk(const char *str, vga_color_t fg, vga_color_t bg);
+void cputk(const char *str, rgb_t fg, rgb_t bg);
 
 /**
  * @brief Print string and a trailing newline.

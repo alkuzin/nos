@@ -79,43 +79,44 @@ void ksh_help(void)
 
 void ksh_theme(theme_t theme)
 {
-    vga_color_t fg, bg;
+    (void)theme;
+    // rgb_t fg, bg;
 
-    switch (theme) {
+    // switch (theme) {
 
-        case THEME_DEFAULT:
-            fg = VGA_COLOR_WHITE;
-            bg = VGA_COLOR_BLACK;
-            break;
+    //     case THEME_DEFAULT:
+    //         fg = VGA_COLOR_WHITE;
+    //         bg = VGA_COLOR_BLACK;
+    //         break;
         
-        case THEME_CLASSIC:
-            fg = VGA_COLOR_WHITE;
-            bg = VGA_COLOR_BLUE;
-            break;
+    //     case THEME_CLASSIC:
+    //         fg = VGA_COLOR_WHITE;
+    //         bg = VGA_COLOR_BLUE;
+    //         break;
         
-        case THEME_GREEN_BLACK:
-            fg = VGA_COLOR_LIGHT_GREEN;
-            bg = VGA_COLOR_BLACK;
-            break;
+    //     case THEME_GREEN_BLACK:
+    //         fg = VGA_COLOR_LIGHT_GREEN;
+    //         bg = VGA_COLOR_BLACK;
+    //         break;
         
-        case THEME_BROWN_BLACK:
-            fg = VGA_COLOR_BROWN;
-            bg = VGA_COLOR_BLACK;
-            break;
+    //     case THEME_BROWN_BLACK:
+    //         fg = VGA_COLOR_BROWN;
+    //         bg = VGA_COLOR_BLACK;
+    //         break;
         
-        case THEME_PURPLE_BLACK:
-            fg = VGA_COLOR_LIGHT_MAGENTA;
-            bg = VGA_COLOR_BLACK;
-            break;
+    //     case THEME_PURPLE_BLACK:
+    //         fg = VGA_COLOR_LIGHT_MAGENTA;
+    //         bg = VGA_COLOR_BLACK;
+    //         break;
     
-        default:
-            printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
-                   " to see list of available commands\n", theme);
-            return;
-    }
+    //     default:
+    //         printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
+    //                " to see list of available commands\n", theme);
+    //         return;
+    // }
     
-    tty_set_color(fg, bg);
-    tty_rewrite();    
+    // tty_set_color(fg, bg);
+    // tty_rewrite();    
 }
 
 void ksh_lsproc(void)

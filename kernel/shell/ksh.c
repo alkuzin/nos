@@ -170,11 +170,11 @@ static void ksh_display_prompt(void)
     // TODO: add primary and secondary colors
     // TODO: handle different themes.
 
-    // putk(USERNAME "@nos:-/ ");
-    tty_printc(USERNAME, VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-    kputchar('@');
-    tty_printc("nos", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-    putk(":-/ ");
+    putk(USERNAME "@nos:-/ ");
+    // tty_printc(USERNAME, VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    // kputchar('@');
+    // tty_printc("nos", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    // putk(":-/ ");
 }
 
 static bool ksh_is_empty(void)

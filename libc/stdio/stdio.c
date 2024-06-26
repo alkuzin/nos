@@ -38,16 +38,14 @@ void putk(const char *str)
 	}
 }
 
-void cputk(const char *str, vga_color_t fg, vga_color_t bg)
+void cputk(const char *str, rgb_t fg, rgb_t bg)
 {
-    u8  color;
 	s32 i;
 
-    color = vga_entry_color(fg, bg);
-	i     = 0;
+	i = 0;
 
     while (str[i]) {
-		tty_kputchar_at(str[i], color, tty_get_x(), tty_get_y());
+		tty_kputchar_at(str[i], tty_get_x(), tty_get_y(), fg, bg);
 		i++;
 	}
 }

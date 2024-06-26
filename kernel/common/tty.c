@@ -23,29 +23,31 @@
 #include <string.h>
 #include <ctype.h>
 
+#include <nos/vbefont.h>
 #include <nos/kernel.h>
 #include <nos/nosstd.h>
 #include <nos/types.h>
+#include <nos/timer.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
+#include <nos/gfx.h>
 
 
-/* VGA scroll function */
+/** @brief Screen scroll function */
 static void __kscroll(void);
 
 /* main kernel TTY structure */
 static tty_t tty;
 
+
 void tty_init(void)
 {
-    tty.v_mem  = (u16 *)VIDEO_MEMORY;
     tty.x_pos  = 0;
     tty.y_pos  = 0;
     tty.fg     = TTY_FG_COLOR;
     tty.bg     = TTY_BG_COLOR;
-    tty.color  = vga_entry_color(tty.fg, tty.bg);
-    tty.height = VGA_SCREEN_HEIGHT;
-    tty.width  = VGA_SCREEN_WIDTH;
+    tty.height = gfx_get_height();
+    tty.width  = gfx_get_width();
 }
 
 s32 tty_get_x(void)
@@ -68,21 +70,20 @@ void tty_set_y(s32 y)
     tty.y_pos = y;
 }
 
-vga_color_t tty_get_fg(void)
+rgb_t tty_get_fg(void)
 {
     return tty.fg;
 }
 
-vga_color_t tty_get_bg(void)
+rgb_t tty_get_bg(void)
 {
     return tty.bg;
 }
 
-void tty_set_color(vga_color_t fg, vga_color_t bg)
+void tty_set_color(rgb_t fg, rgb_t bg)
 {
-    tty.fg    = TTY_FG_COLOR;
-    tty.bg    = TTY_BG_COLOR;
-    tty.color = (u8)(fg | bg << 4);
+    tty.fg = fg;
+    tty.bg = bg;
 }
 
 s32  tty_get_height(void)
@@ -95,42 +96,19 @@ s32  tty_get_width(void)
     return tty.width;
 }
 
-void tty_kputchar_at(char c, u8 color, s32 x, s32 y)
+void tty_kputchar_at(char c, s32 x, s32 y, rgb_t fg, rgb_t bg)
 {
-	tty.v_mem[y * tty.width + x] = vga_entry(c, color);
+	gfx_draw_char((u8)c, x, y, fg, bg, true);
 }
 
 static void __kscroll(void)
 {
-	u16 buffer[(tty.width * tty.height * 2)];
-
-	memset(buffer, tty.color, sizeof(buffer));
-	memcpy(buffer, tty.v_mem, sizeof(buffer));
-
-	tty_clear();
-
-    for (u16 y = 0; y < tty.height; y++) {
-        for (u16 x = 0; x < tty.width; x++)
-            buffer[(y - 1) * tty.width + x] = buffer[y * tty.width + x];
-    }
-
-    for (u16 x = 0; x < tty.width; x++) {
-        buffer[(tty.height - 1) * tty.width + x] = (' ' | tty.color);
-    }
-	
-    memcpy(tty.v_mem, buffer, sizeof(buffer));
+	// TODO: implement secondary buffer for faster scrolling
 }
 
 void tty_clear(void)
 {
-	s32 i;
-
-	i = 0;
-	
-    while(i < tty.width * tty.height) {
-		tty.v_mem[i] = vga_entry(' ', tty.color);
-		i++;
-	}
+	gfx_fill_screen(tty.bg);
 	
     tty_set_x(0);
     tty_set_y(0);
@@ -139,26 +117,22 @@ void tty_clear(void)
 
 void tty_rewrite(void)
 {
-	s32 i;
-
-	i = 0;
-	
-    while(i < tty.width * tty.height) {
-		tty.v_mem[i] = vga_entry(tty.v_mem[i], tty.color);
-		i++;
-	}
+    for (s32 y = 0; y < tty.height; y++) {
+        for (s32 x = 0; x < tty.width; x++)
+            gfx_draw_pixel(x, y, gfx_get_pixel(x, y));
+    }
 }
 
 void kputchar(const s32 c)
 {
-	kputchar_c(c, tty.color);
+	kputchar_c(c, tty.fg, tty.bg);
 }
 
-void kputchar_c(const s32 c, u8 color)
+void kputchar_c(const s32 c, rgb_t fg, rgb_t bg)
 {
 	if(tty.x_pos >= tty.width) {
 		tty.x_pos = 0;
-		tty.y_pos++;
+		tty.y_pos += VBE_CHAR_HEIGHT;
 	}
 	
 	if(tty.y_pos >= tty.height) {
@@ -168,7 +142,7 @@ void kputchar_c(const s32 c, u8 color)
 
 	switch(c) {
 		case '\n':
-			tty.y_pos++;
+			tty.y_pos += VBE_CHAR_HEIGHT;
 			tty.x_pos = 0;
 			break;
 		
@@ -177,7 +151,7 @@ void kputchar_c(const s32 c, u8 color)
 			break;
 		
 		case '\v':
-			tty.y_pos++;
+			tty.y_pos += VBE_CHAR_HEIGHT;
 			break;
 		
 		case '\r':
@@ -185,20 +159,20 @@ void kputchar_c(const s32 c, u8 color)
 			break;
 		
 		case '\b':
-            tty.x_pos--;
+            tty.x_pos -= VBE_CHAR_WIDTH;
             
             if(!tty.x_pos && tty.y_pos) {
-			    tty.y_pos--;
+			    tty.y_pos -= VBE_CHAR_HEIGHT;
                 tty.x_pos = tty.width;
             }
 			
-            tty_kputchar_at(' ', color, tty.x_pos, tty.y_pos);
+            tty_kputchar_at(' ', tty.x_pos, tty.y_pos, fg, bg);
 			break;
 		
 		default:
             if(isprint(c)) {
-			    tty_kputchar_at(c, color, tty.x_pos, tty.y_pos);
-			    tty.x_pos++;
+            	tty_kputchar_at(c, tty.x_pos, tty.y_pos, fg, bg);
+			    tty.x_pos += VBE_CHAR_WIDTH;
             }
 			break;
 	};
@@ -206,16 +180,14 @@ void kputchar_c(const s32 c, u8 color)
 	update_cursor(tty.x_pos, tty.y_pos);	
 }
 
-void tty_printc(const char *str, vga_color_t fg, vga_color_t bg)
+void tty_printc(const char *str, rgb_t fg, rgb_t bg)
 {
-	u8  color;
     u32 i;
 
-	color = vga_entry_color(fg, bg);
     i = 0;
 
     while(str[i]) {
-        kputchar_c(str[i], color);
+        kputchar_c(str[i], fg, bg);
         i++;
 	}
 }

@@ -36,10 +36,11 @@
 
 #include <nos/types.h>
 #include <nos/vga.h>
+#include <nos/gfx.h>
 
 ///< Default kernel TTY foreground & background color.
-#define TTY_FG_COLOR  VGA_COLOR_WHITE
-#define TTY_BG_COLOR  VGA_COLOR_BLUE
+#define TTY_FG_COLOR  RGB(255, 255, 255)
+#define TTY_BG_COLOR  RGB(0, 0, 204)
 #define TTY_TAB_WIDTH 4
 
 ///< For NULL pointer in kprintf.
@@ -47,18 +48,21 @@
 
 ///< TTY management structure.
 typedef struct tty_s {
-    u16 *v_mem;     ///< video memory address
-    s32 x_pos;      ///< x position of the cursor
-    s32 y_pos;      ///< y position of the cursor
-    vga_color_t fg; ///< foreground color
-    vga_color_t bg; ///< background color
-    u8  color;      ///< VGA entry color
-    s32 height;     ///< screen height
-    s32 width;      ///< screen width
+    u16   *v_mem; ///< Video memory address.
+    s32   x_pos;  ///< X position of the cursor.
+    s32   y_pos;  ///< Y position of the cursor.
+    rgb_t fg;     ///< Foreground color.
+    rgb_t bg;     ///< Background color.
+    u8    color;  ///< VGA entry color.
+    s32   height; ///< Screen height.
+    s32   width;  ///< Screen width.
 } tty_t;
 
-///< initialize kernel TTY structure.
+/* Initialize kernel TTY structure. */ 
 void tty_init(void);
+
+/* Initialize kernel TTY cursor structure. */ 
+void tty_cursor_init(void);
 
 /**
  * @brief Get cursor x position.
@@ -93,14 +97,14 @@ void tty_set_y(s32 y);
  * 
  * @return current foreground color.
  */
-vga_color_t tty_get_fg(void);
+rgb_t tty_get_fg(void);
 
 /**
  * @brief Get kernel TTY structure background color.
  * 
  * @return current background color.
  */
-vga_color_t tty_get_bg(void);
+rgb_t tty_get_bg(void);
 
 /**
  * @brief Set foreground & background color.
@@ -108,7 +112,7 @@ vga_color_t tty_get_bg(void);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_set_color(vga_color_t fg, vga_color_t bg);
+void tty_set_color(rgb_t fg, rgb_t bg);
 
 /**
  * @brief Get screen height.
@@ -124,21 +128,22 @@ s32  tty_get_height(void);
  */
 s32  tty_get_width(void);
 
-///< Clear screen.
+/** @brief Clear screen. */ 
 void tty_clear(void);
 
-///< Rewrite TTY buffer.
+/** @brief Rewrite TTY buffer. */ 
 void tty_rewrite(void);
 
 /**
  * @brief Print char with custom color in a specific place.
  * 
  * @param [in] c - given character to print.
- * @param [in] color - given custom color.
  * @param [in] x - given cursor x position to print.
  * @param [in] y - given cursor y position to print.
+ * @param [in] fg - given foreground color. 
+ * @param [in] bg - given background color. 
  */
-void tty_kputchar_at(char c, u8 color, s32 x, s32 y);
+void tty_kputchar_at(char c, s32 x, s32 y, rgb_t fg, rgb_t bg);
 
 /**
  * @brief Print character to screen.
@@ -154,14 +159,15 @@ void kputchar(const s32 c);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_printc(const char *str, vga_color_t fg, vga_color_t bg);
+void tty_printc(const char *str, rgb_t fg, rgb_t bg);
 
 /**
  * @brief Print colored character on screen.
  * 
  * @param [in] c - given character to print.
- * @param [in] color - given custom color.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
  */
-void kputchar_c(const s32 c, u8 color);
+void kputchar_c(const s32 c, rgb_t fg, rgb_t bg);
 
 #endif /* _NOS_KERNEL_TTY_H_ */
