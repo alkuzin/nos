@@ -20,6 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+#include <math.h>
+
 #include <nos/vbefont.h>
 #include <nos/types.h>
 #include <nos/gfx.h>
@@ -51,6 +53,11 @@ u16 gfx_get_height(void)
 void gfx_set_framebuffer(u32 *framebuffer)
 {
     screen.framebuffer = framebuffer;   
+}
+
+bool gfx_rgb_compare(rgb_t c1, rgb_t c2)
+{
+    return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
 }
 
 void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
@@ -96,11 +103,11 @@ void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color)
     d = 3 - 2 * r;
     
     while (x <= y) {
-        for (int i = cx - x; i <= cx + x; i++) {
+        for (s32 i = cx - x; i <= cx + x; i++) {
             gfx_draw_pixel(i, cy + y, color);
             gfx_draw_pixel(i, cy - y, color);
         }
-        for (int i = cx - y; i <= cx + y; i++) {
+        for (s32 i = cx - y; i <= cx + y; i++) {
             gfx_draw_pixel(i, cy + x, color);
             gfx_draw_pixel(i, cy - x, color);
         }
@@ -134,13 +141,76 @@ void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on)
     }
 }
 
-bool gfx_rgb_compare(rgb_t c1, rgb_t c2)
+void gfx_draw_square(s32 x, s32 y, s32 side, rgb_t color)
 {
-    return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
+    for (s32 i = x; i < x + side; i++) {
+        for (s32 j = y; j < y + side; j++)
+            gfx_draw_pixel(i, j, color);
+    }
+}
+
+void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb_t color)
+{
+    s32 dx, dy, sx, sy, err, e2;
+    
+    dx  = abs(x2 - x1);
+    dy  = abs(y2 - y1);
+    err = dx - dy;
+
+    if (x1 < x2) 
+        sx = 1;
+    else 
+        sx = -1;
+    
+    if (y1 < y2)
+        sy = 1;
+    else
+        sy = -1;
+    
+    for (;;) {
+        gfx_draw_pixel(x1, y1, color);
+        
+        if (x1 == x2 && y1 == y2)
+            break;
+        
+        e2 = 2 * err;
+        
+        if (e2 > -dy) {
+            err -= dy;
+            x1 += sx;
+        }
+
+        if (e2 < dx) {
+            err += dx;
+            y1 += sy;
+        }
+    }
+}
+
+void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb_t color)
+{
+    gfx_draw_line(x1, y1, x2, y2, color);
+    gfx_draw_line(x2, y2, x3, y3, color);
+    gfx_draw_line(x3, y3, x1, y1, color);
+}
+
+void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb_t color)
+{
+    for (s32 i = x; i < x + width; i++) {
+        for (s32 j = y; j < y + height; j++)
+            gfx_draw_pixel(i, j, color);
+    }
 }
 
 void gfx_test(void)
 {
-    gfx_draw_circle(400, 400, 100, RGB(255, 0, 0));
-    gfx_draw_circle(600, 600, 50, RGB(255, 0, 255));
+    gfx_draw_circle(400, 400, 100, GFX_COLOR_RED);
+    gfx_draw_line(500, 500, 900, 600, GFX_COLOR_GREEN);
+    gfx_draw_rectangle(100, 100, 50, 300, GFX_COLOR_PURPLE);
+    gfx_draw_square(200, 100, 30, GFX_COLOR_BLUE);
+    gfx_draw_triangle(300, 50, 300, 300, 600, 300, GFX_COLOR_WHITE);
+
+
+    gfx_draw_line(10, screen.height - 10, screen.width - 10, screen.height - 10, GFX_COLOR_WHITE);
+    gfx_draw_line(10, screen.height - 11, screen.width - 10, screen.height - 11, GFX_COLOR_WHITE);
 }
