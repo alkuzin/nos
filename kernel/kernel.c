@@ -99,7 +99,7 @@ extern void kmain(u32 magic, multiboot_t *mboot)
     tty_init();
 
     tty_set_color(GFX_COLOR_WHITE, GFX_COLOR_BLACK);
-    tty_set_primary_color(GFX_COLOR_BLUE);
+    tty_set_primary_color(GFX_COLOR_GRAY);
     tty_set_secondary_color(GFX_COLOR_BLACK);
 	tty_clear(); 
 
@@ -114,7 +114,7 @@ extern void kmain(u32 magic, multiboot_t *mboot)
     kboot(&boot_info);
 
     // Disabled during GFX test.
-    // login_init();
+    login_init();
 
     printk("\n\nLogged in at %s \n", __TIME__);
     printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);

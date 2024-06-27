@@ -172,7 +172,6 @@ s32 ksh_exec(char *cmd)
 
 static void ksh_display_prompt(void)
 {
-    // TODO: handle different themes.
     primary_color   = tty_get_primary_color();
     secondary_color = tty_get_secondary_color();
 

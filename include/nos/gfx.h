@@ -47,6 +47,7 @@
 #define GFX_COLOR_WHITE  RGB(255, 255, 255)
 #define GFX_COLOR_BROWN  RGB(176, 92, 53)
 #define GFX_COLOR_PURPLE RGB(128, 0, 255)
+#define GFX_COLOR_GRAY   RGB(191, 191, 191)
 
 /** @brief RGB color structure */
 typedef struct {

@@ -87,7 +87,7 @@ void ksh_theme(theme_t theme)
         case THEME_DEFAULT:
             fg              = GFX_COLOR_WHITE;
             bg              = GFX_COLOR_BLACK;
-            primary_color   = GFX_COLOR_BLUE;
+            primary_color   = GFX_COLOR_GRAY;
             secondary_color = GFX_COLOR_BLACK;
             break;
         
