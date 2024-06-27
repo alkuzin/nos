@@ -40,6 +40,14 @@
 /** @brief Macro to create RGB color */
 #define RGB(r, g, b) ((rgb_t){(r), (g), (b)})
 
+#define GFX_COLOR_RED    RGB(255, 0, 0)
+#define GFX_COLOR_GREEN  RGB(0, 255, 0)
+#define GFX_COLOR_BLUE   RGB(0, 0, 255)
+#define GFX_COLOR_BLACK  RGB(0, 0, 0)
+#define GFX_COLOR_WHITE  RGB(255, 255, 255)
+#define GFX_COLOR_BROWN  RGB(176, 92, 53)
+#define GFX_COLOR_PURPLE RGB(128, 0, 255)
+
 /** @brief RGB color structure */
 typedef struct {
     u8 red;
@@ -136,5 +144,18 @@ void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color);
  * @param [in] is_bg_on - given param determine whether to display the @a bg.
  */
 void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on);
+
+/**
+ * @brief Compare two RGB colors.
+ * 
+ * @param [in] c1 - given first color to comapre. 
+ * @param [in] c2 - given second color to comapre. 
+ * @return true - if colors are equal.
+ * @return false - otherwise.
+ */
+bool gfx_rgb_compare(rgb_t c1, rgb_t c2);
+
+/** @brief Test graphics.  */
+void gfx_test(void);
 
 #endif /* _NOS_KERNEL_GFX_H_ */

@@ -68,16 +68,13 @@ void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
 
 rgb_t gfx_get_pixel(s32 x, s32 y)
 {
-    u32   red, green, blue, offset;
+    u32   offset;
     rgb_t color;
 
-    offset = y * screen.width + x;
-
-    red   = screen.framebuffer[offset + 2];
-    green = screen.framebuffer[offset + 1];
-    blue  = screen.framebuffer[offset];
-
-    color = RGB(red, green, blue);
+    offset      = y * screen.width + x;
+    color.red   = screen.framebuffer[offset + 2];
+    color.green = screen.framebuffer[offset + 1];
+    color.blue  = screen.framebuffer[offset];
 
     return color;
 }
@@ -135,4 +132,15 @@ void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on)
                 gfx_draw_pixel(x + cx, y + cy, bg);
         }
     }
+}
+
+bool gfx_rgb_compare(rgb_t c1, rgb_t c2)
+{
+    return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
+}
+
+void gfx_test(void)
+{
+    gfx_draw_circle(400, 400, 100, RGB(255, 0, 0));
+    gfx_draw_circle(600, 600, 50, RGB(255, 0, 255));
 }

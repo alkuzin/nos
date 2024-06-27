@@ -33,6 +33,7 @@
 #include <nos/types.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
+#include <nos/gfx.h>
 #include <nos/mm.h>
 
 /** @brief Display promt for user input. */
@@ -61,6 +62,7 @@ static char input_buffer[INPUT_BUFFER_SIZE];
 /** @brief Current character position of user input buffer. */
 static u32 buf_pos;
 
+rgb_t primary_color, secondary_color;
 
 void ksh_init(void)
 {
@@ -157,6 +159,9 @@ s32 ksh_exec(char *cmd)
         else
             printk("cat: %s\n", "incorrect argument\n");
     }
+    else if(ksh_is_valid("gfx", 3, cmd, 3)) {
+        gfx_test();
+    }
     else {
         ksh_warning((char *)cmd);
         return -1;
@@ -167,14 +172,14 @@ s32 ksh_exec(char *cmd)
 
 static void ksh_display_prompt(void)
 {
-    // TODO: add primary and secondary colors
     // TODO: handle different themes.
+    primary_color   = tty_get_primary_color();
+    secondary_color = tty_get_secondary_color();
 
-    putk(USERNAME "@nos:-/ ");
-    // tty_printc(USERNAME, VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-    // kputchar('@');
-    // tty_printc("nos", VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
-    // putk(":-/ ");
+    tty_printc(USERNAME, primary_color, secondary_color);
+    kputchar('@');
+    tty_printc("nos", primary_color, secondary_color);
+    putk(":-/ ");
 }
 
 static bool ksh_is_empty(void)

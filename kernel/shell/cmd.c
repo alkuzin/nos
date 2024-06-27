@@ -58,65 +58,78 @@ void ksh_lsmem(void)
     used_bytes     = used_blocks * BLOCK_SIZE;
     free_bytes     = free_blocks * BLOCK_SIZE;
 
-    printk(" \nMem: \n\t total: %u KB   free: %u KB   used: %u KB \n \n", phys_mem_total >> 10, 
+    printk("\nMem: \n\t total: %u KB   free: %u KB   used: %u KB\n\n", phys_mem_total >> 10, 
     phys_mem_free >> 10, (phys_mem_total - phys_mem_free) >> 10);
-    putk("Blocks: \n \n");
-    printk(" \ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
-    printk(" \tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
-    printk(" \tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
+    putk("Blocks:\n\n");
+    printk("\ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
+    printk("\tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
+    printk("\tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
 }
 
 void ksh_help(void)
 {
     /* TODO: add command for displaying kernel info */
-    putk(" \nhelp         - display this help\n"
+    putk("\nhelp         - display this help\n"
          "clear        - clear screen\n"
          "lsmem        - display list of memory segments\n"
          "lsproc       - display list of current processes\n"
          "theme        - set CLI theme\n"
+         "gfx          - test graphics\n"
          "ls           - display list of files\n \n");
 }
 
 void ksh_theme(theme_t theme)
 {
-    (void)theme;
-    // rgb_t fg, bg;
+    rgb_t fg, bg, primary_color, secondary_color;
 
-    // switch (theme) {
+    switch (theme) {
 
-    //     case THEME_DEFAULT:
-    //         fg = VGA_COLOR_WHITE;
-    //         bg = VGA_COLOR_BLACK;
-    //         break;
+        case THEME_DEFAULT:
+            fg              = GFX_COLOR_WHITE;
+            bg              = GFX_COLOR_BLACK;
+            primary_color   = GFX_COLOR_BLUE;
+            secondary_color = GFX_COLOR_BLACK;
+            break;
         
-    //     case THEME_CLASSIC:
-    //         fg = VGA_COLOR_WHITE;
-    //         bg = VGA_COLOR_BLUE;
-    //         break;
+        case THEME_CLASSIC:
+            fg              = GFX_COLOR_WHITE;
+            bg              = GFX_COLOR_BLUE;
+            primary_color   = GFX_COLOR_WHITE;
+            secondary_color = GFX_COLOR_BLUE;
+            break;
         
-    //     case THEME_GREEN_BLACK:
-    //         fg = VGA_COLOR_LIGHT_GREEN;
-    //         bg = VGA_COLOR_BLACK;
-    //         break;
+        case THEME_GREEN_BLACK:
+            fg              = GFX_COLOR_GREEN;
+            bg              = GFX_COLOR_BLACK;
+            primary_color   = GFX_COLOR_GREEN;
+            secondary_color = GFX_COLOR_BLACK;
+            break;
         
-    //     case THEME_BROWN_BLACK:
-    //         fg = VGA_COLOR_BROWN;
-    //         bg = VGA_COLOR_BLACK;
-    //         break;
+        case THEME_BROWN_BLACK:
+            fg              = GFX_COLOR_BROWN;
+            bg              = GFX_COLOR_BLACK;
+            primary_color   = GFX_COLOR_BROWN;
+            secondary_color = GFX_COLOR_BLACK;
+            break;
         
-    //     case THEME_PURPLE_BLACK:
-    //         fg = VGA_COLOR_LIGHT_MAGENTA;
-    //         bg = VGA_COLOR_BLACK;
-    //         break;
+        case THEME_PURPLE_BLACK:
+            fg              = GFX_COLOR_PURPLE;
+            bg              = GFX_COLOR_BLACK;
+            primary_color   = GFX_COLOR_PURPLE;
+            secondary_color = GFX_COLOR_BLACK;
+            break;
     
-    //     default:
-    //         printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
-    //                " to see list of available commands\n", theme);
-    //         return;
-    // }
+        default:
+            printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
+                   " to see list of available commands\n", theme);
+            return;
+    }
     
-    // tty_set_color(fg, bg);
-    // tty_rewrite();    
+    tty_set_color(fg, bg);
+    tty_set_primary_color(primary_color);
+    tty_set_secondary_color(secondary_color);
+    tty_clear();
+    // tty_rewrite();
 }
 
 void ksh_lsproc(void)

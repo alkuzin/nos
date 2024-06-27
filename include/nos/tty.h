@@ -48,14 +48,18 @@
 
 ///< TTY management structure.
 typedef struct tty_s {
-    u16   *v_mem; ///< Video memory address.
-    s32   x_pos;  ///< X position of the cursor.
-    s32   y_pos;  ///< Y position of the cursor.
-    rgb_t fg;     ///< Foreground color.
-    rgb_t bg;     ///< Background color.
-    u8    color;  ///< VGA entry color.
-    s32   height; ///< Screen height.
-    s32   width;  ///< Screen width.
+    s32   x_pos;            ///< X position of the cursor.
+    s32   y_pos;            ///< Y position of the cursor.
+    rgb_t fg;               ///< Foreground color.
+    rgb_t bg;               ///< Background color.
+    s32   height;           ///< Screen height.
+    s32   width;            ///< Screen width.
+    rgb_t primary_color;
+    rgb_t secondary_color;
+    rgb_t prev_fg;          ///< Previous foreground color.
+    rgb_t prev_bg;          ///< Previous background color.
+    rgb_t prev_prim_color;  ///< Previous primary color.
+    rgb_t prev_sec_color;   ///< Previous secondary color.
 } tty_t;
 
 /* Initialize kernel TTY structure. */ 
@@ -105,6 +109,34 @@ rgb_t tty_get_fg(void);
  * @return current background color.
  */
 rgb_t tty_get_bg(void);
+
+/**
+ * @brief Get TTY primary color. 
+ * 
+ * @return primary color. 
+ */
+rgb_t tty_get_primary_color(void);
+
+/**
+ * @brief Get TTY secondary color. 
+ * 
+ * @return secondary color. 
+ */
+rgb_t tty_get_secondary_color(void);
+
+/**
+ * @brief Set TTY primary color.
+ * 
+ * @param [in] color - given new primary color.
+ */
+void tty_set_primary_color(rgb_t color);
+
+/**
+ * @brief Set TTY secondary color. 
+ * 
+ * @param [in] color - given new secondary color.
+ */
+void tty_set_secondary_color(rgb_t color);
 
 /**
  * @brief Set foreground & background color.

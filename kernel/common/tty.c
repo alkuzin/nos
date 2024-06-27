@@ -42,12 +42,18 @@ static tty_t tty;
 
 void tty_init(void)
 {
-    tty.x_pos  = 0;
-    tty.y_pos  = 0;
-    tty.fg     = TTY_FG_COLOR;
-    tty.bg     = TTY_BG_COLOR;
-    tty.height = gfx_get_height();
-    tty.width  = gfx_get_width();
+    tty.x_pos  			= 0;
+    tty.y_pos  			= 0;
+    tty.fg     			= TTY_FG_COLOR;
+    tty.bg     			= TTY_BG_COLOR;
+    tty.height 			= gfx_get_height();
+    tty.width  			= gfx_get_width();
+	tty.primary_color   = TTY_FG_COLOR;
+	tty.secondary_color = TTY_BG_COLOR;
+	tty.prev_fg 		= TTY_FG_COLOR;
+	tty.prev_bg 		= TTY_BG_COLOR;
+	tty.primary_color   = TTY_FG_COLOR;
+	tty.secondary_color = TTY_BG_COLOR;
 }
 
 s32 tty_get_x(void)
@@ -80,10 +86,34 @@ rgb_t tty_get_bg(void)
     return tty.bg;
 }
 
+rgb_t tty_get_primary_color(void)
+{
+	return tty.primary_color;
+}
+
+rgb_t tty_get_secondary_color(void)
+{
+	return tty.secondary_color;
+}
+
+void tty_set_primary_color(rgb_t color)
+{
+	tty.prev_prim_color = tty.primary_color;
+	tty.primary_color   = color;
+}
+
+void tty_set_secondary_color(rgb_t color)
+{
+	tty.prev_sec_color  = tty.secondary_color;
+	tty.secondary_color = color;
+}
+
 void tty_set_color(rgb_t fg, rgb_t bg)
 {
-    tty.fg = fg;
-    tty.bg = bg;
+	tty.prev_fg = tty.fg;
+	tty.prev_bg = tty.bg;
+    tty.fg 		= fg;
+    tty.bg 		= bg;
 }
 
 s32  tty_get_height(void)
@@ -117,10 +147,26 @@ void tty_clear(void)
 
 void tty_rewrite(void)
 {
-    for (s32 y = 0; y < tty.height; y++) {
-        for (s32 x = 0; x < tty.width; x++)
-            gfx_draw_pixel(x, y, gfx_get_pixel(x, y));
-    }
+	// TODO: fix issue with rewrite
+	
+	// rgb_t pixel;
+
+    // for (s32 y = 0; y < tty.height; y++) {
+    //     for (s32 x = 0; x < tty.width; x++) {
+	// 		pixel = gfx_get_pixel(x, y);
+
+	// 		if (gfx_rgb_compare(pixel, tty.prev_fg))
+    //         	gfx_draw_pixel(x, y, tty.fg);
+	// 		else if (gfx_rgb_compare(pixel, tty.prev_bg))
+    //         	gfx_draw_pixel(x, y, tty.bg);
+	// 		else if (gfx_rgb_compare(pixel, tty.prev_prim_color))
+    //         	gfx_draw_pixel(x, y, tty.primary_color);
+	// 		else if (gfx_rgb_compare(pixel, tty.prev_sec_color))
+    //         	gfx_draw_pixel(x, y, tty.secondary_color);
+	// 		else
+    //         	gfx_draw_pixel(x + 1, y, pixel);
+	// 	}
+    // }
 }
 
 void kputchar(const s32 c)
@@ -147,7 +193,7 @@ void kputchar_c(const s32 c, rgb_t fg, rgb_t bg)
 			break;
 		
 		case '\t':
-			tty.x_pos += TTY_TAB_WIDTH;
+			tty.x_pos += TTY_TAB_WIDTH * VBE_CHAR_WIDTH;
 			break;
 		
 		case '\v':
