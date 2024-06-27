@@ -39,15 +39,16 @@ void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter)
     switch (type) {
         
         case INITRD:
-            printk(" kernel: VFS: set filesystem %d (INITRD)\n", type);
+            kmesg(true, "VFS: set filesystem %d (INITRD)\n", type);
             break;
 
         case EXT2:
-            printk(" kernel: VFS: set filesystem %d (EXT2)\n", type);
+            kmesg(true, "VFS: set filesystem %d (EXT2)\n", type);
             break;
         
         default:
-            panic("unknown file system: %d\n", type);
+            kmesg(false, "Unknown file system: %d\n", type);
+            panic("%s\n", "VFS error");
             break;
     };
 

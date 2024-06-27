@@ -41,7 +41,6 @@
 #include <nos/mm.h>
 #include <nos/pm.h>
 
-
 static void test_initrd(void)
 {
     s32 fd;
@@ -64,29 +63,29 @@ void kboot(multiboot_t *boot_info)
 {
     /* initializing Global Descriptor Table */
     gdt_init();
-    printk(" %s\n", "kernel: initialized Global Descriptor Table");
+    kmesg(true, "%s\n", "initialized Global Descriptor Table");
     
     /* initializing Interrupt Descriptor Table */
     idt_init();
-    printk(" %s\n", "kernel: initialized Interrupt Descriptor Table");	
+    kmesg(true, "%s\n", "initialized Interrupt Descriptor Table");	
     
     /* initializing timer */
     timer_init();
-    printk(" %s\n", "kernel: initialized timer");	
+    kmesg(true, "%s\n", "initialized timer");	
 
     /* initializing memory management */
     memory_init(boot_info);
-    printk(" %s\n", "kernel: initialized memory management");
+    kmesg(true, "%s\n", "initialized memory management");
 
     /* initializing initial ramdisk */
     initrd_init();
-    printk(" %s\n", "kernel: initialized initial ramdisk");
+    kmesg(true, "%s\n", "initialized initial ramdisk");
 
     /* initializing Virtual File System */
     vfs_adapter_t *initrd_adapter = initrd_get_adapter();
 
     vfs_init(INITRD, initrd_adapter);
-    printk(" %s\n", "kernel: initialized Virtual File System");
+    kmesg(true, "%s\n", "initialized Virtual File System");
 
     test_initrd();
 }
@@ -97,25 +96,27 @@ extern void kmain(u32 magic, multiboot_t *mboot)
     multiboot_t boot_info = *mboot;
     
     vbe_init(&boot_info);
-    printk(" %s\n", "kernel: initialized VBE mode"); // TODO: add kmesg() for logs: "[ OK ] ..."
-
     tty_init();
-    tty_set_color(RGB(255, 255, 255), RGB(0, 0, 0)); // TODO: define colors
+
+    tty_set_color(GFX_COLOR_WHITE, GFX_COLOR_BLACK);
+    tty_set_primary_color(GFX_COLOR_BLUE);
+    tty_set_secondary_color(GFX_COLOR_BLACK);
 	tty_clear(); 
-    printk(" %s\n", "kernel: initialized TTY");
+
+    kmesg(true, "%s\n", "initialized VBE mode");
+    kmesg(true, "%s\n", "initialized TTY");
     	
-    printk("kernel: magic: %#X\n", magic);
-    
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        printk(" kernel: Invalid magic number: %#X\n", magic);
+        kmesg(false, "Invalid magic number: %#X\n", magic);
         return;
     }
 
     kboot(&boot_info);
 
-    login_init();
+    // Disabled during GFX test.
+    // login_init();
 
-    printk("Logged in at %s \n", __TIME__);
+    printk("\n\nLogged in at %s \n", __TIME__);
     printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);
     printk("%s\n", "The programs included in NOS are free software.\n"
     "The software is provided \"as is\", without warranty of any kind.\n");

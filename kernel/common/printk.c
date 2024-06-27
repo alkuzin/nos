@@ -53,3 +53,22 @@ void printk(const char *fmt, ...)
 
     putk(buf);
 }
+
+void kmesg(bool state, const char *fmt, ...)
+{
+    va_list args;
+    
+    kputchar('[');
+
+    if (state)
+        cputk(" OK ", GFX_COLOR_GREEN, tty_get_bg());
+    else
+        cputk(" ERR ", GFX_COLOR_RED, tty_get_bg());
+    
+    kputchar(']');
+    kputchar(' ');
+
+    va_start(args, fmt);    
+    vprintk(fmt, args);
+    va_end(args);
+}

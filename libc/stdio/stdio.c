@@ -45,7 +45,7 @@ void cputk(const char *str, rgb_t fg, rgb_t bg)
 	i = 0;
 
     while (str[i]) {
-		tty_kputchar_at(str[i], tty_get_x(), tty_get_y(), fg, bg);
+        kputchar_c(str[i], fg, bg);
 		i++;
 	}
 }

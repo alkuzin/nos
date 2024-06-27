@@ -107,7 +107,14 @@ void printk(const char *fmt, ...);
  */
 void vprintk(const char *fmt, va_list args);
 
-/* boot kernel */
+/**
+ * @brief Print kernel component initialization message.
+ * 
+ * @param [in] state - given initialization state (OK/ERR). 
+ * @param [in] fmt - given format string.
+ * @param [in] args - given variable number of arguments.
+ */
+void kmesg(bool state, const char *fmt, ...);
 
 /**
  * @brief Setup kernel.
