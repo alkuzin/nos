@@ -1,6 +1,6 @@
-include ../kernel_common.mk
+include ../kernel/kernel_common.mk
 
-NAME     = _boot.o
+NAME = _boot.o
 
 $(NAME):
 	$(ASM) $(ASMFLAGS) -o $(NAME) boot.s
