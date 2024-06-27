@@ -196,4 +196,12 @@ void  *memset(void *s, s32 c, usize n);
  */
 void *memchr(const void *s, s32 c, usize n);
 
+/**
+ * @brief Retrieve a string describing the error code.
+ * 
+ * @param [in] errnum - given error code. 
+ * @return pointer to a string describing the error code.
+ */
+char *strerror(s32 errnum);
+
 #endif /* _LIBC_STRING_H_ */
