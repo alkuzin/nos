@@ -28,6 +28,7 @@
 #include <nos/nosstd.h>
 #include <nos/sched.h>
 #include <nos/types.h>
+#include <nos/ports.h>
 #include <nos/tty.h>
 #include <nos/vga.h>
 #include <nos/exe.h>
@@ -39,12 +40,27 @@ void ksh_warning(const char *cmd)
     printk("ksh: %s: command not found \n", cmd);
 }
 
+void ksh_help(void)
+{
+    putk("help, ?      - display information about builtin commands.\n"
+         "clear        - clear screen\n"
+         "uname        - print system information\n"
+         "ls           - display list of files\n"
+         "free         - display list of free memory\n"
+         "theme <id>   - set CLI theme\n"
+         "ps           - display list of current processes\n"
+         "reboot       - reboot OS\n"
+         "shutdown     - shutdown OS\n"
+         "gfx          - test graphics\n\n"
+    );
+}
+
 void ksh_clear(void)
 {
     tty_clear();
 }
 
-void ksh_lsmem(void)
+void ksh_free(void)
 {
     u32 max_blocks, used_blocks, phys_mem_total, phys_mem_free; 
     u32 free_blocks, total_bytes, used_bytes, free_bytes;
@@ -64,18 +80,6 @@ void ksh_lsmem(void)
     printk("\ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
     printk("\tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
     printk("\tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
-}
-
-void ksh_help(void)
-{
-    /* TODO: add command for displaying kernel info */
-    putk("\nhelp         - display this help\n"
-         "clear        - clear screen\n"
-         "lsmem        - display list of memory segments\n"
-         "lsproc       - display list of current processes\n"
-         "theme        - set CLI theme\n"
-         "gfx          - test graphics\n"
-         "ls           - display list of files\n \n");
 }
 
 void ksh_theme(theme_t theme)
@@ -129,10 +133,9 @@ void ksh_theme(theme_t theme)
     tty_set_primary_color(primary_color);
     tty_set_secondary_color(secondary_color);
     tty_clear();
-    // tty_rewrite();
 }
 
-void ksh_lsproc(void)
+void ksh_ps(void)
 {
     putk("comming soon ...\n");
     // sched_t *scheduler;
@@ -188,4 +191,16 @@ void ksh_cat(const char *pathname)
 
     if (ret == -1)
         printk("cat: error to close file \"%s\"\n", pathname);
+}
+
+void ksh_reboot(void)
+{
+    outb(0x64, 0xFE);
+}
+
+void ksh_shutdown(void)
+{
+    outw(0xB004, 0x2000);
+    outw(0x0604, 0x2000);
+    outw(0x4004, 0x3400);
 }

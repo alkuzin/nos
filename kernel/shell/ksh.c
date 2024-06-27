@@ -127,11 +127,11 @@ s32 ksh_exec(char *cmd)
 
     cmd_len = strlen(cmd);
     
-    if(ksh_is_valid("lsmem", 5, cmd, cmd_len))
-        ksh_lsmem();
+    if(ksh_is_valid("free", 4, cmd, cmd_len))
+        ksh_free();
     else if(ksh_is_valid("clear", 5, cmd, cmd_len))
         ksh_clear();
-    else if(ksh_is_valid("help", 4, cmd, cmd_len))
+    else if(ksh_is_valid("help", 4, cmd, cmd_len) || ksh_is_valid("?", 1, cmd, cmd_len))
         ksh_help();
     else if(ksh_is_valid("theme", 5, cmd, 5)) {
         char *theme_type;
@@ -144,8 +144,8 @@ s32 ksh_exec(char *cmd)
         else
             printk(" theme: %s\n", "incorrect argument\n");
     }
-    else if(ksh_is_valid("lsproc", 6, cmd, cmd_len))
-        ksh_lsproc();
+    else if(ksh_is_valid("ps", 2, cmd, cmd_len))
+        ksh_ps();
     else if(ksh_is_valid("ls", 2, cmd, cmd_len))
         ksh_ls();
     else if(ksh_is_valid("cat", 3, cmd, 3)) {
@@ -159,9 +159,14 @@ s32 ksh_exec(char *cmd)
         else
             printk("cat: %s\n", "incorrect argument\n");
     }
-    else if(ksh_is_valid("gfx", 3, cmd, 3)) {
+    else if(ksh_is_valid("gfx", 3, cmd, 3))
         gfx_test();
-    }
+    else if(ksh_is_valid("uname", 5, cmd, 5))
+        printk("%s (%s) %s\n", __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
+    else if(ksh_is_valid("reboot", 5, cmd, 5))
+        ksh_reboot();
+    else if(ksh_is_valid("shutdown", 8, cmd, 8))
+        ksh_shutdown();
     else {
         ksh_warning((char *)cmd);
         return -1;

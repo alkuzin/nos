@@ -113,7 +113,6 @@ extern void kmain(u32 magic, multiboot_t *mboot)
 
     kboot(&boot_info);
 
-    // Disabled during GFX test.
     login_init();
 
     printk("\n\nLogged in at %s \n", __TIME__);

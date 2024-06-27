@@ -68,8 +68,8 @@ void ksh_warning(const char *cmd);
 /** @brief Clear terminal. */
 void ksh_clear(void);
 
-/** @brief Display list of available memory. */
-void ksh_lsmem(void);
+/** @brief Display list of free memory. */
+void ksh_free(void);
 
 /** @brief Display list of available shell commands. */
 void ksh_help(void);
@@ -82,7 +82,7 @@ void ksh_help(void);
 void ksh_theme(theme_t theme);
 
 /** @brief Display list of current processes. */
-void ksh_lsproc(void);
+void ksh_ps(void);
 
 /** @brief Display executable information. */
 void ksh_readexe(void);
@@ -93,5 +93,11 @@ void ksh_readexe(void);
  * @param [in] pathname - given file path.
  */
 void ksh_cat(const char *pathname);
+
+/** @brief Reboot OS. */
+void ksh_reboot(void);
+
+/** @brief Shutdown OS. */
+void ksh_shutdown(void);
 
 #endif /* _NOS_KERNEL_SHELL_H_ */
