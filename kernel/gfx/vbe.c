@@ -39,14 +39,17 @@ void vbe_init(multiboot_info_t *boot_info)
     
     vbe_mode = (vbe_mode_info_t*)boot_info->vbe_mode_info;
 
-    vbe_set_video_mode(1024, 768, 32, (u32*)vbe_mode->framebuffer);
+    vbe_set_video_mode(1024, 768, 32, vbe_mode->pitch, (u32*)vbe_mode->framebuffer);
 }
 
-void vbe_set_video_mode(u16 width, u16 height, u16 depth, u32 *fb_addr)
+void vbe_set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr)
 {
+    gfx_set_pitch(pitch);
     gfx_set_width(width);
     gfx_set_height(height);
+
     gfx_set_framebuffer(fb_addr);
+    gfx_back_frambuffer_init();
 
     vbe_write(0x00, 0x4F02);  /* set VBE mode */ 
     vbe_write(0x01, width);   /* set width */ 

@@ -20,13 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
+#include <string.h>
 #include <math.h>
 
 #include <nos/vbefont.h>
+#include <nos/nosstd.h>
+#include <nos/kernel.h>
 #include <nos/types.h>
 #include <nos/gfx.h>
 
 
+static u32 back_framebuffer[sizeof(u16) * 1024 * 768];  ///< Additional framebuffer.
 static screen_t screen;
 
 
@@ -55,6 +59,36 @@ void gfx_set_framebuffer(u32 *framebuffer)
     screen.framebuffer = framebuffer;   
 }
 
+u32 *gfx_get_framebuffer(void)
+{
+    return screen.framebuffer;
+}
+
+u32 *gfx_get_back_framebuffer(void)
+{
+    return back_framebuffer;
+}
+
+void gfx_set_pitch(u16 pitch)
+{
+    screen.pitch = pitch;
+}
+
+u16 gfx_get_pitch(void)
+{
+    return screen.pitch;
+}
+
+void gfx_back_frambuffer_init(void)
+{
+    // screen.back_framebuffer = (u32 *)kmalloc(screen.height * screen.width * sizeof(u32));
+
+    // if (!screen.back_framebuffer)
+    //     panic("%s\n", "back framebuffer allocation error");
+
+    bzero(back_framebuffer, sizeof(back_framebuffer));
+}
+
 bool gfx_rgb_compare(rgb_t c1, rgb_t c2)
 {
     return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
@@ -69,7 +103,9 @@ void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
         green  = (u32)color.green << 8;
         blue   = (u32)color.blue;
         offset = y * screen.width + x;
+
         screen.framebuffer[offset] = red | green | blue;
+        back_framebuffer[offset]   = red | green | blue;
     }
 }
 

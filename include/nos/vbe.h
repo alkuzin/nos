@@ -94,7 +94,6 @@ struct __vbe_mode_info_s {
 
 typedef struct __vbe_mode_info_s vbe_mode_info_t;
 
-
 /**
  * @brief Initialize VBE mode. 
  * 
@@ -108,8 +107,9 @@ void vbe_init(multiboot_info_t *boot_info);
  * @param [in] width - given screen width.
  * @param [in] height - given screen height.
  * @param [in] depth - given number of bits per pixel.
+ * @param [in] pitch - given number of bytes per scanline.
  * @param [in] fb_addr - given framebuffer pointer.
  */
-void vbe_set_video_mode(u16 width, u16 height, u16 depth, u32 *fb_addr);
+void vbe_set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr);
 
 #endif /* _NOS_KERNEL_VBE_H_ */ 

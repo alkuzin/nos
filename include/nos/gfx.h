@@ -57,12 +57,44 @@ typedef struct {
 } rgb_t;
 
 struct __screen_s {
-    u16 width;          ///< Screen width.
-    u16 height;         ///< Screen height.
-    u32 *framebuffer;   ///< Screen framebuffer.
+    u16 pitch;              ///< Screen number of bytes per scanline.
+    u16 width;              ///< Screen width.
+    u16 height;             ///< Screen height.
+    u32 *framebuffer;       ///< Screen framebuffer.
 } __attribute__((packed)); /* prevent the compiler from optimizing */
 
 typedef struct __screen_s screen_t;
+
+/** @brief Initialize back framebuffer. */
+void gfx_back_frambuffer_init(void);
+
+/**
+ * @brief Get back framebuffer. 
+ * 
+ * @return pointer to back framebuffer. 
+ */
+u32 *gfx_get_back_framebuffer(void);
+
+/**
+ * @brief Get framebuffer. 
+ * 
+ * @return pointer to framebuffer. 
+ */
+u32 *gfx_get_framebuffer(void);
+
+/**
+ * @brief Get number of bytes per scanline. 
+ * 
+ * @return framebuffer pitch. 
+ */
+u16 gfx_get_pitch(void);
+
+/**
+ * @brief Set number of bytes per scanline.
+ * 
+ * @param [in] pitch - given number of bytes per scanline to set.
+ */
+void gfx_set_pitch(u16 pitch);
 
 /**
  * @brief Get screen width. 

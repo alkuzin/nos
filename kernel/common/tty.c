@@ -34,7 +34,7 @@
 
 
 /** @brief Screen scroll function */
-static void __kscroll(void);
+static void tty_scroll(void);
 
 /* main kernel TTY structure */
 static tty_t tty;
@@ -131,9 +131,25 @@ void tty_kputchar_at(char c, s32 x, s32 y, rgb_t fg, rgb_t bg)
 	gfx_draw_char((u8)c, x, y, fg, bg, true);
 }
 
-static void __kscroll(void)
+static void tty_scroll(void)
 {
-	// TODO: implement secondary buffer for faster scrolling
+	u32 *back_framebuffer, *framebuffer, framebuffer_size;
+	u16 pitch;
+
+	back_framebuffer = gfx_get_back_framebuffer();
+	framebuffer      = gfx_get_framebuffer();
+	pitch 			 = gfx_get_pitch();
+	framebuffer_size = tty.height * pitch;
+
+    for (u32 i = 0; i < framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i++) {
+        framebuffer[i]      = framebuffer[i + tty.width * VBE_CHAR_HEIGHT];
+        back_framebuffer[i] = back_framebuffer[i + tty.width * VBE_CHAR_HEIGHT];
+    }
+
+    for (u32 i = framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i < framebuffer_size; i++) {
+        framebuffer[i]      = 0x00;
+        back_framebuffer[i] = 0x00;
+    }
 }
 
 void tty_clear(void)
@@ -147,6 +163,7 @@ void tty_clear(void)
 
 void tty_rewrite(void)
 {
+	update_colors();
 	// TODO: fix issue with rewrite
 	
 	// rgb_t pixel;
@@ -176,14 +193,11 @@ void kputchar(const s32 c)
 
 void kputchar_c(const s32 c, rgb_t fg, rgb_t bg)
 {
+	s32 rows_to_scroll;
+
 	if(tty.x_pos >= tty.width) {
 		tty.x_pos = 0;
 		tty.y_pos += VBE_CHAR_HEIGHT;
-	}
-	
-	if(tty.y_pos >= tty.height) {
-		__kscroll();
-		tty.y_pos = tty.height - 1;
 	}
 
 	switch(c) {
@@ -223,7 +237,11 @@ void kputchar_c(const s32 c, rgb_t fg, rgb_t bg)
 			break;
 	};
 
-	update_cursor(tty.x_pos, tty.y_pos);	
+	if (tty.y_pos >= tty.height) {
+        rows_to_scroll = (tty.y_pos - tty.height) / VBE_CHAR_HEIGHT + 1;
+        tty_scroll();
+        tty.y_pos -= rows_to_scroll * VBE_CHAR_HEIGHT;
+    }
 }
 
 void tty_printc(const char *str, rgb_t fg, rgb_t bg)
