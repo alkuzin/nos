@@ -81,11 +81,6 @@ u16 gfx_get_pitch(void)
 
 void gfx_back_frambuffer_init(void)
 {
-    // screen.back_framebuffer = (u32 *)kmalloc(screen.height * screen.width * sizeof(u32));
-
-    // if (!screen.back_framebuffer)
-    //     panic("%s\n", "back framebuffer allocation error");
-
     bzero(back_framebuffer, sizeof(back_framebuffer));
 }
 
@@ -111,13 +106,13 @@ void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
 
 rgb_t gfx_get_pixel(s32 x, s32 y)
 {
-    u32   offset;
     rgb_t color;
+    u32   pixel;
 
-    offset      = y * screen.width + x;
-    color.red   = screen.framebuffer[offset + 2];
-    color.green = screen.framebuffer[offset + 1];
-    color.blue  = screen.framebuffer[offset];
+    pixel       = screen.framebuffer[y * screen.width + x];
+    color.red   = (pixel >> 16) & 0xFF;
+    color.green = (pixel >> 8) & 0xFF;
+    color.blue  = pixel & 0xFF;
 
     return color;
 }
