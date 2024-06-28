@@ -164,7 +164,7 @@ s32  tty_get_width(void);
 void tty_clear(void);
 
 /** @brief Rewrite TTY buffer. */ 
-void tty_rewrite(void);
+void tty_update(void);
 
 /**
  * @brief Print char with custom color in a specific place.

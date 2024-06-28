@@ -133,7 +133,7 @@ void tty_kputchar_at(char c, s32 x, s32 y, rgb_t fg, rgb_t bg)
 
 static void tty_scroll(void)
 {
-	u32 *back_framebuffer, *framebuffer, framebuffer_size;
+	u32 *back_framebuffer, *framebuffer, framebuffer_size, offset;
 	u16 pitch;
 
 	back_framebuffer = gfx_get_back_framebuffer();
@@ -142,8 +142,9 @@ static void tty_scroll(void)
 	framebuffer_size = tty.height * pitch;
 
     for (u32 i = 0; i < framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i++) {
-        framebuffer[i]      = framebuffer[i + tty.width * VBE_CHAR_HEIGHT];
-        back_framebuffer[i] = back_framebuffer[i + tty.width * VBE_CHAR_HEIGHT];
+		offset              = i + tty.width * VBE_CHAR_HEIGHT;
+        framebuffer[i]      = framebuffer[offset];
+        back_framebuffer[i] = back_framebuffer[offset];
     }
 
     for (u32 i = framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i < framebuffer_size; i++) {
@@ -161,29 +162,26 @@ void tty_clear(void)
     update_cursor(0, 0);
 }
 
-void tty_rewrite(void)
+void tty_update(void)
 {
-	update_colors();
-	// TODO: fix issue with rewrite
-	
-	// rgb_t pixel;
+	rgb_t pixel;
 
-    // for (s32 y = 0; y < tty.height; y++) {
-    //     for (s32 x = 0; x < tty.width; x++) {
-	// 		pixel = gfx_get_pixel(x, y);
+    for (s32 y = 0; y < tty.height; y++) {
+        for (s32 x = 0; x < tty.width; x++) {
+			pixel = gfx_get_pixel(x, y);
 
-	// 		if (gfx_rgb_compare(pixel, tty.prev_fg))
-    //         	gfx_draw_pixel(x, y, tty.fg);
-	// 		else if (gfx_rgb_compare(pixel, tty.prev_bg))
-    //         	gfx_draw_pixel(x, y, tty.bg);
-	// 		else if (gfx_rgb_compare(pixel, tty.prev_prim_color))
-    //         	gfx_draw_pixel(x, y, tty.primary_color);
-	// 		else if (gfx_rgb_compare(pixel, tty.prev_sec_color))
-    //         	gfx_draw_pixel(x, y, tty.secondary_color);
-	// 		else
-    //         	gfx_draw_pixel(x + 1, y, pixel);
-	// 	}
-    // }
+			if (gfx_rgb_compare(pixel, tty.prev_fg))
+            	gfx_draw_pixel(x, y, tty.fg);
+			else if (gfx_rgb_compare(pixel, tty.prev_bg))
+            	gfx_draw_pixel(x, y, tty.bg);
+			else if (gfx_rgb_compare(pixel, tty.prev_prim_color))
+            	gfx_draw_pixel(x, y, tty.primary_color);
+			else if (gfx_rgb_compare(pixel, tty.prev_sec_color))
+            	gfx_draw_pixel(x, y, tty.secondary_color);
+			else
+            	gfx_draw_pixel(x, y, tty.fg);
+		}
+    }
 }
 
 void kputchar(const s32 c)
@@ -202,12 +200,21 @@ void kputchar_c(const s32 c, rgb_t fg, rgb_t bg)
 
 	switch(c) {
 		case '\n':
+			for (s32 i = 0; i < tty.width / VBE_CHAR_WIDTH; i++) {
+            	tty_kputchar_at(' ', tty.x_pos, tty.y_pos, fg, bg);
+			    tty.x_pos += VBE_CHAR_WIDTH;
+			}
+
 			tty.y_pos += VBE_CHAR_HEIGHT;
 			tty.x_pos = 0;
+			
 			break;
 		
 		case '\t':
-			tty.x_pos += TTY_TAB_WIDTH * VBE_CHAR_WIDTH;
+			for (s32 i = 0; i < TTY_TAB_WIDTH; i++) {
+            	tty_kputchar_at(' ', tty.x_pos, tty.y_pos, fg, bg);
+				tty.x_pos += VBE_CHAR_WIDTH;
+			}
 			break;
 		
 		case '\v':

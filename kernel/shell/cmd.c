@@ -132,7 +132,8 @@ void ksh_theme(theme_t theme)
     tty_set_color(fg, bg);
     tty_set_primary_color(primary_color);
     tty_set_secondary_color(secondary_color);
-    tty_clear();
+
+    tty_update();
 }
 
 void ksh_ps(void)
