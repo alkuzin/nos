@@ -74,7 +74,7 @@ re: clean all
 build-iso: $(NAME)
 	mkdir -p $(ISO_DIR) $(ISO_DIR)/boot/ $(ISO_DIR)/boot/grub/
 	cp $(NAME) $(ISO_DIR)/boot/kernel.elf
-	cp grub/grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
+	cp boot/grub/grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
 	grub-mkrescue -o $(NAME_ISO) $(ISO_DIR)
 
 init-iso: 
