@@ -20,14 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-
 #include <nos/multiboot.h>
 #include <nos/memlayout.h>
+#include <nos/string.h>
 #include <nos/types.h>
 #include <nos/vmm.h>
 #include <nos/pmm.h>
-#include <nos/tty.h>
 
 #include <asm/system.h>
 
@@ -249,9 +247,7 @@ bool vmm_init(void)
     SET_FRAME(entry2, (u32)table3G);
 
     vmm_set_page_dir(dir);
-
-    /* enable paging */
-    __asm__ volatile("movl %cr0, %eax; orl $0x80000001, %eax; movl %eax, %cr0;");
+    enable_paging();
 
     return true;
 }
