@@ -21,37 +21,41 @@
  * SOFTWARE. */
 
 /**
- * @file  kernel.h
- * @brief Contains declarations for kernel functions and structures.
- * 
- * @details This header file includes functions related to kernel setup & kernel entry point.
- * 
+ * @file  panic.h
+ * @brief Kernel error output functions.
+ *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   17.05.2024 
+ * @date   29.06.2024 
  */
 
-#ifndef _NOS_KERNEL_H_
-#define _NOS_KERNEL_H_
+#ifndef _NOS_KERNEL_PANIC_H_
+#define _NOS_KERNEL_PANIC_H_
 
-#include <nos/multiboot.h>
+#include <nos/stdarg.h>
 #include <nos/types.h>
 
 /**
- * @brief Setup kernel.
+ * @brief Macro for kernel panic (detecting an internal fatal error).
  * 
- * Initializes kernel components such as TTY, GDT, 
- * IDT, timer and etc.
+ * It displaying error message, file, function and line where error occured.
  * 
- * @param [in] mboot - given multiboot information structure.
+ * @param [in] fmt - given format string.
+ * @param [in] ... - given variable number of arguments.
  */
-void kboot(multiboot_t *mboot);
+#define panic(fmt, ...) __panic(__FILE__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
+/* detatiled kernel panic */
 /**
- * @brief Kernel entry point.
+ * @brief Detailed kernel panic function.
  * 
- * @param [in] magic - given magic number.
- * @param [in] mboot - given multiboot information structure.
+ * It displaying error message, file, function and line where error occured.
+ * 
+ * @param [in] file - given filename, where error occured.
+ * @param [in] func - given function name, where error occured.
+ * @param [in] line - given line number, where error occured.
+ * @param [in] fmt - given format string.
+ * @param [in] ... - given variable number of arguments.
  */
-extern void kmain(u32 magic, multiboot_t *mboot);
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...);
 
 #endif /* _NOS_KERNEL_H_ */
