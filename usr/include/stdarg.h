@@ -35,8 +35,6 @@
 #ifndef _LIBC_STDARG_H_
 #define _LIBC_STDARG_H_
 
-#include <stddef.h>
-
 /**
  * @brief This macro initializes ap for subsequent use by
  * va_arg() and va_end(), and must be called first.

@@ -21,20 +21,22 @@
  * SOFTWARE. */
 
 #include <stdlib.h>
-#include <nos/shell/ksh.h>
 
 
 s32 system(char *str)
 {
-    s32 ret;
+    // TODO: complete after implementing syscalls 
+    (void)str;
+//     s32 ret;
 
-    if (!str)
-        return 1; /* command handler is exist */
+//     if (!str)
+//         return 1; /* command handler is exist */
 
-    ret = ksh_exec(str);    
+//     ret = ksh_exec(str);
     
-    if (ret == -1)
-        return -1;
+//     if (ret == -1)
+//         return -1;
 
-    return 0;
+//     return 0;
+    return -1;
 }

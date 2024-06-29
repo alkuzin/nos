@@ -1,10 +1,8 @@
-include ../libc_common.mk
+include ../common.mk
 
-NAME = libc_math.o
+NAME = libc_stdio.o
 
-SRC  = exp log pow sqrt fabs fmax fmin acos atan2 asin atan sin cos tan \
-	   cosh sinh tanh log10 ceil floor
-
+SRC  = stdio vsnprintf
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

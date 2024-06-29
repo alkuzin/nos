@@ -1,8 +1,10 @@
-include ../libc_common.mk
+include ../common.mk
 
-NAME = libc_stdio.o
+NAME = libc_string.o
 
-SRC  = stdio vsnprintf
+SRC  = strlen strncmp strncpy strncat memset bzero memcpy memcmp strtok strpbrk \
+	   strchr strrchr strnstr memmove memchr strerror
+
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

@@ -1,9 +1,7 @@
-include libc_common.mk
+include common.mk
 
-INCLUDE_DIR = ../../include
-LIBC_DIR    = $(INCLUDE_DIR)/libc
-
-NAME = libc.a
+INCLUDE_DIR = ../include
+NAME        = libc.a
 
 LIBC_MATH_DIR   = math/
 LIBC_STRING_DIR = string/

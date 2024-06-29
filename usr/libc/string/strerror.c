@@ -21,7 +21,8 @@
  * SOFTWARE. */
 
 #include <string.h>
-#include <nos/errno.h>
+#include <errno.h>
+
 
 char *strerror(s32 errnum)
 {

@@ -1,4 +1,4 @@
-include ../libc_common.mk
+include ../common.mk
 
 NAME = libc_stdlib.o
 

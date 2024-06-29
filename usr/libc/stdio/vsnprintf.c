@@ -23,56 +23,113 @@
 #include <string.h>
 #include <stddef.h> 
 #include <stdarg.h> 
+#include <stdio.h>
 #include <ctype.h> 
 #include <math.h>
 
-#include <nos/kernel.h>
-#include <nos/tty.h>
+/** For null pointer in vsnprintk. */
+#define __NIL__ "(nil)"
 
-/* print buffer info struct */
+/** Print buffer info struct. */
 typedef struct pinfo_s {
     char  *buf; 
-    usize size; /* buffer size */
-    s32   pos; /* current buffer position */
-    s32   pref_flag; /* '#' flag */
+    usize size; 		/** Buffer size. */
+    s32   pos;  		/** Current buffer position. */
+    s32   pref_flag; 	/** '#' flag */
 } pinfo_t;
 
 static pinfo_t  pinfo;
 
-/* initialize pinfo struct */
+/**
+ * @brief Initialize pinfo struct.
+ * 
+ * @param [out] buf - given buffer for containing printk output.
+ * @param [in] size - given size of the buffer.
+ */
 static void pinfo_init(char *buf, usize size);
 
-/* append character to pinfo struct buffer */
+/**
+ * @brief Append character to pinfo struct buffer.
+ * 
+ * @param [in] c - given character to append.
+ */
 static void  buf_append(char c);
 
-/* %x %X options (hexadecimal) */
+/**
+ * @brief %x %X options (hexadecimal).
+ * 
+ * @param [in] n - given number to convert.
+ * @param [in] is_upper - given is uppercase/lowercase flag.
+ */
 static void  print_hex(u64 n, s32 is_upper);
 
-/* hexadecimal to alphanumeric lenght */
+/**
+ * @brief Hexadecimal to alphanumeric lenght.
+ * 
+ * @param [in] n - given number.
+ * @return length of hex string representation of @a n.
+ */
 static s32   xtoa_len(u32 n);
 
-/* %i %d options (int) */
+/**
+ * @brief %i %d options (int)
+ * 
+ * @param [in] n - given number to convert.
+ */
 static void  print_int(s32 n);
 
-/* s32 to alphanumeric lenght */
+/**
+ * @brief Integer to alphanumeric lenght.
+ * 
+ * @param [in] n - given number.
+ * @return length of int string representation of @a n.
+ */
 static usize itoa_len(s32 n);
 
-/* %p option (pointer) */
+/**
+ * @brief %p option (pointer).
+ * 
+ * @param [in] p - given pointer to convert.
+ */
 static void  print_ptr(u64 p);
 
-/* digit to hex */
+/**
+ * @brief Digit to hex.
+ * 
+ * @param [in] v - given digit to convert. 
+ * @return hex representation of digit.
+ */
 static char  dtoh(s32 v);
 
-/* %u option (unsigned int) */
+/**
+ * @brief %u option (unsigned int).
+ * 
+ * @param [in] n - given number.
+ */
 static void  print_uint(u32 n);
 
-/* unsigned s32 to alphanumeric lenght */
+/**
+ * @brief Unsigned s32 to alphanumeric lenght.
+ * 
+ * @param [in] n - given number.
+ * @return length of unsigned int string representation of @a n.
+ */
 static usize utoa_len(u32 n);
 
-/* prs32 kprintf arguments */
+/**
+ * @brief Print vsnprintk arguments.
+ * 
+ * @param [in] type - given type of argument.
+ * @param [in] args - given list of arguments.
+ */
 static void  print_args(char type, va_list * args);
 
-/* parse kprintf arguments */
+/**
+ * @brief Parse printk arguments.
+ * 
+ * @param [in] str - given format string.
+ * @param [in] args - given list of arguments.
+ */
 static void  parse(const char* str, va_list * args);
 
 
@@ -360,12 +417,12 @@ static void parse(const char *str, va_list *args)
     }
 }
 
-void vsnprintf(char *buf, usize size, const char *fmt, va_list args)
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args)
 {
     va_list args_copy;
 
     if(!fmt || *fmt == '\0')
-		panic("%s\n", "incorrect format string");
+		puts("incorrect format string");
 	
     pinfo_init(buf, size);
 

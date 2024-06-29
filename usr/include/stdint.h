@@ -31,6 +31,30 @@
 #ifndef _LIBC_STDINT_H_
 #define _LIBC_STDINT_H_
 
-#include <nos/types.h> // TODO: separate user and kernel space libraries
+/* unsigned types */
+typedef unsigned long   uint64_t;
+typedef unsigned int    uint32_t;
+typedef unsigned short  uint16_t;
+typedef unsigned char   uint8_t;
+
+typedef unsigned long   u64;
+typedef unsigned int    u32;
+typedef unsigned short  u16;
+typedef unsigned char   u8;
+
+/* signed types */
+typedef long   int64_t;
+typedef int    int32_t;
+typedef short  int16_t;
+typedef char   int8_t;
+
+typedef long   s64;
+typedef int    s32;
+typedef short  s16;
+typedef char   s8;
+
+/* floating point types */
+typedef double f64;
+typedef float  f32;
 
 #endif /* _LIBC_STDINT_H_ */

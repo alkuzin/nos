@@ -35,6 +35,7 @@
 #define _LIBC_STDLIB_H_
 
 #include <stddef.h>
+#include <stdint.h>
 
 
 /** @brief The largest number rand will return.  */

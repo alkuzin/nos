@@ -20,38 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdint.h>
 #include <stdio.h>
 
-#include <nos/tty.h>
-#include <nos/vga.h>
-
-
-void putk(const char *str)
-{
-    u32 i;
-
-    i = 0;
-    while(str[i]) {
-        kputchar(str[i]);       
-        i++;
-	}
-}
-
-void cputk(const char *str, rgb_t fg, rgb_t bg)
-{
-	s32 i;
-
-	i = 0;
-
-    while (str[i]) {
-        kputchar_c(str[i], fg, bg);
-		i++;
-	}
-}
 
 void puts(const char *str)
 {
-    putk(str);
-    kputchar('\n');
+    // TODO: complete after implementing syscalls 
+    (void)str;
 }

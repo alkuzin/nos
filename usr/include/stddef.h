@@ -31,6 +31,13 @@
 #ifndef _LIBC_STDDEF_H_
 #define _LIBC_STDDEF_H_
 
-#include <nos/types.h> // TODO: separate user and kernel space libraries
+#include <stdint.h>
+
+#define NULL ((void *)0)
+
+#define size_t   uint64_t 
+#define ssize_t  int64_t 
+#define usize    u64
+#define ssize    s64
 
 #endif /* _LIBC_STDDEF_H_ */
