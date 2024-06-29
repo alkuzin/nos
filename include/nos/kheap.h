@@ -21,7 +21,7 @@
  * SOFTWARE. */
 
 /**
- * @file  kmalloc.h
+ * @file  kheap.h
  * @brief Contains declarations for dynamic heap allocation management.
  * 
  * @details This header file includes definitions and functions
@@ -31,8 +31,8 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_KMALLOC_H_
-#define _NOS_KERNEL_KMALLOC_H_
+#ifndef _NOS_KERNEL_KHEAP_H_
+#define _NOS_KERNEL_KHEAP_H_
 
 #include <nos/types.h>
 #include <nos/pmm.h>
@@ -87,4 +87,4 @@ void kmalloc_merge_free_blocks(void);
  */
 void kmalloc_free(void *ptr);
 
-#endif /* _NOS_KERNEL_KMALLOC_H_ */
+#endif /* _NOS_KERNEL_KHEAP_H_ */
