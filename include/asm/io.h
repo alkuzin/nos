@@ -21,7 +21,7 @@
  * SOFTWARE. */
 
 /**
- * @file  ports.h
+ * @file  io.h
  * @brief Contains functions for input/output operations on ports.
  * 
  * @details
@@ -32,8 +32,8 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_PORTS_H_
-#define _NOS_KERNEL_PORTS_H_
+#ifndef _ASM_IO_H_
+#define _ASM_IO_H_
 
 #include <nos/types.h>
 
@@ -62,7 +62,7 @@ static inline void outw(u16 port, u16 data)
 /**
  * @brief Receive a byte of data from a specified input/output port.
  *
- * @param port - given port from which the data will be read.
+ * @param [in] port - given port from which the data will be read.
  * @return the byte of data read from the port.
  */
 static inline u8 inb(u16 port)
@@ -72,5 +72,4 @@ static inline u8 inb(u16 port)
     return rv;
 }
 
-
-#endif /* _NOS_KERNEL_PORTS_H_ */
+#endif /* _ASM_IO_H_ */
