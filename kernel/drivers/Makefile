@@ -2,7 +2,7 @@ include ../kernel_common.mk
 
 NAME = _drivers.o
 
-SRC  = keyboard timer vga
+SRC  = keyboard timer
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

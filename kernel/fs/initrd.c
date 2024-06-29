@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-
 #include <nos/nosstd.h>
-#include <nos/kernel.h>
+#include <nos/string.h>
 #include <nos/initrd.h>
+#include <nos/printk.h>
+#include <nos/panic.h>
+#include <nos/kheap.h>
 #include <nos/types.h>
 #include <nos/fcntl.h>
 #include <nos/stat.h>

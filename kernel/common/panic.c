@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/kernel.h>
+#include <nos/stdarg.h>
 #include <nos/nosstd.h>
-#include <nos/types.h>
-#include <nos/tty.h>
+#include <nos/printk.h>
+#include <nos/panic.h>
 
 
 void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
@@ -31,7 +31,7 @@ void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
 	va_list args;
 	
 	va_start(args, fmt);
-    printk(" kernel: panic: in \"%s\" in \"%s()\" at line %d: ", file, func, line);
+    printk("kernel: panic: in \"%s\" in \"%s()\" at line %d: ", file, func, line);
 	vprintk(fmt, args);
     va_end(args);
 

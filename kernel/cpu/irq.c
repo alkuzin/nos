@@ -20,14 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/kernel.h>
+#include <nos/panic.h>
 #include <nos/types.h>
-#include <nos/ports.h>
-#include <nos/tty.h>
 #include <nos/idt.h>
 #include <nos/irq.h>
 
 #include <asm/system.h>
+#include <asm/io.h>
 
 char *exception_msgs[] = {
     "division by zero",

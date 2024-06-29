@@ -20,19 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <nos/shell/ksh.h>
 #include <nos/shell/ls.h>
 #include <nos/keyboard.h>
+#include <nos/version.h>
+#include <nos/string.h>
+#include <nos/printk.h>
 #include <nos/kernel.h> 
 #include <nos/nosstd.h>
+#include <nos/stdlib.h>
 #include <nos/types.h>
+#include <nos/ctype.h>
+#include <nos/login.h>
 #include <nos/tty.h>
-#include <nos/vga.h>
 #include <nos/gfx.h>
 #include <nos/mm.h>
 
@@ -162,7 +162,7 @@ s32 ksh_exec(char *cmd)
     else if(ksh_is_valid("gfx", 3, cmd, 3))
         gfx_test();
     else if(ksh_is_valid("uname", 5, cmd, 5))
-        printk("%s (%s) %s\n", __OS_NAME__, __OS_VERSION__, __OS_ARCH__);
+        __DISPLAY_OS_INFO();
     else if(ksh_is_valid("reboot", 5, cmd, 5))
         ksh_reboot();
     else if(ksh_is_valid("shutdown", 8, cmd, 8))

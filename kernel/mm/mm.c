@@ -21,26 +21,24 @@
  * SOFTWARE. */
 
 #include <nos/multiboot.h>
-#include <nos/kernel.h>
+#include <nos/panic.h>
 #include <nos/types.h>
-#include <nos/tty.h>
 #include <nos/pmm.h>
-#include <nos/vmm.h>
 #include <nos/mm.h>
 
 
-void memory_init(multiboot_t *boot_info)
+void memory_init(multiboot_t *mboot)
 {
     u32  start_addr, size;
 
-    if(!(boot_info->flags >> 6 & 0x1))
+    if(!(mboot->flags >> 6 & 0x1))
         panic("%s\n", "invalid memory map given by GRUB bootloader");
 
     /* initializing physical memory manager */
 
     /* set start address, size of available memory
-       set total, used & free physical memory */
-    pmm_get_memory(boot_info, &start_addr, &size);
+     * set total, used & free physical memory */
+    pmm_get_memory(mboot, &start_addr, &size);
     pmm_init(start_addr, size);
     
     /* free some available blocks of memory */

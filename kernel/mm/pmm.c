@@ -20,14 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-#include <stdio.h>
-
 #include <nos/multiboot.h>
-#include <nos/kernel.h>
+#include <nos/string.h>
+#include <nos/printk.h>
+#include <nos/panic.h>
 #include <nos/types.h>
 #include <nos/pmm.h>
-#include <nos/tty.h>
 
 static u32 *memory_map    = 0;
 static u32 max_blocks     = 0;

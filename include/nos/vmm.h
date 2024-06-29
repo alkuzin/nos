@@ -34,9 +34,8 @@
 #ifndef _NOS_KERNEL_VMM_H_
 #define _NOS_KERNEL_VMM_H_
 
-#include <string.h>
-
 #include <nos/multiboot.h>
+#include <nos/string.h>
 #include <nos/types.h>
 #include <nos/vmm.h>
 

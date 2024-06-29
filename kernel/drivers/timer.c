@@ -20,15 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/kernel.h>
-#include <nos/types.h>
 #include <nos/timer.h>
-#include <nos/ports.h>
-#include <nos/tty.h>
+#include <nos/types.h>
 #include <nos/irq.h>
 
-u32 ticks;
+#include <asm/io.h>
+
 const u32 freq = 100;
+u32 ticks;
 
 void timer_delay(u32 seconds)
 {

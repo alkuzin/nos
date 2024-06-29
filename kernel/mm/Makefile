@@ -2,7 +2,7 @@ include ../kernel_common.mk
 
 NAME = _mm.o
 
-SRC  = pmm vmm mm kmalloc
+SRC  = pmm vmm mm kheap
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 

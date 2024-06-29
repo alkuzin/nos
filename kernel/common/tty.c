@@ -20,16 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-#include <ctype.h>
-
 #include <nos/vbefont.h>
-#include <nos/kernel.h>
+#include <nos/printk.h>
 #include <nos/nosstd.h>
+#include <nos/string.h>
+#include <nos/ctype.h>
 #include <nos/types.h>
 #include <nos/timer.h>
 #include <nos/tty.h>
-#include <nos/vga.h>
 #include <nos/gfx.h>
 
 
@@ -159,7 +157,6 @@ void tty_clear(void)
 	
     tty_set_x(0);
     tty_set_y(0);
-    update_cursor(0, 0);
 }
 
 void tty_update(void)

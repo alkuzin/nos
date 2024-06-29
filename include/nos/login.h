@@ -35,6 +35,13 @@
 
 #define MAX_ATTEMPTS 3
 
+// TODO: create structure for containing login & password
+#define MAX_USERNAME_SIZE 5
+#define USERNAME          "alex"
+
+#define SUPER_SECURE_PASSWORD      "12345"
+#define SUPER_SECURE_PASSWORD_SIZE 6
+
 #define LOGIN_BANNER "   _  ______  ____ \n" \
                      "  / |/ / __ \\/ __/ \n" \
                      " /    / /_/ /\\ \\   \n" \

@@ -20,18 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-
 #include <nos/shell/ksh.h>
 #include <nos/multiboot.h>
 #include <nos/keyboard.h>
+#include <nos/version.h>
 #include <nos/nosstd.h>
 #include <nos/initrd.h>
 #include <nos/kernel.h>
+#include <nos/printk.h>
+#include <nos/string.h>
 #include <nos/timer.h>
 #include <nos/types.h>
 #include <nos/sched.h>
 #include <nos/login.h>
+#include <nos/panic.h>
 #include <nos/tty.h>
 #include <nos/gdt.h>
 #include <nos/idt.h>
@@ -59,7 +61,7 @@ static void test_initrd(void)
     vfs_close(fd);
 }
 
-void kboot(multiboot_t *boot_info)
+void kboot(multiboot_t *mboot)
 {
     /* initializing Global Descriptor Table */
     gdt_init();
@@ -74,7 +76,7 @@ void kboot(multiboot_t *boot_info)
     kmesg(true, "%s\n", "initialized timer");	
 
     /* initializing memory management */
-    memory_init(boot_info);
+    memory_init(mboot);
     kmesg(true, "%s\n", "initialized memory management");
 
     /* initializing initial ramdisk */
@@ -116,7 +118,7 @@ extern void kmain(u32 magic, multiboot_t *mboot)
     login_init();
 
     printk("\n\nLogged in at %s \n", __TIME__);
-    printk("NOS - hobby Unix-like OS (%s)\n \n", __OS_VERSION__);
+    __DISPLAY_OS_INFO();
     printk("%s\n", "The programs included in NOS are free software.\n"
     "The software is provided \"as is\", without warranty of any kind.\n");
 

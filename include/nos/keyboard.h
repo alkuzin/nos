@@ -35,8 +35,9 @@
 #define _NOS_KERNEL_KEYBOARD_H_
 
 #include <nos/types.h>
-#include <nos/ports.h>
 #include <nos/irq.h>
+
+#include <asm/io.h>
 
 #define INPUT_BUFFER_SIZE 256
 

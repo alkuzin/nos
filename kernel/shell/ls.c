@@ -20,12 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
 
 #include <nos/shell/ls.h>
+#include <nos/string.h>
 #include <nos/initrd.h>
-#include <nos/kernel.h>
+#include <nos/printk.h>
 #include <nos/types.h>
+#include <nos/login.h>
 
 static ls_t ls;
 

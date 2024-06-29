@@ -20,13 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-#include <math.h>
-
 #include <nos/vbefont.h>
-#include <nos/nosstd.h>
-#include <nos/kernel.h>
+#include <nos/string.h>
 #include <nos/types.h>
+#include <nos/math.h>
 #include <nos/gfx.h>
 
 

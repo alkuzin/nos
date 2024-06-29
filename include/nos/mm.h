@@ -41,8 +41,8 @@
 /**
  * @brief Initialize memory manager.
  * 
- * @param [in] boot_info - given multiboot information structure.
+ * @param [in] mboot - given multiboot information structure.
  */
-void memory_init(multiboot_t *boot_info);
+void memory_init(multiboot_t *mboot);
 
 #endif /* _NOS_KERNEL_MM_H_ */

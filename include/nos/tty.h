@@ -32,19 +32,14 @@
 #ifndef _NOS_KERNEL_TTY_H_
 #define _NOS_KERNEL_TTY_H_ 
 
-#include <stdarg.h>
-
+#include <nos/stdarg.h>
 #include <nos/types.h>
-#include <nos/vga.h>
 #include <nos/gfx.h>
 
 ///< Default kernel TTY foreground & background color.
 #define TTY_FG_COLOR  RGB(255, 255, 255)
 #define TTY_BG_COLOR  RGB(0, 0, 204)
 #define TTY_TAB_WIDTH 4
-
-///< For NULL pointer in kprintf.
-#define __NIL__ "(nil)"
 
 ///< TTY management structure.
 typedef struct tty_s {

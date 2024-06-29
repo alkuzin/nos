@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <string.h>
-
-#include <nos/ports.h>
-#include <nos/tty.h>
+#include <nos/string.h>
 #include <nos/idt.h>
 #include <nos/irq.h>
+
+#include <asm/io.h>
 
 idt_entry_t idt_entries[256];
 idt_ptr_t   idt_ptr;

@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/kmalloc.h>
 #include <nos/nosstd.h>
 #include <asm/system.h>
+#include <nos/kheap.h>
 #include <nos/types.h>
 
 

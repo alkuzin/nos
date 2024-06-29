@@ -33,6 +33,8 @@
 #ifndef _NOS_KERNEL_MEMLAYOUT_H_
 #define _NOS_KERNEL_MEMLAYOUT_H_
 
+#include <nos/types.h>
+
 extern u32 kernel_phys_start;
 extern u32 kernel_phys_end;
 

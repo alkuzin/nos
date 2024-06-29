@@ -20,9 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/ports.h>
 #include <nos/vbe.h>
 #include <nos/gfx.h>
+
+#include <asm/io.h>
 
 /**
  * @brief Set VBE params.

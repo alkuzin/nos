@@ -20,19 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <stdio.h>
-
 #include <nos/shell/ksh.h>
-#include <nos/kernel.h> 
+#include <nos/printk.h>
 #include <nos/initrd.h> 
 #include <nos/nosstd.h>
 #include <nos/sched.h>
 #include <nos/types.h>
-#include <nos/ports.h>
 #include <nos/tty.h>
-#include <nos/vga.h>
 #include <nos/exe.h>
 #include <nos/mm.h>
+
+#include <asm/io.h>
 
 
 void ksh_warning(const char *cmd)

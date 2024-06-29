@@ -20,13 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <ctype.h>
-
 #include <nos/keyboard.h>
 #include <nos/types.h>
-#include <nos/ports.h>
+#include <nos/ctype.h>
 #include <nos/irq.h>
-#include <nos/tty.h>
+
+#include <asm/io.h>
 
 const u32 UNKNOWN = 0xFFFFFFFF;
 const u32 ESC     = 0xFFFFFFFF - 1;
