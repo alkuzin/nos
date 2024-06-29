@@ -42,7 +42,7 @@
 
 #define __os_version_major__  0
 #define __os_version_minor__  0
-#define __os_version_lower__  3
+#define __os_version_lower__  4
 
 #define __os_version_format__ "v%d.%d.%d"
 
