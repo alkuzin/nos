@@ -87,3 +87,30 @@
 - added colored shell prompt
 
 <img src="res/nos_v0_0_3.gif">
+
+> NOS (v0.0.4):
+
+- added new math functions to libc:
+  - `fabs()` `fmin()` `fmax()` `acos()` `atan2()` `asin()` `atan()` `cos()` 
+  - `sin()` `tan()` `cosh()` `sinh()` `tanh()` `log2()` `log10()` `ceil()` `floor()`
+- added tests for math functions
+- added new string handeling functions to libc:
+  - `strchr()` `strrchr()` `strnstr()` `memmove()` `memchr()`
+- added new general standard library functions to libc:
+  -  `atoi()` `atof()` `rand()` `srand()` `qsort()` `system()`
+- updated multiboot information structures
+- added kernel memory layout macros
+- disabled virtual memory management
+- added `outw()` function to `<asm/io.h>`
+- enabled VBE mode
+- added graphics library for drawing pixels/circles/lines and etc.
+- added VBE font
+- adapted TTY for VBE mode
+- added `errno.h` & `strerror()` function
+- renamed some shell commands & add several new: uname, reboot, shutdown
+- separated libc from kernel
+- added `enable_paging()` macro
+- removed VGA driver
+- moved libc to userspace related directory
+
+<img src="res/nos_graphics.png">

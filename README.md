@@ -10,7 +10,7 @@ Was built on top of ([simple os](https://github.com/alkuzin/simple-os)).
 
 List of updates in [CHANGELOG.md](CHANGELOG.md)
 
-<img src="res/nos_v_0_0_3.png">
+<img src="res/nos_v0_0_4.png">
 
 ## Installation
 
