@@ -5,7 +5,7 @@ LIBC_DIR    = $(INCLUDE_DIR)/libc
 
 NAME = _common.o
 
-SRC  = tty printk nosstd panic login
+SRC  = tty vsnprintk printk panic login nosstd 
 SRCS = $(addsuffix .c, $(SRC))
 OBJS = $(addsuffix .o, $(SRC))
 
