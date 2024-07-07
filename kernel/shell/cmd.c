@@ -44,6 +44,7 @@ void ksh_help(void)
          "clear        - clear screen\n"
          "uname        - print system information\n"
          "ls           - display list of files\n"
+         "cat          - display file content\n"
          "free         - display list of free memory\n"
          "theme <id>   - set CLI theme\n"
          "ps           - display list of current processes\n"
