@@ -17,7 +17,7 @@
  */
 
 #include <nos/stdlib.hpp>
-#include <nos/string.h>
+#include <nos/string.hpp>
 #include <nos/math.hpp>
 
 
@@ -107,9 +107,9 @@ static void __swap(void *p1, void *p2, usize size)
 {
     char temp[size];
 
-    memcpy(temp, p1, size);
-    memcpy(p1, p2, size);
-    memcpy(p2, temp, size);
+    str::memcpy(temp, p1, size);
+    str::memcpy(p1, p2, size);
+    str::memcpy(p2, temp, size);
 }
 
 static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
@@ -121,7 +121,7 @@ static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const v
     if (nmemb <= 1)
         return;
     
-    memcpy(pivot, (char *)base + (nmemb / 2) * size, size);
+    str::memcpy(pivot, (char *)base + (nmemb / 2) * size, size);
 
     i = 0;
     j = nmemb - 1;
@@ -135,9 +135,9 @@ static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const v
             j--;
 
         if (i <= j) {
-            memcpy(temp, (char *)base + i * size, size);
-            memcpy((char *)base + i * size, (char *)base + j * size, size);
-            memcpy((char *)base + j * size, temp, size);
+            str::memcpy(temp, (char *)base + i * size, size);
+            str::memcpy((char *)base + i * size, (char *)base + j * size, size);
+            str::memcpy((char *)base + j * size, temp, size);
 
             i++;
             j--;
@@ -194,12 +194,12 @@ static void __insertion_sort(void *base, usize nmemb, usize size, s32 (*cmp)(con
     usize  i, j;
 
     for (i = 1; i < nmemb; i++) {
-        memcpy(tmp, (char *)base + i * size, size);
+        str::memcpy(tmp, (char *)base + i * size, size);
         
         for (j = i; j > 0 && cmp((char *)base + (j - 1) * size, tmp) > 0; j--)
-            memcpy((char *)base + j * size, (char *)base + (j - 1) * size, size);
+            str::memcpy((char *)base + j * size, (char *)base + (j - 1) * size, size);
         
-        memcpy((char *)base + j * size, tmp, size);
+        str::memcpy((char *)base + j * size, tmp, size);
     }
 }
 
