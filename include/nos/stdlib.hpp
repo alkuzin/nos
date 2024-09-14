@@ -30,7 +30,7 @@
 #ifndef _NOS_KERNEL_STDLIB_HPP_
 #define _NOS_KERNEL_STDLIB_HPP_
 
-#include <nos/types.h>
+#include <nos/types.hpp>
 
 
 namespace kernel {

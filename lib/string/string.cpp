@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/types.h>
-#include <nos/errno.h>
+#include <nos/types.hpp>
+#include <nos/errno.hpp>
 
 
 namespace kernel {
@@ -147,82 +147,82 @@ char *strchr(const char *s, s32 c)
     return nullptr;
 }
 
-const char *strerror(s32 errnum)
+const char *strerror(kernel::err errnum)
 {
     switch (errnum) {
-        case E2BIG:
+        case kernel::err::E2BIG:
             return "Arg list too long";
-        case EACCES:
+        case kernel::err::EACCES:
             return "Permission denied";
-        case EAGAIN:
+        case kernel::err::EAGAIN:
             return "Try again";
-        case EBADF:
+        case kernel::err::EBADF:
             return "Bad file number";
-        case EBUSY:
+        case kernel::err::EBUSY:
             return "Device or resource busy";
-        case ECHILD:
+        case kernel::err::ECHILD:
             return "No child processes";
-        case EDEADLK:
+        case kernel::err::EDEADLK:
             return "Resource deadlock would occur";
-        case EDOM:
+        case kernel::err::EDOM:
             return "Math argument out of domain of func";
-        case EEXIST:
+        case kernel::err::EEXIST:
             return "File exists";
-        case EFAULT:
+        case kernel::err::EFAULT:
             return "Bad address";
-        case EFBIG:
+        case kernel::err::EFBIG:
             return "File too large";
-        case EINTR:
+        case kernel::err::EINTR:
             return "Interrupted system call";
-        case EINVAL:
+        case kernel::err::EINVAL:
             return "Invalid argument";
-        case EIO:
+        case kernel::err::EIO:
             return "I/O error";
-        case EISDIR:
+        case kernel::err::EISDIR:
             return "Is a directory";
-        case EMFILE:
+        case kernel::err::EMFILE:
             return "Too many open files";
-        case EMLINK:
+        case kernel::err::EMLINK:
             return "Too many links";
-        case ENAMETOOLONG:
+        case kernel::err::ENAMETOOLONG:
             return "File name too long";
-        case ENFILE:
+        case kernel::err::ENFILE:
             return "File table overflow";
-        case ENODEV:
+        case kernel::err::ENODEV:
             return "No such device";
-        case ENOENT:
+        case kernel::err::ENOENT:
             return "No such file or directory";
-        case ENOEXEC:
+        case kernel::err::ENOEXEC:
             return "Exec format error";
-        case ENOLCK:
+        case kernel::err::ENOLCK:
             return "No record locks available";
-        case ENOMEM:
+        case kernel::err::ENOMEM:
             return "Out of memory";
-        case ENOSPC:
+        case kernel::err::ENOSPC:
             return "No space left on device";
-        case ENOSYS:
+        case kernel::err::ENOSYS:
             return "Function not implemented";
-        case ENOTDIR:
+        case kernel::err::ENOTDIR:
             return "Not a directory";
-        case ENOTEMPTY:
+        case kernel::err::ENOTEMPTY:
             return "Directory not empty";
-        case ENOTTY:
+        case kernel::err::ENOTTY:
             return "Not a typewriter";
-        case ENXIO:
+        case kernel::err::ENXIO:
             return "No such device or address";
-        case EPERM:
+        case kernel::err::EPERM:
             return "Operation not permitted";
-        case EPIPE:
+        case kernel::err::EPIPE:
             return "Broken pipe";
-        case ERANGE:
+        case kernel::err::ERANGE:
             return "Math result not representable";
-        case EROFS:
+        case kernel::err::EROFS:
             return "Read-only file system";
-        case ESPIPE:
+        case kernel::err::ESPIPE:
             return "Illegal seek";
-        case ESRCH:
+        case kernel::err::ESRCH:
             return "No such process";
-        case EXDEV:
+        case kernel::err::EXDEV:
             return "Cross-device link";
         default:
             return "Unknown error";
