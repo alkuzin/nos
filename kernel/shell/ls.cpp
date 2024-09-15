@@ -1,32 +1,30 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include <nos/shell/ls.hpp>
+#include <nos/string.hpp>
+#include <nos/initrd.hpp>
+#include <nos/printk.hpp>
+#include <nos/login.hpp>
 
 
-#include <nos/shell/ls.h>
-#include <nos/string.h>
-#include <nos/initrd.h>
-#include <nos/printk.h>
-#include <nos/types.h>
-#include <nos/login.h>
+namespace kernel {
+namespace shell {
 
 static ls_t ls;
 
@@ -55,8 +53,8 @@ void ksh_ls(void)
     ls_file_t *file;
     s32       ret;
 
-    strncpy(ls.dirname, ".", 1); /* current directory by default */
-    ls.count = initrd_get_count();
+    lib::strncpy(ls.dirname, ".", 1); /* current directory by default */
+    ls.count = fs::initrd_get_count();
 
     for (u32 i = 0; i < ls.count; i++) {
         file = &ls.files[i];
@@ -65,14 +63,14 @@ void ksh_ls(void)
         ls_get_mode(file->mode, file->stat.mode);
 
         if (ret == -1) {
-            printk("ls: %s\n", "get initrd stat error");
+            lib::printk("ls: %s\n", "get initrd stat error");
             return;
         }
     }
 
     ls_printdir();
     
-    printk(" \ntotal files: %u/%u\n", ls.count, INITRD_MAX_FILES);
+    lib::printk(" \ntotal files: %u/%u\n", ls.count, INITRD_MAX_FILES);
 }
 
 static void ls_printdir(void)
@@ -80,12 +78,12 @@ static void ls_printdir(void)
     char user[MAX_USERNAME_SIZE];
     ls_file_t *file;
 
-    strncpy(user, USERNAME, MAX_USERNAME_SIZE);
+    lib::strncpy(user, USERNAME, MAX_USERNAME_SIZE);
 
     for (u32 i = 0; i < ls.count; i++) {
         file = &ls.files[i];
 
-        printk("%s  %u %s %s %u bytes   %s\n", file->mode, file->stat.fd, user, user,
+        lib::printk("%s  %u %s %s %u bytes   %s\n", file->mode, file->stat.fd, user, user,
         file->stat.size, file->stat.name);
     }
 }
@@ -125,3 +123,6 @@ static void ls_get_mode(char *buffer, mode_t mode)
     buffer[8] = (S_IWOTH & mode) ? 'w' : '-';
     buffer[9] = (S_IXOTH & mode) ? 'x' : '-';
 }
+
+} // namespace shell
+} // namespace kernel

@@ -1,40 +1,40 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <nos/shell/ksh.h>
-#include <nos/shell/ls.h>
-#include <nos/keyboard.h>
-#include <nos/version.h>
-#include <nos/string.h>
-#include <nos/printk.h>
-#include <nos/kernel.h> 
-#include <nos/nosstd.h>
-#include <nos/stdlib.h>
-#include <nos/types.h>
-#include <nos/ctype.h>
-#include <nos/login.h>
-#include <nos/tty.h>
-#include <nos/gfx.h>
-#include <nos/mm.h>
+#include <nos/shell/ksh.hpp>
+#include <nos/shell/ls.hpp>
+#include <nos/keyboard.hpp>
+#include <nos/version.hpp>
+#include <nos/string.hpp>
+#include <nos/printk.hpp>
+#include <nos/kernel.hpp>
+#include <nos/nosstd.hpp>
+#include <nos/stdlib.hpp>
+#include <nos/types.hpp>
+#include <nos/ctype.hpp>
+#include <nos/login.hpp>
+#include <nos/tty.hpp>
+#include <nos/gfx.hpp>
+#include <nos/mm.hpp>
+
+
+namespace kernel {
+namespace shell {
 
 /** @brief Display promt for user input. */
 static void ksh_display_prompt(void);
@@ -57,23 +57,23 @@ static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input,
                         const s32 input_len);
 
 /** @brief Shell commands input buffer. */
-static char input_buffer[INPUT_BUFFER_SIZE];
+static char input_buffer[driver::INPUT_BUFFER_SIZE];
 
 /** @brief Current character position of user input buffer. */
 static u32 buf_pos;
 
-rgb_t primary_color, secondary_color;
+gfx::rgb primary_color, secondary_color;
 
 void ksh_init(void)
 {
     char cc;
 
     /* initializing keyboard */
-    keyboard_init();
+    driver::keyboard_init();
 
     /* clear user input buffer */
-    bzero(input_buffer, sizeof(input_buffer));
-    kputchar('\n');
+    lib::bzero(input_buffer, sizeof(input_buffer));
+    lib::kputchar('\n');
 
     buf_pos = 0;
 
@@ -81,7 +81,7 @@ void ksh_init(void)
         ksh_display_prompt();
         
         do {
-            cc = (char)keyboard_getchar();
+            cc = (char)driver::keyboard_getchar();
 
             if(cc != 0 && cc != '\n') {
                 
@@ -93,9 +93,9 @@ void ksh_init(void)
                     input_buffer[buf_pos] = 0;
                 }
                 
-                kputchar(cc);
+                lib::kputchar(cc);
 
-                if(buf_pos < INPUT_BUFFER_SIZE && isprint(cc)) {
+                if(buf_pos < driver::INPUT_BUFFER_SIZE && lib::isprint(cc)) {
                     input_buffer[buf_pos] = cc;
                     buf_pos++;
                 }
@@ -104,28 +104,28 @@ void ksh_init(void)
         } while(cc != '\n');
 
         input_buffer[buf_pos] = '\0';
-        kputchar('\n');
+        lib::kputchar('\n');
         
         if(!ksh_is_empty())
             ksh_exec(input_buffer);
         
-        bzero(input_buffer, sizeof(input_buffer));
+        lib::bzero(input_buffer, sizeof(input_buffer));
         buf_pos = 0;
     }
     
-    khalt(); 
+    lib::khalt(); 
 }
 
 static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len)
 {
-    return (cmd_len == input_len) && (strncmp(cmd, input, cmd_len) == 0);
+    return (cmd_len == input_len) && (lib::strncmp(cmd, input, cmd_len) == 0);
 }
 
 s32 ksh_exec(char *cmd)
 {
     [[gnu::unused]]s32 cmd_len;
 
-    cmd_len = strlen(cmd);
+    cmd_len = lib::strlen(cmd);
     
     if(ksh_is_valid("free", 4, cmd, cmd_len))
         ksh_free();
@@ -136,13 +136,13 @@ s32 ksh_exec(char *cmd)
     else if(ksh_is_valid("theme", 5, cmd, 5)) {
         char *theme_type;
 
-        theme_type = strtok(cmd, " ");
-        theme_type = strtok(nullptr, " ");
+        theme_type = lib::strtok(cmd, " ");
+        theme_type = lib::strtok(nullptr, " ");
 
         if (theme_type)
-            ksh_theme(atoi(theme_type));
+            ksh_theme(static_cast<theme_t>(lib::atoi(theme_type)));
         else
-            printk(" theme: %s\n", "incorrect argument\n");
+            lib::printk(" theme: %s\n", "incorrect argument\n");
     }
     else if(ksh_is_valid("ps", 2, cmd, cmd_len))
         ksh_ps();
@@ -151,18 +151,18 @@ s32 ksh_exec(char *cmd)
     else if(ksh_is_valid("cat", 3, cmd, 3)) {
         char *pathname;
 
-        pathname = strtok(cmd, " ");
-        pathname = strtok(nullptr, " ");
+        pathname = lib::strtok(cmd, " ");
+        pathname = lib::strtok(nullptr, " ");
 
         if (pathname)
             ksh_cat(pathname);
         else
-            printk("cat: %s\n", "incorrect argument\n");
+            lib::printk("cat: %s\n", "incorrect argument\n");
     }
     else if(ksh_is_valid("gfx", 3, cmd, 3))
-        gfx_test();
+        gfx::gfx_test();
     else if(ksh_is_valid("uname", 5, cmd, 5))
-        __DISPLAY_OS_INFO();
+        info::__DISPLAY_OS_INFO();
     else if(ksh_is_valid("reboot", 5, cmd, 5))
         ksh_reboot();
     else if(ksh_is_valid("shutdown", 8, cmd, 8))
@@ -177,16 +177,19 @@ s32 ksh_exec(char *cmd)
 
 static void ksh_display_prompt(void)
 {
-    primary_color   = tty_get_primary_color();
-    secondary_color = tty_get_secondary_color();
+    primary_color   = gfx::tty_get_primary_color();
+    secondary_color = gfx::tty_get_secondary_color();
 
     tty_printc(USERNAME, primary_color, secondary_color);
-    kputchar('@');
+    lib::kputchar('@');
     tty_printc("nos", primary_color, secondary_color);
-    putk(":-/ ");
+    lib::putk(":-/ ");
 }
 
 static bool ksh_is_empty(void)
 {
     return input_buffer[0] == 0;
 }
+
+} // namespace shell
+} // namespace kernel
