@@ -1,35 +1,34 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <nos/string.h>
-#include <nos/gdt.h>
+#include <nos/string.hpp>
+#include <nos/gdt.hpp>
 
-extern void gdt_flush(u32);
-extern void tss_flush(void);
+
+extern "C" void gdt_flush(kernel::u32);
+extern "C" void tss_flush(void);
+
+namespace kernel {
+namespace core {
 
 gdt_entry_t gdt_entries[6];
 gdt_ptr_t   gdt_ptr;
 tss_entry_t tss_entry;
-
 
 void set_gdt_gate(u32 num, u32 base, u32 limit, u8 access, u8 gran)
 {
@@ -87,7 +86,7 @@ void tss_write(u32 num, u16 ss0, u32 esp0)
     limit = base + sizeof(tss_entry);
 
     set_gdt_gate(num, base, limit, 0xE9, 0x00);
-    bzero(&tss_entry, sizeof(tss_entry));
+    lib::bzero(&tss_entry, sizeof(tss_entry));
 
     tss_entry.ss0  = ss0;
     tss_entry.esp0 = esp0;
@@ -100,3 +99,6 @@ void tss_write(u32 num, u16 ss0, u32 esp0)
     tss_entry.fs = 0x10 | 0x3;
     tss_entry.gs = 0x10 | 0x3;
 }
+
+} // namespace core
+} // namespace kernel

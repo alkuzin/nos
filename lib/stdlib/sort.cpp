@@ -22,7 +22,7 @@
 
 
 namespace kernel {
-namespace std {
+namespace lib {
     
 /**
  * @brief Swaps the contents of two memory regions of a given size.
@@ -107,9 +107,9 @@ static void __swap(void *p1, void *p2, usize size)
 {
     char temp[size];
 
-    str::memcpy(temp, p1, size);
-    str::memcpy(p1, p2, size);
-    str::memcpy(p2, temp, size);
+    memcpy(temp, p1, size);
+    memcpy(p1, p2, size);
+    memcpy(p2, temp, size);
 }
 
 static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
@@ -121,7 +121,7 @@ static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const v
     if (nmemb <= 1)
         return;
     
-    str::memcpy(pivot, (char *)base + (nmemb / 2) * size, size);
+    memcpy(pivot, (char *)base + (nmemb / 2) * size, size);
 
     i = 0;
     j = nmemb - 1;
@@ -135,9 +135,9 @@ static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const v
             j--;
 
         if (i <= j) {
-            str::memcpy(temp, (char *)base + i * size, size);
-            str::memcpy((char *)base + i * size, (char *)base + j * size, size);
-            str::memcpy((char *)base + j * size, temp, size);
+            memcpy(temp, (char *)base + i * size, size);
+            memcpy((char *)base + i * size, (char *)base + j * size, size);
+            memcpy((char *)base + j * size, temp, size);
 
             i++;
             j--;
@@ -194,12 +194,12 @@ static void __insertion_sort(void *base, usize nmemb, usize size, s32 (*cmp)(con
     usize  i, j;
 
     for (i = 1; i < nmemb; i++) {
-        str::memcpy(tmp, (char *)base + i * size, size);
+        memcpy(tmp, (char *)base + i * size, size);
         
         for (j = i; j > 0 && cmp((char *)base + (j - 1) * size, tmp) > 0; j--)
-            str::memcpy((char *)base + j * size, (char *)base + (j - 1) * size, size);
+            memcpy((char *)base + j * size, (char *)base + (j - 1) * size, size);
         
-        str::memcpy((char *)base + j * size, tmp, size);
+        memcpy((char *)base + j * size, tmp, size);
     }
 }
 
@@ -245,7 +245,7 @@ void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const v
     if (size == sizeof(s32))
         __radix_sort((s32 *)base, nmemb);
     else {
-        depth_limit = 2 * math::log(size);
+        depth_limit = 2 * log(size);
         
         if (nmemb <= QSORT_THRESHOLD) {
             __insertion_sort(base, nmemb, size, cmp);
@@ -261,5 +261,5 @@ void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const v
     }
 }
 
-} // namespace std    
+} // namespace lib  
 } // namespace kernel

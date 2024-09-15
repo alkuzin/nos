@@ -20,77 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. */
 
-#include <nos/stdarg.h>
-#include <nos/printk.h> 
-#include <nos/types.h>
-#include <nos/gfx.h>
-#include <nos/tty.h>
-
-#define BUF_SIZE 1024
-
-static char buf[BUF_SIZE];
+#include <nos/stdarg.hpp>
+#include <nos/nosstd.hpp>
+#include <nos/printk.hpp>
+#include <nos/panic.hpp>
 
 
-void vprintk(const char *fmt, va_list args)
+namespace kernel {
+namespace lib {
+	
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
 {
-    va_list args_copy;
-
-    va_copy(args_copy, args);
-    vsnprintk(buf, BUF_SIZE, fmt, args);
-    va_end(args_copy);
-
-	putk(buf);
-}
-
-void printk(const char *fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    vsnprintk(buf, BUF_SIZE, fmt, args);
+	va_list args;
+	
+	va_start(args, fmt);
+    printk("kernel: panic: in \"%s\" in \"%s()\" at line %d: ", file, func, line);
+	vprintk(fmt, args);
     va_end(args);
 
-    putk(buf);
+	khalt();
 }
 
-void kmesg(bool state, const char *fmt, ...)
-{
-    va_list args;
-    
-    kputchar('[');
-
-    if (state)
-        cputk(" OK ", GFX_COLOR_GREEN, tty_get_bg());
-    else
-        cputk(" ERR ", GFX_COLOR_RED, tty_get_bg());
-    
-    kputchar(']');
-    kputchar(' ');
-
-    va_start(args, fmt);    
-    vprintk(fmt, args);
-    va_end(args);
-}
-
-void putk(const char *str)
-{
-    u32 i;
-
-    i = 0;
-    while(str[i]) {
-        kputchar(str[i]);       
-        i++;
-	}
-}
-
-void cputk(const char *str, rgb_t fg, rgb_t bg)
-{
-	s32 i;
-
-	i = 0;
-
-    while (str[i]) {
-        kputchar_c(str[i], fg, bg);
-		i++;
-	}
-}
+} // namespace lib
+} // namespace kernel

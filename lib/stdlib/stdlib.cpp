@@ -20,7 +20,7 @@
 
 
 namespace kernel {
-namespace std {
+namespace lib {
 
 // Convertion Functions ---------------------------------------------
 
@@ -98,5 +98,5 @@ void srand(u32 seed)
     next = seed;
 }
 
-} // namespace std    
+} // namespace lib
 } // namespace kernel

@@ -19,7 +19,7 @@
 #include <nos/math.hpp>
 
 namespace kernel {
-namespace math {
+namespace lib {
 
 // Trigonometric Functions -----------------------------------------------
 
@@ -244,5 +244,5 @@ f64 floor(f64 x)
         return int_part - 1;
 }
 
-} // namespace math
+} // namespace lib
 } // namespace kernel
