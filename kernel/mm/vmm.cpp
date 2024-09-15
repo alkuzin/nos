@@ -1,34 +1,33 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
+#include <arch/x86/system.hpp>
+#include <nos/memlayout.hpp>
 #include <nos/multiboot.h>
-#include <nos/memlayout.h>
-#include <nos/string.h>
-#include <nos/types.h>
-#include <nos/vmm.h>
-#include <nos/pmm.h>
+#include <nos/string.hpp>
+#include <nos/types.hpp>
+#include <nos/vmm.hpp>
+#include <nos/pmm.hpp>
 
-#include <asm/system.h>
 
+namespace kernel {
+namespace core {
+namespace memory {
 
 page_dir_t *cur_page_dir = 0;
 
@@ -88,7 +87,7 @@ void vmm_free_page(u32 *page)
     addr = (void *)PAGE_PADDRESS(page);
 
     if(addr)
-        pmm_free_blocks(addr, 1);
+        pmm_free_blocks(reinterpret_cast<u32*>(addr), 1);
 
     CLEAR_ATTRIBUTE(page, PTE_PRESENT);
 }
@@ -108,9 +107,9 @@ bool vmm_set_page_dir(page_dir_t *pd)
 
 void vmm_flush_tlb_entry(u32 vaddr)
 {
-    cli();
+    arch::x86::cli();
     __asm__ volatile("invlpg (%0);" : : "r"(vaddr));
-    sti();
+    arch::x86::sti();
 }
 
 bool vmm_map_page(void *paddr, void *vaddr)
@@ -128,7 +127,7 @@ bool vmm_map_page(void *paddr, void *vaddr)
         if(!table)
             return false;
 
-        bzero(table, sizeof(page_table_t));
+        lib::bzero(table, sizeof(page_table_t));
 
         entry = &pd->entries[PD_INDEX((u32)vaddr)];
 
@@ -176,7 +175,7 @@ bool vmm_init(void)
         return false;
 
     /* clear page directory and set as current */
-    bzero(dir, sizeof(page_dir_t));
+    lib::bzero(dir, sizeof(page_dir_t));
 
     for(u32 i = 0; i < 1024; i++)
         dir->entries[i] = 0x02;
@@ -195,8 +194,8 @@ bool vmm_init(void)
     if(!table3G)
         return false;
 
-    bzero(table, sizeof(page_table_t));
-    bzero(table3G, sizeof(page_table_t));
+    lib::bzero(table, sizeof(page_table_t));
+    lib::bzero(table3G, sizeof(page_table_t));
 
     frame = 0x0;
     vaddr = 0x0;
@@ -247,7 +246,11 @@ bool vmm_init(void)
     SET_FRAME(entry2, (u32)table3G);
 
     vmm_set_page_dir(dir);
-    enable_paging();
+    arch::x86::enable_paging();
 
     return true;
 }
+
+} // namespace memory
+} // namespace core
+} // namespace kernel
