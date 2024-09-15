@@ -30,7 +30,7 @@
 #ifndef _NOS_KERNEL_INITRD_HPP_
 #define _NOS_KERNEL_INITRD_HPP_
 
-#include <nos/fcntl.h>
+#include <nos/fcntl.hpp>
 #include <nos/stat.hpp>
 #include <nos/vfs.hpp>
 

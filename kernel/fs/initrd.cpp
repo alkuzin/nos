@@ -1,35 +1,35 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <nos/nosstd.h>
-#include <nos/string.h>
-#include <nos/initrd.h>
-#include <nos/printk.h>
-#include <nos/panic.h>
-#include <nos/kheap.h>
-#include <nos/types.h>
-#include <nos/fcntl.h>
-#include <nos/stat.h>
-#include <nos/vfs.h>
+#include <nos/nosstd.hpp>
+#include <nos/string.hpp>
+#include <nos/initrd.hpp>
+#include <nos/printk.hpp>
+#include <nos/panic.hpp>
+#include <nos/kheap.hpp>
+#include <nos/types.hpp>
+#include <nos/fcntl.hpp>
+#include <nos/stat.hpp>
+#include <nos/vfs.hpp>
+
+
+namespace kernel {
+namespace fs {
 
 static vfs_adapter_t initrd_adapter; ///< Initrd adapter for VFS.
 static initrd_t      initrd;         ///< Main initrd structure.
@@ -40,10 +40,10 @@ static u32           cur_file_index; /* for initrd_opendir() */
 
 void initrd_init(void)
 {
-    initrd.files = (initrd_file_t *)kmalloc(sizeof(initrd_file_t) * INITRD_MAX_FILES);
+    initrd.files = (initrd_file_t *)lib::kmalloc(sizeof(initrd_file_t) * INITRD_MAX_FILES);
 
     if (!initrd.files)
-        panic("%s\n", "kmalloc error");
+        lib::panic("%s\n", "kmalloc error");
 
     initrd_next_fd = 0;
     initrd.count   = 0;
@@ -58,7 +58,7 @@ void initrd_init(void)
 
 void initrd_free(void)
 {
-    kfree(initrd.files);
+    lib::kfree(initrd.files);
 }
 
 s32 initrd_creat(const char* pathname, mode_t mode)
@@ -75,8 +75,8 @@ s32 initrd_creat(const char* pathname, mode_t mode)
 
     file = &initrd.files[initrd.count];
 
-    strncpy(file->name, pathname, INITRD_MAX_NAME_SIZE);
-    bzero(file->data, INITRD_FILE_SIZE);
+    lib::strncpy(file->name, pathname, INITRD_MAX_NAME_SIZE);
+    lib::bzero(file->data, INITRD_FILE_SIZE);
     file->size  = 0;
     file->mode  = mode;
     file->type  = S_IFREG;
@@ -110,7 +110,7 @@ s32 initrd_unlink(const char* pathname)
     if (file->state == INITRD_FILE_OPENED)
         initrd_close(file->fd);
 
-    bzero(file->data, INITRD_FILE_SIZE);
+    lib::bzero(file->data, INITRD_FILE_SIZE);
 
     /* shift remaining files to fill the gap */
     for (u32 j = file_index; j < initrd.count - 1; j++)
@@ -246,10 +246,10 @@ s32 initrd_open(const char *pathname, s32 flags)
     file->state = INITRD_FILE_OPENED;
     file->flags = flags;
     
-    initrd_buffer = (u8 *)kmalloc(INITRD_FILE_SIZE);
+    initrd_buffer = (u8 *)lib::kmalloc(INITRD_FILE_SIZE);
 
-    bzero(initrd_buffer, INITRD_FILE_SIZE);
-    memcpy(initrd_buffer, file->data, file->size);
+    lib::bzero(initrd_buffer, INITRD_FILE_SIZE);
+    lib::memcpy(initrd_buffer, file->data, file->size);
 
     return file->fd;
 }
@@ -276,7 +276,7 @@ s32 initrd_close(s32 fd)
     for (u32 i = 0; i < INITRD_FILE_SIZE; i++)
         file->data[i] = initrd_buffer[i];
 
-    kfree(initrd_buffer);
+    lib::kfree(initrd_buffer);
     return 0;
 }
 
@@ -287,7 +287,7 @@ s32 initrd_get_index(const char *pathname)
         return -1; /* get file index error */
     
     for (u32 i = 0; i < initrd.count; i++) {
-        if (strncmp(initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
+        if (lib::strncmp(initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
             return i;
     }
 
@@ -334,7 +334,7 @@ s32 initrd_stat(const char *pathname, stat_t *sb)
 
     file = &initrd.files[file_index];
 
-    strncpy(sb->name, file->name, INITRD_MAX_NAME_SIZE);
+    lib::strncpy(sb->name, file->name, INITRD_MAX_NAME_SIZE);
     sb->size  = file->size;
     sb->mode  = file->mode;
     sb->type  = file->type;
@@ -354,8 +354,8 @@ s32 initrd_opendir(const char *pathname, stat_t *sb)
     s32 ret;
 
     // TODO: remove after implementing directories
-    if (strncmp(".", pathname, 1) != 0) {
-        printk("%s\n", "incorrect path");
+    if (lib::strncmp(".", pathname, 1) != 0) {
+        lib::printk("%s\n", "incorrect path");
         return -1;
     }
     
@@ -369,3 +369,6 @@ s32 initrd_opendir(const char *pathname, stat_t *sb)
     cur_file_index++;
     return ret;
 }
+
+} // namespace fs
+} // namespace kernel
