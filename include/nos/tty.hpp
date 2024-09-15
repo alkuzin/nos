@@ -34,7 +34,7 @@
 
 
 namespace kernel {
-namespace lib {
+namespace gfx {
 
 ///< Default kernel TTY foreground & background color.
 #define TTY_FG_COLOR  RGB(255, 255, 255)
@@ -45,16 +45,16 @@ namespace lib {
 typedef struct tty_s {
     s32   x_pos;            ///< X position of the cursor.
     s32   y_pos;            ///< Y position of the cursor.
-    gfx::rgb fg;               ///< Foreground color.
-    gfx::rgb bg;               ///< Background color.
+    rgb fg;               ///< Foreground color.
+    rgb bg;               ///< Background color.
     s32   height;           ///< Screen height.
     s32   width;            ///< Screen width.
-    gfx::rgb primary_color;
-    gfx::rgb secondary_color;
-    gfx::rgb prev_fg;          ///< Previous foreground color.
-    gfx::rgb prev_bg;          ///< Previous background color.
-    gfx::rgb prev_prim_color;  ///< Previous primary color.
-    gfx::rgb prev_sec_color;   ///< Previous secondary color.
+    rgb primary_color;
+    rgb secondary_color;
+    rgb prev_fg;          ///< Previous foreground color.
+    rgb prev_bg;          ///< Previous background color.
+    rgb prev_prim_color;  ///< Previous primary color.
+    rgb prev_sec_color;   ///< Previous secondary color.
 } tty_t;
 
 /* Initialize kernel TTY structure. */ 
@@ -96,42 +96,42 @@ void tty_set_y(s32 y);
  * 
  * @return current foreground color.
  */
-gfx::rgb tty_get_fg(void);
+rgb tty_get_fg(void);
 
 /**
  * @brief Get kernel TTY structure background color.
  * 
  * @return current background color.
  */
-gfx::rgb tty_get_bg(void);
+rgb tty_get_bg(void);
 
 /**
  * @brief Get TTY primary color. 
  * 
  * @return primary color. 
  */
-gfx::rgb tty_get_primary_color(void);
+rgb tty_get_primary_color(void);
 
 /**
  * @brief Get TTY secondary color. 
  * 
  * @return secondary color. 
  */
-gfx::rgb tty_get_secondary_color(void);
+rgb tty_get_secondary_color(void);
 
 /**
  * @brief Set TTY primary color.
  * 
  * @param [in] color - given new primary color.
  */
-void tty_set_primary_color(gfx::rgb color);
+void tty_set_primary_color(rgb color);
 
 /**
  * @brief Set TTY secondary color. 
  * 
  * @param [in] color - given new secondary color.
  */
-void tty_set_secondary_color(gfx::rgb color);
+void tty_set_secondary_color(rgb color);
 
 /**
  * @brief Set foreground & background color.
@@ -139,7 +139,7 @@ void tty_set_secondary_color(gfx::rgb color);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_set_color(gfx::rgb fg, gfx::rgb bg);
+void tty_set_color(rgb fg, rgb bg);
 
 /**
  * @brief Get screen height.
@@ -170,7 +170,20 @@ void tty_update(void);
  * @param [in] fg - given foreground color. 
  * @param [in] bg - given background color. 
  */
-void tty_kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg);
+void tty_kputchar_at(char c, s32 x, s32 y, rgb fg, rgb bg);
+
+/**
+ * @brief Print colored string to the screen.
+ * 
+ * @param [in] str - given string to print.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
+void tty_printc(const char *str, rgb fg, rgb bg);
+
+} // namespace gfx
+
+namespace lib {
 
 /**
  * @brief Print character to screen.
@@ -180,15 +193,6 @@ void tty_kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg);
 void kputchar(const s32 c);
 
 /**
- * @brief Print colored string to the screen.
- * 
- * @param [in] str - given string to print.
- * @param [in] fg - given foreground color.
- * @param [in] bg - given background color.
- */
-void tty_printc(const char *str, gfx::rgb fg, gfx::rgb bg);
-
-/**
  * @brief Print colored character on screen.
  * 
  * @param [in] c - given character to print.
@@ -196,7 +200,7 @@ void tty_printc(const char *str, gfx::rgb fg, gfx::rgb bg);
  * @param [in] bg - given background color.
  */
 void kputchar_c(const s32 c, gfx::rgb fg, gfx::rgb bg);
-
+    
 } // namespace lib
 } // namespace kernel
 

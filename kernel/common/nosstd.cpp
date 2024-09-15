@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <arch/x86/system.hpp>
 #include <nos/nosstd.hpp>
-#include <asm/system.h>
-#include <nos/kheap.h>
+#include <nos/kheap.hpp>
 
 
 namespace kernel {
@@ -28,11 +28,11 @@ void *kmalloc(usize n)
 {
     static void *ptr;
 
-    if(!kmalloc_get_head())
-        kmalloc_init(n);
+    if(!core::memory::kmalloc_get_head())
+        core::memory::kmalloc_init(n);
 
-    ptr = kmalloc_next_block(n);
-    kmalloc_merge_free_blocks();
+    ptr = core::memory::kmalloc_next_block(n);
+    core::memory::kmalloc_merge_free_blocks();
 
     return ptr;
 }
@@ -41,7 +41,7 @@ void kfree(void *ptr) {
     if(!ptr)
         return;
 
-    kmalloc_free(ptr);
+    core::memory::kmalloc_free(ptr);
 }
 
 void __ksleep(u32 microsec)
@@ -50,7 +50,7 @@ void __ksleep(u32 microsec)
 
 	for (i = 0; i < microsec * 10000; i++) {
 		for (i = 0; i < microsec * 10000; i++)
-			nop(); /* do nothing */
+			arch::x86::nop(); /* do nothing */
 	}
 }
 
@@ -61,7 +61,7 @@ void ksleep(u32 sec)
 
 void khalt(void) 
 {
-	cli(); /* disable interrupts */
+	arch::x86::cli(); /* disable interrupts */
 	for(;;);
 }
 

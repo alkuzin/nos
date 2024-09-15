@@ -94,12 +94,12 @@ extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
     multiboot_t boot_info = *mboot;
     
     kernel::driver::vbe_init(&boot_info);
-    kernel::lib::tty_init();
+    kernel::gfx::tty_init();
 
-    kernel::lib::tty_set_color(kernel::gfx::color::white, kernel::gfx::color::black);
-    kernel::lib::tty_set_primary_color(kernel::gfx::color::gray);
-    kernel::lib::tty_set_secondary_color(kernel::gfx::color::black);
-	kernel::lib::tty_clear(); 
+    kernel::gfx::tty_set_color(kernel::gfx::color::white, kernel::gfx::color::black);
+    kernel::gfx::tty_set_primary_color(kernel::gfx::color::gray);
+    kernel::gfx::tty_set_secondary_color(kernel::gfx::color::black);
+	kernel::gfx::tty_clear(); 
 
     kernel::lib::kmesg(true, "%s\n", "initialized VBE mode");
     kernel::lib::kmesg(true, "%s\n", "initialized TTY");

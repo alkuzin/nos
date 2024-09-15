@@ -56,9 +56,9 @@ void kmesg(bool state, const char *fmt, ...)
     kputchar('[');
 
     if (state)
-        putk(" OK ", gfx::color::green, tty_get_bg());
+        putk(" OK ", gfx::color::green, gfx::tty_get_bg());
     else
-        putk(" ERR ", gfx::color::red, tty_get_bg());
+        putk(" ERR ", gfx::color::red, gfx::tty_get_bg());
     
     kputchar(']');
     kputchar(' ');
