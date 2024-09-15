@@ -1,27 +1,23 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
- * @file  gfx.h
+ * @file  gfx.hpp
  * @brief Contains declarations for graphics.
  * 
  * @details This header file includes functions and structs related to the
@@ -31,30 +27,47 @@
  * @date   24.06.2024
  */
 
-#ifndef _NOS_KERNEL_GFX_H_
-#define _NOS_KERNEL_GFX_H_
+#ifndef _NOS_KERNEL_GFX_HPP_
+#define _NOS_KERNEL_GFX_HPP_
 
-#include <nos/types.h>
+#include <nos/types.hpp>
 
 
-/** @brief Macro to create RGB color */
-#define RGB(r, g, b) ((rgb_t){(r), (g), (b)})
+namespace kernel {
+namespace gfx {
 
-#define GFX_COLOR_RED    RGB(255, 0, 0)
-#define GFX_COLOR_GREEN  RGB(0, 255, 0)
-#define GFX_COLOR_BLUE   RGB(0, 0, 255)
-#define GFX_COLOR_BLACK  RGB(0, 0, 0)
-#define GFX_COLOR_WHITE  RGB(255, 255, 255)
-#define GFX_COLOR_BROWN  RGB(176, 92, 53)
-#define GFX_COLOR_PURPLE RGB(128, 0, 255)
-#define GFX_COLOR_GRAY   RGB(191, 191, 191)
-
-/** @brief RGB color structure */
-typedef struct {
+/** @brief RGB color structure.*/
+struct rgb {
     u8 red;
     u8 green;
     u8 blue;
-} rgb_t;
+};
+
+/**
+ * @brief Create RGB color.
+ * 
+ * @param [in] r - given red color.
+ * @param [in] g - given green color.
+ * @param [in] b - given blue color.
+ * @return constexpr rgb 
+ */
+constexpr inline rgb RGB(u8 r, u8 g, u8 b) noexcept
+{
+    return ((rgb){r, g, b});
+}
+
+namespace color {
+
+constexpr rgb red    = RGB(255, 0, 0);
+constexpr rgb green  = RGB(0, 255, 0);
+constexpr rgb blue   = RGB(0, 0, 255);
+constexpr rgb black  = RGB(0, 0, 0);
+constexpr rgb white  = RGB(255, 255, 255);
+constexpr rgb brown  = RGB(176, 92, 53);
+constexpr rgb purple = RGB(128, 0, 255);
+constexpr rgb gray   = RGB(191, 191, 191);
+
+} // namespace color
 
 struct __screen_s {
     u16 pitch;              ///< Screen number of bytes per scanline.
@@ -139,7 +152,7 @@ void gfx_set_framebuffer(u32 *framebuffer);
  * @return true - if colors are equal.
  * @return false - otherwise.
  */
-bool gfx_rgb_compare(rgb_t c1, rgb_t c2);
+bool gfx_rgb_compare(rgb c1, rgb c2);
 
 /**
  * @brief Draw pixel on the screen. 
@@ -148,7 +161,7 @@ bool gfx_rgb_compare(rgb_t c1, rgb_t c2);
  * @param [in] y - given y pixel position.
  * @param [in] color - given RGB color of pixel.
  */
-void gfx_draw_pixel(s32 x, s32 y, rgb_t color);
+void gfx_draw_pixel(s32 x, s32 y, rgb color);
 
 /**
  * @brief Get color of specific pixel.
@@ -157,14 +170,14 @@ void gfx_draw_pixel(s32 x, s32 y, rgb_t color);
  * @param [in] y - given y pixel position.
  * @return pixel color.
  */
-rgb_t gfx_get_pixel(s32 x, s32 y);
+rgb gfx_get_pixel(s32 x, s32 y);
 
 /**
  * @brief Fill screen with given color. 
  * 
  * @param [in] color - given RGB color.
  */
-void gfx_fill_screen(rgb_t color);
+void gfx_fill_screen(rgb color);
 
 /**
  * @brief Draw circle on the screen.
@@ -174,7 +187,7 @@ void gfx_fill_screen(rgb_t color);
  * @param [in] r - given radius of the circle.
  * @param [in] color - given RGB color of circle.
  */
-void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color);
+void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb color);
 
 /**
  * @brief Draw VBE font character on the screen.
@@ -186,7 +199,7 @@ void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color);
  * @param [in] bg - given background color.
  * @param [in] is_bg_on - given param determine whether to display the @a bg.
  */
-void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on);
+void gfx_draw_char(u8 c, s32 x, s32 y, rgb fg, rgb bg, bool is_bg_on);
 
 /**
  * @brief Draw square on the screen.
@@ -196,7 +209,7 @@ void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on);
  * @param [in] side - given square side length in pixels.
  * @param [in] color - given RGB color of square.
  */
-void gfx_draw_square(s32 x, s32 y, s32 side, rgb_t color);
+void gfx_draw_square(s32 x, s32 y, s32 side, rgb color);
 
 /**
  * @brief Draw line on the screen.
@@ -207,7 +220,7 @@ void gfx_draw_square(s32 x, s32 y, s32 side, rgb_t color);
  * @param [in] y2 - given y position of second point.
  * @param [in] color - given RGB color of line.
  */
-void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb_t color);
+void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb color);
 
 /**
  * @brief Draw triangle on the screen.
@@ -220,7 +233,7 @@ void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb_t color);
  * @param [in] y3 - given y position of third point.
  * @param [in] color - given RGB color of triangle.
  */
-void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb_t color);
+void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb color);
 
 /**
  * @brief Draw rectangle on the screen.
@@ -231,9 +244,12 @@ void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb_t col
  * @param [in] height - given rectangle height. 
  * @param [in] color - given RGB color of rectangle.
  */
-void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb_t color);
+void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb color);
 
 /** @brief Test graphics.  */
 void gfx_test(void);
+    
+} // namespace gfx
+} // namespace kernel
 
-#endif /* _NOS_KERNEL_GFX_H_ */
+#endif /* _NOS_KERNEL_GFX_HPP_ */

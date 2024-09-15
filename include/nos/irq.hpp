@@ -21,7 +21,7 @@
  * SOFTWARE. */
 
 /**
- * @file  irq.h
+ * @file  irq.hpp
  * @brief IRQ (Interrupt Request). Contains definitions related to interrupt handling.
  * 
  * @details This header file includes constants, structures, and functions 
@@ -38,11 +38,15 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_IRQ_H_
-#define _NOS_KERNEL_IRQ_H_
+#ifndef _NOS_KERNEL_IRQ_HPP_
+#define _NOS_KERNEL_IRQ_HPP_
 
-#include <nos/types.h>
-#include <nos/irq.h>
+#include <nos/types.hpp>
+#include <nos/irq.hpp>
+
+
+namespace kernel {
+namespace core {
 
 /** @brief Structure representing interrupt register state */
 struct int_reg_s {
@@ -100,60 +104,63 @@ void irq_install_handler(int irq, irq_handler_t handler);
  */
 void irq_uninstall_handler(int irq);
 
+} // namespace core
+} // namespace kernel
+
 /** @brief Declare ISR functions for hardware interrupts 0-31. */
-extern void isr0(void);
-extern void isr1(void);
-extern void isr2(void);
-extern void isr3(void);
-extern void isr4(void);
-extern void isr5(void);
-extern void isr6(void);
-extern void isr7(void);
-extern void isr8(void);
-extern void isr9(void);
-extern void isr10(void);
-extern void isr11(void);
-extern void isr12(void);
-extern void isr13(void);
-extern void isr14(void);
-extern void isr15(void);
-extern void isr16(void);
-extern void isr17(void);
-extern void isr18(void);
-extern void isr19(void);
-extern void isr20(void);
-extern void isr21(void);
-extern void isr22(void);
-extern void isr23(void);
-extern void isr24(void);
-extern void isr25(void);
-extern void isr26(void);
-extern void isr27(void);
-extern void isr28(void);
-extern void isr29(void);
-extern void isr30(void);
-extern void isr31(void);
+extern "C" void isr0(void);
+extern "C" void isr1(void);
+extern "C" void isr2(void);
+extern "C" void isr3(void);
+extern "C" void isr4(void);
+extern "C" void isr5(void);
+extern "C" void isr6(void);
+extern "C" void isr7(void);
+extern "C" void isr8(void);
+extern "C" void isr9(void);
+extern "C" void isr10(void);
+extern "C" void isr11(void);
+extern "C" void isr12(void);
+extern "C" void isr13(void);
+extern "C" void isr14(void);
+extern "C" void isr15(void);
+extern "C" void isr16(void);
+extern "C" void isr17(void);
+extern "C" void isr18(void);
+extern "C" void isr19(void);
+extern "C" void isr20(void);
+extern "C" void isr21(void);
+extern "C" void isr22(void);
+extern "C" void isr23(void);
+extern "C" void isr24(void);
+extern "C" void isr25(void);
+extern "C" void isr26(void);
+extern "C" void isr27(void);
+extern "C" void isr28(void);
+extern "C" void isr29(void);
+extern "C" void isr30(void);
+extern "C" void isr31(void);
 
 /** @brief Declare ISR functions for system calls. */
-extern void isr128(void);
-extern void isr177(void);
+extern "C" void isr128(void);
+extern "C" void isr177(void);
 
 /** @brief Declare ISR functions for hardware interrupts 0-15. */
-extern void irq0(void);
-extern void irq1(void);
-extern void irq2(void);
-extern void irq3(void);
-extern void irq4(void);
-extern void irq5(void);
-extern void irq6(void);
-extern void irq7(void);
-extern void irq8(void);
-extern void irq9(void);
-extern void irq10(void);
-extern void irq11(void);
-extern void irq12(void);
-extern void irq13(void);
-extern void irq14(void);
-extern void irq15(void);
+extern "C" void irq0(void);
+extern "C" void irq1(void);
+extern "C" void irq2(void);
+extern "C" void irq3(void);
+extern "C" void irq4(void);
+extern "C" void irq5(void);
+extern "C" void irq6(void);
+extern "C" void irq7(void);
+extern "C" void irq8(void);
+extern "C" void irq9(void);
+extern "C" void irq10(void);
+extern "C" void irq11(void);
+extern "C" void irq12(void);
+extern "C" void irq13(void);
+extern "C" void irq14(void);
+extern "C" void irq15(void);
 
-#endif /* _NOS_KERNEL_IRQ_H_ */
+#endif /* _NOS_KERNEL_IRQ_HPP_ */

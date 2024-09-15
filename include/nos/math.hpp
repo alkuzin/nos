@@ -34,8 +34,9 @@
 
 #include <nos/types.hpp>
 
+
 namespace kernel {
-namespace math {
+namespace lib {
     
 /** @brief The mathematical constant Pi. */
 #define M_PI 3.14159265358979323846
@@ -262,7 +263,7 @@ f64 ceil(f64 x);
  */
 f64 floor(f64 x);
 
-} // namespace math
+} // namespace lib
 } // namespace kernel
 
 #endif /* _NOS_KERNEL_MATH_HPP_ */

@@ -21,19 +21,23 @@
  * SOFTWARE. */
 
 /**
- * @file  printk.h
+ * @file  printk.hpp
  * @brief Kernel output functions.
  *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   29.06.2024 
  */
 
-#ifndef _NOS_KERNEL_PRINTK_H_
-#define _NOS_KERNEL_PRINTK_H_
+#ifndef _NOS_KERNEL_PRINTK_HPP_
+#define _NOS_KERNEL_PRINTK_HPP_
 
-#include <nos/stdarg.h>
-#include <nos/types.h>
-#include <nos/gfx.h>
+#include <nos/stdarg.hpp>
+#include <nos/types.hpp>
+#include <nos/gfx.hpp>
+
+
+namespace kernel {
+namespace lib {
 
 /**
  * @brief Formats and prints data.
@@ -84,6 +88,9 @@ void kmesg(bool state, const char *fmt, ...);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void cputk(const char *str, rgb_t fg, rgb_t bg);
+void putk(const char *str, gfx::rgb fg, gfx::rgb bg);
 
-#endif /* _NOS_KERNEL_PRINTK_H_ */
+} // namespace lib
+} // namespace kernel
+
+#endif /* _NOS_KERNEL_PRINTK_HPP_ */

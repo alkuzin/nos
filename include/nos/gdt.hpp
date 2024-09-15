@@ -1,27 +1,23 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
- * @file  gdt.h
+ * @file  gdt.hpp
  * @brief Contains GDT and TSS structures and management functions.
  * 
  * @details 
@@ -35,10 +31,14 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_GDT_H_
-#define _NOS_KERNEL_GDT_H_
+#ifndef _NOS_KERNEL_GDT_HPP_
+#define _NOS_KERNEL_GDT_HPP_
 
-#include <nos/types.h>
+#include <nos/types.hpp>
+
+
+namespace kernel {
+namespace core {
 
 /**
  * @brief GDT entry (segment descriptor) - tells the CPU the attributes of a given segment.
@@ -119,5 +119,8 @@ void set_gdt_gate(u32 num, u32 base, u32 limit, u8 access, u8 gran);
  * @param [in] esp0 - given stack pointer for privilege level 0.
  */
 void tss_write(u32 num, u16 ss0, u32 esp0);
+    
+} // namespace core
+} // namespace kernel
 
-#endif /* _NOS_KERNEL_GDT_H_ */
+#endif /* _NOS_KERNEL_GDT_HPP_ */

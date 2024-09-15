@@ -21,7 +21,7 @@
  * SOFTWARE. */
 
 /**
- * @file  version.h
+ * @file  version.hpp
  * @brief Contains declarations for kernel functions and structures.
  * 
  * @details This header file includes constants, definitions related to the OS information.
@@ -30,42 +30,43 @@
  * @date   29.06.2024 
  */
 
-#ifndef _NOS_KERNEL_VERSION_H_
-#define _NOS_KERNEL_VERSION_H_
+#ifndef _NOS_KERNEL_VERSION_HPP_
+#define _NOS_KERNEL_VERSION_HPP_
 
-#include <nos/printk.h>
-#include <nos/types.h>
+#include <nos/printk.hpp>
 
-#define __os_name__   "NOS"
-#define __os_arch__   "x86_32"
-#define __os_author__ "@alkuzin"
 
-#define __os_version_major__  0
-#define __os_version_minor__  0
-#define __os_version_lower__  4
+namespace kernel {
+namespace info {
 
-#define __os_version_format__ "v%d.%d.%d"
+const char *__os_name__               {"NOS"};
+const char *__os_arch__               {"x86_32"};
+const char *__os_author__             {"@alkuzin"};
+const char *__os_version_format__     {"v%d.%d.%d"};
+const char *__os_build_date__         {__DATE__};
+const char *__os_build_time__         {__TIME__};
+const char *__os_compiler_version__   {__VERSION__};
+const char *__os_info_format__        {"%s (? %s) (c) %s - 2024\n"};
+const char *__os_build_info_format__  {"build time: %s %s [gcc-%s]\n"};
+const u32   __os_version_major__      {0};
+const u32   __os_version_minor__      {2};
+const u32   __os_version_lower__      {0};
 
-#define __os_build_date__       __DATE__
-#define __os_build_time__       __TIME__
-#define __os_compiler_version__ __VERSION__
+/** @brief Display main OS info: name, version and architecture.*/
+inline void __DISPLAY_OS_INFO(void)
+{
+    lib::printk(__os_info_format__, __os_name__, __os_version_major__,
+    __os_version_minor__, __os_version_lower__, __os_arch__, __os_author__);
+}
 
-#define __os_info_format__        "%s (" __os_version_format__ " %s) (c) %s - 2024\n"
-#define __os_build_info_format__  "build time: %s %s [gcc-%s]\n"  
+/** @brief Display OS build info: build date and time.*/
+inline void __DISPLAY_OS_BUILD_INFO(void)
+{
+    lib::printk(__os_build_info_format__, __os_build_time__, __os_build_date__,
+    __os_compiler_version__);
+}
 
-/**
- * @brief Macro for displaying main OS info: name, version 
- * and architecture.
- */
-#define __DISPLAY_OS_INFO() \
-printk(__os_info_format__, __os_name__, __os_version_major__, __os_version_minor__, \
-__os_version_lower__, __os_arch__, __os_author__)
+} // namespace info
+} // namespace kernel
 
-/**
- * @brief Macro for displaying kernel build info: build time
- * and build date.
- */
-#define __DISPLAY_OS_BUILD_INFO() \
-printk(__os_build_info_format__, __os_build_time__, __os_build_date__, __os_compiler_version__)
-
-#endif /* _NOS_KERNEL_VERSION_H_ */
+#endif /* _NOS_KERNEL_VERSION_HPP_ */

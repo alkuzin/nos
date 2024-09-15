@@ -34,8 +34,8 @@
 #ifndef _NOS_KERNEL_PM_H_
 #define _NOS_KERNEL_PM_H_
 
-#include <nos/types.h>
-#include <nos/gdt.h>
+#include <nos/types.hpp>
+#include <nos/gdt.hpp>
 
 #define PROC_NAME_MAX_SIZE 64
 #define PROC_MEMORY_SIZE   1024 /* 1 KB */

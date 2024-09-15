@@ -1,27 +1,23 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 /**
- * @file  tty.h
+ * @file  tty.hpp
  * @brief TTY (teletype terminal). Contains definitions related
  * to screen input/output.
  * 
@@ -29,12 +25,16 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_TTY_H_
-#define _NOS_KERNEL_TTY_H_ 
+#ifndef _NOS_KERNEL_TTY_HPP_
+#define _NOS_KERNEL_TTY_HPP_ 
 
-#include <nos/stdarg.h>
-#include <nos/types.h>
-#include <nos/gfx.h>
+#include <nos/stdarg.hpp>
+#include <nos/types.hpp>
+#include <nos/gfx.hpp>
+
+
+namespace kernel {
+namespace lib {
 
 ///< Default kernel TTY foreground & background color.
 #define TTY_FG_COLOR  RGB(255, 255, 255)
@@ -45,16 +45,16 @@
 typedef struct tty_s {
     s32   x_pos;            ///< X position of the cursor.
     s32   y_pos;            ///< Y position of the cursor.
-    rgb_t fg;               ///< Foreground color.
-    rgb_t bg;               ///< Background color.
+    gfx::rgb fg;               ///< Foreground color.
+    gfx::rgb bg;               ///< Background color.
     s32   height;           ///< Screen height.
     s32   width;            ///< Screen width.
-    rgb_t primary_color;
-    rgb_t secondary_color;
-    rgb_t prev_fg;          ///< Previous foreground color.
-    rgb_t prev_bg;          ///< Previous background color.
-    rgb_t prev_prim_color;  ///< Previous primary color.
-    rgb_t prev_sec_color;   ///< Previous secondary color.
+    gfx::rgb primary_color;
+    gfx::rgb secondary_color;
+    gfx::rgb prev_fg;          ///< Previous foreground color.
+    gfx::rgb prev_bg;          ///< Previous background color.
+    gfx::rgb prev_prim_color;  ///< Previous primary color.
+    gfx::rgb prev_sec_color;   ///< Previous secondary color.
 } tty_t;
 
 /* Initialize kernel TTY structure. */ 
@@ -96,42 +96,42 @@ void tty_set_y(s32 y);
  * 
  * @return current foreground color.
  */
-rgb_t tty_get_fg(void);
+gfx::rgb tty_get_fg(void);
 
 /**
  * @brief Get kernel TTY structure background color.
  * 
  * @return current background color.
  */
-rgb_t tty_get_bg(void);
+gfx::rgb tty_get_bg(void);
 
 /**
  * @brief Get TTY primary color. 
  * 
  * @return primary color. 
  */
-rgb_t tty_get_primary_color(void);
+gfx::rgb tty_get_primary_color(void);
 
 /**
  * @brief Get TTY secondary color. 
  * 
  * @return secondary color. 
  */
-rgb_t tty_get_secondary_color(void);
+gfx::rgb tty_get_secondary_color(void);
 
 /**
  * @brief Set TTY primary color.
  * 
  * @param [in] color - given new primary color.
  */
-void tty_set_primary_color(rgb_t color);
+void tty_set_primary_color(gfx::rgb color);
 
 /**
  * @brief Set TTY secondary color. 
  * 
  * @param [in] color - given new secondary color.
  */
-void tty_set_secondary_color(rgb_t color);
+void tty_set_secondary_color(gfx::rgb color);
 
 /**
  * @brief Set foreground & background color.
@@ -139,7 +139,7 @@ void tty_set_secondary_color(rgb_t color);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_set_color(rgb_t fg, rgb_t bg);
+void tty_set_color(gfx::rgb fg, gfx::rgb bg);
 
 /**
  * @brief Get screen height.
@@ -170,7 +170,7 @@ void tty_update(void);
  * @param [in] fg - given foreground color. 
  * @param [in] bg - given background color. 
  */
-void tty_kputchar_at(char c, s32 x, s32 y, rgb_t fg, rgb_t bg);
+void tty_kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg);
 
 /**
  * @brief Print character to screen.
@@ -186,7 +186,7 @@ void kputchar(const s32 c);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_printc(const char *str, rgb_t fg, rgb_t bg);
+void tty_printc(const char *str, gfx::rgb fg, gfx::rgb bg);
 
 /**
  * @brief Print colored character on screen.
@@ -195,6 +195,9 @@ void tty_printc(const char *str, rgb_t fg, rgb_t bg);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void kputchar_c(const s32 c, rgb_t fg, rgb_t bg);
+void kputchar_c(const s32 c, gfx::rgb fg, gfx::rgb bg);
 
-#endif /* _NOS_KERNEL_TTY_H_ */
+} // namespace lib
+} // namespace kernel
+
+#endif /* _NOS_KERNEL_TTY_HPP_ */

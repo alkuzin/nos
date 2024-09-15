@@ -34,7 +34,7 @@
 
 
 namespace kernel {
-namespace std {
+namespace lib {
 
 /** @brief The largest number rand will return.  */
 #define	RAND_MAX 32767
@@ -86,7 +86,7 @@ void srand(u32 seed);
  */
 void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
 
-} // namespace std    
+} // namespace lib
 } // namespace kernel
 
 #endif /* _NOS_KERNEL_STDLIB_HPP_ */

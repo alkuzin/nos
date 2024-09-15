@@ -21,28 +21,33 @@
  * SOFTWARE. */
 
 /**
- * @file  mm.h
- * @brief Contains declarations for memory management.
+ * @file  memlayout.hpp
+ * @brief Kernel memory layout.
  * 
- * @details This header file includes functions related to the
- * physical and virtual memory management.
+ * @details Contains kernel memory map addresses.
  * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   17.05.2024 
+ * @date   25.06.2024
  */
 
-#ifndef _NOS_KERNEL_MM_H_
-#define _NOS_KERNEL_MM_H_
+#ifndef _NOS_KERNEL_MEMLAYOUT_HPP_
+#define _NOS_KERNEL_MEMLAYOUT_HPP_
 
-#include <nos/multiboot.h>
-#include <nos/pmm.h>
-#include <nos/vmm.h>
+#include <nos/types.hpp>
 
-/**
- * @brief Initialize memory manager.
- * 
- * @param [in] mboot - given multiboot information structure.
- */
-void memory_init(multiboot_t *mboot);
 
-#endif /* _NOS_KERNEL_MM_H_ */
+extern kernel::u32 kernel_phys_start;
+extern kernel::u32 kernel_phys_end;
+
+namespace kernel {
+namespace info {
+    
+#define KERNEL_START_PADDR ((u32) &kernel_phys_start)
+#define KERNEL_END_PADDR   ((u32) &kernel_phys_end)
+#define KERNEL_SIZE        (KERNEL_END_PADDR - KERNEL_START_PADDR)
+
+} // namespace info
+} // namespace kernel
+
+
+#endif /* _NOS_KERNEL_MEMLAYOUT_HPP_ */

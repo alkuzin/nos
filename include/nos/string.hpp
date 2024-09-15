@@ -34,7 +34,7 @@
 
 
 namespace kernel {
-namespace str {
+namespace lib {
     
 /**
  * @brief Get string length.
@@ -204,7 +204,7 @@ void *memchr(const void *s, s32 c, usize n);
  */
 const char *strerror(s32 errnum);
 
-} // namespace str
+} // namespace lib
 } // namespace kernel
 
 #endif /* _NOS_KERNEL_STRING_HPP_ */

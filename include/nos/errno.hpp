@@ -30,10 +30,11 @@
 #include <nos/types.hpp>
 
 namespace kernel {
+namespace error {
 
 extern s32 errno;
 
-enum class err : s32 {
+enum class ERRNO : s32 {
     E2BIG		  = 1,   // Arg list too long.
     EACCES		  = 2,   // Permission denied.
     EAGAIN		  = 3,   // Try again.
@@ -71,7 +72,8 @@ enum class err : s32 {
     ESPIPE		  = 35,  // Illegal seek.
     ESRCH		  = 36,  // No such process.
     EXDEV		  = 37   // Cross-device link.
-};  
+};
+} // namespace error
 } // namespace kernel
 
 #endif /* _NOS_KERNEL_ERRNO_HPP_ */
