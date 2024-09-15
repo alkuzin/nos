@@ -34,6 +34,7 @@
 #include <nos/gfx.hpp>
 #include <nos/mm.hpp>
 
+
 namespace kernel {
 namespace core {
 

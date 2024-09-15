@@ -1,31 +1,30 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <nos/vbefont.h>
-#include <nos/string.h>
-#include <nos/types.h>
-#include <nos/math.h>
-#include <nos/gfx.h>
+#include <nos/vbefont.hpp>
+#include <nos/string.hpp>
+#include <nos/types.hpp>
+#include <nos/math.hpp>
+#include <nos/gfx.hpp>
 
+
+namespace kernel {
+namespace gfx {
 
 static u32 back_framebuffer[sizeof(u16) * 1024 * 768];  ///< Additional framebuffer.
 static screen_t screen;
@@ -78,15 +77,15 @@ u16 gfx_get_pitch(void)
 
 void gfx_back_frambuffer_init(void)
 {
-    bzero(back_framebuffer, sizeof(back_framebuffer));
+    lib::bzero(back_framebuffer, sizeof(back_framebuffer));
 }
 
-bool gfx_rgb_compare(rgb_t c1, rgb_t c2)
+bool gfx_rgb_compare(rgb c1, rgb c2)
 {
     return (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue);
 }
 
-void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
+void gfx_draw_pixel(s32 x, s32 y, rgb color)
 {
     u32 red, green, blue, offset;
 
@@ -101,9 +100,9 @@ void gfx_draw_pixel(s32 x, s32 y, rgb_t color)
     }
 }
 
-rgb_t gfx_get_pixel(s32 x, s32 y)
+rgb gfx_get_pixel(s32 x, s32 y)
 {
-    rgb_t color;
+    rgb color;
     u32   pixel;
 
     pixel       = screen.framebuffer[y * screen.width + x];
@@ -114,7 +113,7 @@ rgb_t gfx_get_pixel(s32 x, s32 y)
     return color;
 }
 
-void gfx_fill_screen(rgb_t color)
+void gfx_fill_screen(rgb color)
 {
     for (s32 y = 0; y < screen.height; y++) {
         for (s32 x = 0; x < screen.width; x++)
@@ -122,7 +121,7 @@ void gfx_fill_screen(rgb_t color)
     }
 }
 
-void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color)
+void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb color)
 {
     s32 x, y, d;
     
@@ -151,7 +150,7 @@ void gfx_draw_circle(s32 cx, s32 cy, s32 r, rgb_t color)
     }
 }
 
-void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on)
+void gfx_draw_char(u8 c, s32 x, s32 y, rgb fg, rgb bg, bool is_bg_on)
 {
     s32 mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
     s32 cx, cy;
@@ -169,7 +168,7 @@ void gfx_draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on)
     }
 }
 
-void gfx_draw_square(s32 x, s32 y, s32 side, rgb_t color)
+void gfx_draw_square(s32 x, s32 y, s32 side, rgb color)
 {
     for (s32 i = x; i < x + side; i++) {
         for (s32 j = y; j < y + side; j++)
@@ -177,7 +176,7 @@ void gfx_draw_square(s32 x, s32 y, s32 side, rgb_t color)
     }
 }
 
-void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb_t color)
+void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb color)
 {
     s32 dx, dy, sx, sy, err, e2;
     
@@ -215,14 +214,14 @@ void gfx_draw_line(s32 x1, s32 y1, s32 x2, s32 y2, rgb_t color)
     }
 }
 
-void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb_t color)
+void gfx_draw_triangle(s32 x1, s32 y1, s32 x2, s32 y2, s32 x3, s32 y3, rgb color)
 {
     gfx_draw_line(x1, y1, x2, y2, color);
     gfx_draw_line(x2, y2, x3, y3, color);
     gfx_draw_line(x3, y3, x1, y1, color);
 }
 
-void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb_t color)
+void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb color)
 {
     for (s32 i = x; i < x + width; i++) {
         for (s32 j = y; j < y + height; j++)
@@ -232,13 +231,16 @@ void gfx_draw_rectangle(s32 x, s32 y, s32 width, s32 height, rgb_t color)
 
 void gfx_test(void)
 {
-    gfx_draw_circle(400, 400, 100, GFX_COLOR_RED);
-    gfx_draw_line(500, 500, 900, 600, GFX_COLOR_GREEN);
-    gfx_draw_rectangle(100, 100, 50, 300, GFX_COLOR_PURPLE);
-    gfx_draw_square(200, 100, 30, GFX_COLOR_BLUE);
-    gfx_draw_triangle(300, 50, 300, 300, 600, 300, GFX_COLOR_WHITE);
+    gfx_draw_circle(400, 400, 100, color::red);
+    gfx_draw_line(500, 500, 900, 600, color::green);
+    gfx_draw_rectangle(100, 100, 50, 300, color::purple);
+    gfx_draw_square(200, 100, 30, color::blue);
+    gfx_draw_triangle(300, 50, 300, 300, 600, 300, color::white);
 
 
-    gfx_draw_line(10, screen.height - 10, screen.width - 10, screen.height - 10, GFX_COLOR_WHITE);
-    gfx_draw_line(10, screen.height - 11, screen.width - 10, screen.height - 11, GFX_COLOR_WHITE);
+    gfx_draw_line(10, screen.height - 10, screen.width - 10, screen.height - 10, color::white);
+    gfx_draw_line(10, screen.height - 11, screen.width - 10, screen.height - 11, color::white);
 }
+
+} // namespace gfx
+} // namespace kernel
