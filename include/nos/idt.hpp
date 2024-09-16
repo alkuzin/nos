@@ -33,6 +33,7 @@
 
 #include <nos/types.hpp>
 
+
 namespace kernel {
 namespace core {
 
@@ -70,6 +71,5 @@ void set_idt_gate(u8 num, u32 base, u16 sel, u8 flags);
 
 } // namespace core
 } // namespace kernel
-
 
 #endif /* _NOS_KERNEL_IDT_HPP_ */

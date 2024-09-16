@@ -1,58 +1,58 @@
-/* MIT License
- *
- * Copyright (c) 2024 Alexander (@alkuzin)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. */
+/**
+ * The Null Operating System (NOS).
+ * Copyright (C) 2024  Alexander (@alkuzin).
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <nos/string.h>
-#include <nos/idt.h>
-#include <nos/irq.h>
+#include <arch/x86/io.hpp>
+#include <nos/string.hpp>
+#include <nos/idt.hpp>
+#include <nos/irq.hpp>
 
-#include <asm/io.h>
+
+extern "C" void idt_flush(kernel::u32);
+
+namespace kernel {
+namespace core {
 
 idt_entry_t idt_entries[256];
 idt_ptr_t   idt_ptr;
 
-extern void idt_flush(u32);
 
 void idt_init(void)
 {
     idt_ptr.limit = sizeof(idt_entries) - 1;
     idt_ptr.base  = (u32) &idt_entries;
 
-    bzero(&idt_entries, sizeof(idt_entries));
+    lib::bzero(&idt_entries, sizeof(idt_entries));
 
     /* chips initialization mode */
-    outb(0x20, 0x11);
-    outb(0xA0, 0x11);
+    arch::x86::outb(0x20, 0x11);
+    arch::x86::outb(0xA0, 0x11);
 
-    outb(0x21, 0x20);
-    outb(0xA1, 0x28);
+    arch::x86::outb(0x21, 0x20);
+    arch::x86::outb(0xA1, 0x28);
     
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
+    arch::x86::outb(0x21, 0x04);
+    arch::x86::outb(0xA1, 0x02);
     
-    outb(0x21, 0x01);
-    outb(0xA1, 0x01);
+    arch::x86::outb(0x21, 0x01);
+    arch::x86::outb(0xA1, 0x01);
     
-    outb(0x21, 0x0);
-    outb(0xA1, 0x0);
+    arch::x86::outb(0x21, 0x0);
+    arch::x86::outb(0xA1, 0x0);
 
     set_idt_gate(0, (u32)isr0, 0x08, 0x8E);
     set_idt_gate(1, (u32)isr1, 0x08, 0x8E);
@@ -118,3 +118,6 @@ void set_idt_gate(u8 num, u32 base, u16 sel, u8 flags)
     idt_entries[num].always0   = 0;
     idt_entries[num].flags     = (flags | 0x60);
 }
+
+} // namespace core
+} // namespace kernel

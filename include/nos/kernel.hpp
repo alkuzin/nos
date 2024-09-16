@@ -34,6 +34,7 @@
 
 
 namespace kernel {
+namespace core {
 
 /**
  * @brief Setup kernel.
@@ -45,6 +46,7 @@ namespace kernel {
  */
 void kboot(multiboot_t *mboot);
 
+} // namespace core
 } // namespace kernel
 
 /**
