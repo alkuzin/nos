@@ -29,7 +29,7 @@
 #ifndef _NOS_KERNEL_HPP_
 #define _NOS_KERNEL_HPP_
 
-#include <nos/multiboot.h>
+#include <nos/multiboot.hpp>
 #include <nos/types.hpp>
 
 

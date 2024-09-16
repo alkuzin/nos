@@ -30,7 +30,7 @@
 #ifndef _NOS_KERNEL_MM_HPP_
 #define _NOS_KERNEL_MM_HPP_
 
-#include <nos/multiboot.h>
+#include <nos/multiboot.hpp>
 #include <nos/pmm.hpp>
 #include <nos/vmm.hpp>
 

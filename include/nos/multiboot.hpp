@@ -17,7 +17,7 @@
  */
 
 /**
- * @file  multiboot.h
+ * @file  multiboot.hpp
  * @brief Contains multiboot information structures decalarations.
  * 
  * @details This header file includes functions related to the
@@ -27,8 +27,8 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_MULTIBOOT_H_
-#define _NOS_KERNEL_MULTIBOOT_H_
+#ifndef _NOS_KERNEL_MULTIBOOT_HPP_
+#define _NOS_KERNEL_MULTIBOOT_HPP_
 
 
 /* How many bytes from the start of the file we search for the header. */
@@ -218,4 +218,4 @@ struct multiboot_apm_info {
 
 typedef multiboot_info_t multiboot_t;
 
-#endif /* _NOS_KERNEL_MULTIBOOT_H */
+#endif /* _NOS_KERNEL_MULTIBOOT_HPP_ */

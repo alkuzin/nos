@@ -16,11 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/multiboot.h>
 #include <nos/string.hpp>
 #include <nos/printk.hpp>
 #include <nos/panic.hpp>
-#include <nos/types.hpp>
 #include <nos/pmm.hpp>
 
 

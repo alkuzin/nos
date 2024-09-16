@@ -31,7 +31,7 @@
 #define _NOS_KERNEL_PMM_HPP_
 
 #include <nos/memlayout.hpp>
-#include <nos/multiboot.h>
+#include <nos/multiboot.hpp>
 
 
 namespace kernel {

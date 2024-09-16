@@ -18,7 +18,6 @@
 
 #include <arch/x86/system.hpp>
 #include <nos/memlayout.hpp>
-#include <nos/multiboot.h>
 #include <nos/string.hpp>
 #include <nos/types.hpp>
 #include <nos/vmm.hpp>
