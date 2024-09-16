@@ -39,6 +39,7 @@ set(LIB_SOURCES
 # List of kernel core source files
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
+    "${KERNEL_DIR}/version.cpp"
 
     # Kernel common directory:
     "${KERNEL_COMMON_DIR}/login.cpp"

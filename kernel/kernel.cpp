@@ -36,23 +36,6 @@
 
 
 namespace kernel {
-namespace info { // TODO: move to version.cpp
-
-const char *__os_name__               {"NOS"};
-const char *__os_arch__               {"x86_32"};
-const char *__os_author__             {"@alkuzin"};
-const char *__os_version_format__     {"v%d.%d.%d"};
-const char *__os_build_date__         {__DATE__};
-const char *__os_build_time__         {__TIME__};
-const char *__os_compiler_version__   {__VERSION__};
-const char *__os_info_format__        {"%s (? %s) (c) %s - 2024\n"};
-const char *__os_build_info_format__  {"build time: %s %s [g++-%s]\n"};
-const u32   __os_version_major__      {0};
-const u32   __os_version_minor__      {2};
-const u32   __os_version_lower__      {0};
-
-} // namespace info
-
 namespace core {
 
 static void test_initrd(void)
@@ -131,7 +114,7 @@ extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
     kernel::login::login_init();
 
     kernel::lib::printk("\n\nLogged in at %s \n", __TIME__);
-    kernel::info::__DISPLAY_OS_INFO();
+    kernel::info::display_general_info();
     kernel::lib::printk("%s\n", "The programs included in NOS are free software.\n"
     "The software is provided \"as is\", without warranty of any kind.\n");
 

@@ -40,8 +40,8 @@ void login_init(void)
 
     lib::printk("%s", LOGIN_BANNER);
 
-    info::__DISPLAY_OS_INFO();
-    info::__DISPLAY_OS_BUILD_INFO();
+    info::display_general_info();
+    info::display_build_info();
 
     lib::kputchar('\n');
 

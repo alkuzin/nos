@@ -38,28 +38,34 @@ namespace info {
 extern const char *__os_name__;
 extern const char *__os_arch__;
 extern const char *__os_author__;
-extern const char *__os_version_format__;
 extern const char *__os_build_date__;
 extern const char *__os_build_time__;
 extern const char *__os_compiler_version__;
-extern const char *__os_info_format__  ;
-extern const char *__os_build_info_format__;
 extern const u32   __os_version_major__;
 extern const u32   __os_version_minor__;
 extern const u32   __os_version_lower__;
 
 /** @brief Display main OS info: name, version and architecture.*/
-inline void __DISPLAY_OS_INFO(void)
+inline void display_general_info(void)
 {
-    lib::printk(__os_info_format__, __os_name__, __os_version_major__,
-    __os_version_minor__, __os_version_lower__, __os_arch__, __os_author__);
+    lib::printk("%s (v%d.%d.%d %s) %s - 2024\n",
+    __os_name__, 
+    __os_version_major__,
+    __os_version_minor__,
+    __os_version_lower__,
+    __os_arch__,
+    __os_author__
+    );
 }
 
 /** @brief Display OS build info: build date and time.*/
-inline void __DISPLAY_OS_BUILD_INFO(void)
+inline void display_build_info(void)
 {
-    lib::printk(__os_build_info_format__, __os_build_time__, __os_build_date__,
-    __os_compiler_version__);
+    lib::printk("build time: %s %s [g++-%s]\n",
+    __os_build_time__,
+    __os_build_date__,
+    __os_compiler_version__
+    );
 }
 
 } // namespace info

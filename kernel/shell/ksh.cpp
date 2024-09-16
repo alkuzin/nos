@@ -162,7 +162,7 @@ s32 ksh_exec(char *cmd)
     else if(ksh_is_valid("gfx", 3, cmd, 3))
         gfx::gfx_test();
     else if(ksh_is_valid("uname", 5, cmd, 5))
-        info::__DISPLAY_OS_INFO();
+        info::display_general_info();
     else if(ksh_is_valid("reboot", 5, cmd, 5))
         ksh_reboot();
     else if(ksh_is_valid("shutdown", 8, cmd, 8))
