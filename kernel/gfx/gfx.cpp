@@ -26,7 +26,6 @@
 namespace kernel {
 namespace gfx {
 
-static u32 back_framebuffer[sizeof(u16) * 1024 * 768];  ///< Additional framebuffer.
 static screen_t screen;
 
 
@@ -60,11 +59,6 @@ u32 *gfx_get_framebuffer(void)
     return screen.framebuffer;
 }
 
-u32 *gfx_get_back_framebuffer(void)
-{
-    return back_framebuffer;
-}
-
 void gfx_set_pitch(u16 pitch)
 {
     screen.pitch = pitch;
@@ -73,11 +67,6 @@ void gfx_set_pitch(u16 pitch)
 u16 gfx_get_pitch(void)
 {
     return screen.pitch;
-}
-
-void gfx_back_frambuffer_init(void)
-{
-    lib::bzero(back_framebuffer, sizeof(back_framebuffer));
 }
 
 bool gfx_rgb_compare(rgb c1, rgb c2)
@@ -96,7 +85,6 @@ void gfx_draw_pixel(s32 x, s32 y, rgb color)
         offset = y * screen.width + x;
 
         screen.framebuffer[offset] = red | green | blue;
-        back_framebuffer[offset]   = red | green | blue;
     }
 }
 

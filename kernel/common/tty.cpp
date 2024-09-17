@@ -31,7 +31,7 @@ namespace kernel {
 namespace gfx {
 
 /** @brief Screen scroll function */
-static void tty_scroll(void);
+void tty_scroll(void);
 
 /* main kernel TTY structure */
 static tty_t tty;
@@ -128,26 +128,20 @@ void tty_kputchar_at(char c, s32 x, s32 y, rgb fg, rgb bg)
 	gfx_draw_char((u8)c, x, y, fg, bg, true);
 }
 
-static void tty_scroll(void)
+void tty_scroll(void)
 {
-	u32 *back_framebuffer, *framebuffer, framebuffer_size, offset;
-	u16 pitch;
+	u32 *framebuffer = gfx_get_framebuffer();
+	u16 pitch		 = gfx_get_pitch();
+	u32 size		 = static_cast<u32>(tty.height) * pitch;
+	u32 offset;
 
-	back_framebuffer = gfx_get_back_framebuffer();
-	framebuffer      = gfx_get_framebuffer();
-	pitch 			 = gfx_get_pitch();
-	framebuffer_size = tty.height * pitch;
-
-    for (u32 i = 0; i < framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i++) {
-		offset              = i + tty.width * VBE_CHAR_HEIGHT;
-        framebuffer[i]      = framebuffer[offset];
-        back_framebuffer[i] = back_framebuffer[offset];
+    for (u32 i = 0; i < size; i++) {
+		offset         = i + static_cast<u32>(tty.width) * VBE_CHAR_HEIGHT;
+        framebuffer[i] = framebuffer[offset];
     }
 
-    for (u32 i = framebuffer_size - tty.width * VBE_CHAR_HEIGHT; i < framebuffer_size; i++) {
-        framebuffer[i]      = 0x00;
-        back_framebuffer[i] = 0x00;
-    }
+	auto pos = size - tty.width * VBE_CHAR_HEIGHT;
+	kernel::lib::bzero(&framebuffer[pos], size - pos);
 }
 
 void tty_clear(void)
@@ -182,9 +176,7 @@ void tty_update(void)
 
 void tty_printc(const char *str, rgb fg, rgb bg)
 {
-    u32 i;
-
-    i = 0;
+    u32 i = 0;
 
     while(str[i]) {
         lib::kputchar_c(str[i], fg, bg);

@@ -30,38 +30,44 @@ namespace driver {
  * @param [in] index - given index to set. 
  * @param [in] data - given data to set. 
  */
-static void vbe_write(u16 index, u16 data);
-
-
-void vbe_init(multiboot_info_t *boot_info)
-{
-    vbe_mode_info_t* vbe_mode;
-    
-    vbe_mode = (vbe_mode_info_t*)boot_info->vbe_mode_info;
-
-    vbe_set_video_mode(1024, 768, 32, vbe_mode->pitch, (u32*)vbe_mode->framebuffer);
-}
-
-void vbe_set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr)
-{
-    gfx::gfx_set_pitch(pitch);
-    gfx::gfx_set_width(width);
-    gfx::gfx_set_height(height);
-
-    gfx::gfx_set_framebuffer(fb_addr);
-    gfx::gfx_back_frambuffer_init();
-
-    vbe_write(0x00, 0x4F02);  /* set VBE mode */ 
-    vbe_write(0x01, width);   /* set width */ 
-    vbe_write(0x02, height);  /* set height */ 
-    vbe_write(0x03, depth);   /* Set bits per pixel */ 
-    vbe_write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); /* enable LFB mode */
-}
-
-static void vbe_write(u16 index, u16 data)
+static constexpr inline void vbe_write(u16 index, u16 data) noexcept
 {
     arch::x86::outw(VBE_DISPI_IOPORT_INDEX, index);
     arch::x86::outw(VBE_DISPI_IOPORT_DATA, data);
+}
+
+/**
+ * @brief Set VBE video mode.
+ * 
+ * @param [in] width - given screen width.
+ * @param [in] height - given screen height.
+ * @param [in] depth - given number of bits per pixel.
+ * @param [in] pitch - given number of bytes per scanline.
+ * @param [in] fb_addr - given framebuffer pointer.
+ */
+static constexpr void vbe_set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr) noexcept
+{
+    gfx::gfx_set_framebuffer(fb_addr);
+    gfx::gfx_set_height(height);
+    gfx::gfx_set_width(width);
+    gfx::gfx_set_pitch(pitch);
+
+    vbe_write(0x00, 0x4F02); // set VBE mode
+    vbe_write(0x01, width);
+    vbe_write(0x02, height);
+    vbe_write(0x03, depth);
+    vbe_write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); // enable LFB mode
+}
+
+void vbe_init(const multiboot_info_t& mboot)
+{
+    vbe_set_video_mode(
+        mboot.framebuffer_width,
+        mboot.framebuffer_height,
+        mboot.framebuffer_bpp,
+        mboot.framebuffer_pitch,
+        reinterpret_cast<u32*>(mboot.framebuffer_addr)
+    );
 }
 
 } // namespace driver

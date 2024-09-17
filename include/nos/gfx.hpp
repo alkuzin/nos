@@ -78,16 +78,6 @@ struct __screen_s {
 
 typedef struct __screen_s screen_t;
 
-/** @brief Initialize back framebuffer. */
-void gfx_back_frambuffer_init(void);
-
-/**
- * @brief Get back framebuffer. 
- * 
- * @return pointer to back framebuffer. 
- */
-u32 *gfx_get_back_framebuffer(void);
-
 /**
  * @brief Get framebuffer. 
  * 

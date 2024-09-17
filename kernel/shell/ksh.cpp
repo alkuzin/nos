@@ -25,22 +25,28 @@
 #include <nos/kernel.hpp>
 #include <nos/nosstd.hpp>
 #include <nos/stdlib.hpp>
-#include <nos/types.hpp>
 #include <nos/ctype.hpp>
 #include <nos/login.hpp>
 #include <nos/tty.hpp>
-#include <nos/gfx.hpp>
 #include <nos/mm.hpp>
 
 
 namespace kernel {
 namespace shell {
 
-/** @brief Display promt for user input. */
-static void ksh_display_prompt(void);
+static gfx::rgb primary_color, secondary_color;
 
-/** @brief Check if user input buffer is empty. */
-static bool ksh_is_empty(void);
+/** @brief Display promt for user input. */
+static constexpr inline void ksh_display_prompt(void) noexcept
+{
+    primary_color   = gfx::tty_get_primary_color();
+    secondary_color = gfx::tty_get_secondary_color();
+
+    tty_printc(USERNAME, primary_color, secondary_color);
+    lib::kputchar('@');
+    tty_printc("nos", primary_color, secondary_color);
+    lib::putk(":-/ ");
+}
 
 /**
  * @brief Check shell command is valid.
@@ -53,46 +59,41 @@ static bool ksh_is_empty(void);
  * @return 0 - if command is correct.
  * @return -1 - otherwise.
  */
-static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input,
-                        const s32 input_len);
+static inline s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len) noexcept
+{
+    return (cmd_len == input_len) && (lib::strncmp(cmd, input, cmd_len) == 0);
+}
 
-/** @brief Shell commands input buffer. */
-static char input_buffer[driver::INPUT_BUFFER_SIZE];
-
-/** @brief Current character position of user input buffer. */
-static u32 buf_pos;
-
-gfx::rgb primary_color, secondary_color;
 
 void ksh_init(void)
 {
+    char input_buffer[driver::INPUT_BUFFER_SIZE];
+    u32  buf_pos = 0;
     char cc;
 
-    /* initializing keyboard */
+    // initializing keyboard
     driver::keyboard_init();
 
-    /* clear user input buffer */
+    // clear user input buffer
     lib::bzero(input_buffer, sizeof(input_buffer));
     lib::kputchar('\n');
-
-    buf_pos = 0;
 
     for(;;) {
         ksh_display_prompt();
         
         do {
-            cc = (char)driver::keyboard_getchar();
+            cc = (char) driver::keyboard_getchar();
 
             if(cc != 0 && cc != '\n') {
-                
+
                 if (cc == '\b' && buf_pos == 0)
                     continue;
-
-                if (cc == '\b' && buf_pos > 0) {
+                    
+                if (cc == '\b' && buf_pos > 1) {
                     buf_pos--;
                     input_buffer[buf_pos] = 0;
                 }
-                
+            
                 lib::kputchar(cc);
 
                 if(buf_pos < driver::INPUT_BUFFER_SIZE && lib::isprint(cc)) {
@@ -105,10 +106,10 @@ void ksh_init(void)
 
         input_buffer[buf_pos] = '\0';
         lib::kputchar('\n');
-        
-        if(!ksh_is_empty())
+
+        if(input_buffer[0])
             ksh_exec(input_buffer);
-        
+
         lib::bzero(input_buffer, sizeof(input_buffer));
         buf_pos = 0;
     }
@@ -116,16 +117,9 @@ void ksh_init(void)
     lib::khalt(); 
 }
 
-static s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len)
-{
-    return (cmd_len == input_len) && (lib::strncmp(cmd, input, cmd_len) == 0);
-}
-
 s32 ksh_exec(char *cmd)
 {
-    [[gnu::unused]]s32 cmd_len;
-
-    cmd_len = lib::strlen(cmd);
+    [[gnu::unused]]s32 cmd_len = lib::strlen(cmd);
     
     if(ksh_is_valid("free", 4, cmd, cmd_len))
         ksh_free();
@@ -168,27 +162,11 @@ s32 ksh_exec(char *cmd)
     else if(ksh_is_valid("shutdown", 8, cmd, 8))
         ksh_shutdown();
     else {
-        ksh_warning((char *)cmd);
+        ksh_warning(cmd);
         return -1;
     }
 
     return 0;
-}
-
-static void ksh_display_prompt(void)
-{
-    primary_color   = gfx::tty_get_primary_color();
-    secondary_color = gfx::tty_get_secondary_color();
-
-    tty_printc(USERNAME, primary_color, secondary_color);
-    lib::kputchar('@');
-    tty_printc("nos", primary_color, secondary_color);
-    lib::putk(":-/ ");
-}
-
-static bool ksh_is_empty(void)
-{
-    return input_buffer[0] == 0;
 }
 
 } // namespace shell
