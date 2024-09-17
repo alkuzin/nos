@@ -24,11 +24,11 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-void memory_init(multiboot_t *mboot)
+void memory_init(const multiboot_t& mboot)
 {
     u32  start_addr, size;
 
-    if(!(mboot->flags >> 6 & 0x1))
+    if(!(mboot.flags >> 6 & 0x1))
         lib::panic("%s\n", "invalid memory map given by GRUB bootloader");
 
     /* initializing physical memory manager */

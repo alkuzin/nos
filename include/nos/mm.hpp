@@ -44,7 +44,7 @@ namespace memory {
  * 
  * @param [in] mboot - given multiboot information structure.
  */
-void memory_init(multiboot_t *mboot);
+void memory_init(const multiboot_t& mboot);
 
 } // namespace memory
 } // namespace core

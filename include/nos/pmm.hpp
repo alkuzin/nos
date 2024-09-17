@@ -88,7 +88,7 @@ void pmm_init(u32 start_addr, u32 size);
  * @param [in] start_addr - given starting address of memory.
  * @param [in] size - given pointer to store the size of memory.
  */
-void pmm_get_memory(const multiboot_t *mboot, u32 *start_addr, u32 *size);
+void pmm_get_memory(const multiboot_t& mboot, u32 *start_addr, u32 *size);
 
 /**
  * @brief Initialize a memory region.
