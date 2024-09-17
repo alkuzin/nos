@@ -27,18 +27,12 @@ namespace lib {
 
 void bzero(void *s, usize n)
 {
-    u8  *src;
-    s32 i;
-
-    src = static_cast<u8*>(s);
-    i   = 0;
-
-    while(src[i] && n > 0) {
+    u8 *src = static_cast<u8*>(s);
+    
+    for (usize i = 0; i < n; i++)
         src[i] = '\0';
-        i++;
-        n--;
-    }
 }
+
 
 void *memchr(const void *s, s32 c, usize n)
 {
