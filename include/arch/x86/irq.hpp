@@ -34,15 +34,15 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_IRQ_HPP_
-#define _NOS_KERNEL_IRQ_HPP_
+#ifndef _ARCH_X86_IRQ_HPP_
+#define _ARCH_X86_IRQ_HPP_
 
 #include <nos/types.hpp>
-#include <nos/irq.hpp>
 
 
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
 
 /** @brief Structure representing interrupt register state */
 struct int_reg_s {
@@ -100,7 +100,8 @@ void irq_install_handler(int irq, irq_handler_t handler);
  */
 void irq_uninstall_handler(int irq);
 
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel
 
 /** @brief Declare ISR functions for hardware interrupts 0-31. */
@@ -159,4 +160,4 @@ extern "C" void irq13(void);
 extern "C" void irq14(void);
 extern "C" void irq15(void);
 
-#endif /* _NOS_KERNEL_IRQ_HPP_ */
+#endif // _ARCH_X86_IRQ_HPP_

@@ -28,14 +28,15 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_IDT_HPP_
-#define _NOS_KERNEL_IDT_HPP_
+#ifndef _ARCH_X86_IDT_HPP_
+#define _ARCH_X86_IDT_HPP_
 
 #include <nos/types.hpp>
 
 
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
 
 /** @brief Interrupt Descriptor Table entry structure */
 struct idt_entry_s {
@@ -69,7 +70,8 @@ void idt_init(void);
  */
 void set_idt_gate(u8 num, u32 base, u16 sel, u8 flags);
 
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_IDT_HPP_ */
+#endif // _ARCH_X86_IDT_HPP_

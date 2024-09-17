@@ -31,14 +31,15 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_GDT_HPP_
-#define _NOS_KERNEL_GDT_HPP_
+#ifndef _ARCH_X86_GDT_HPP_
+#define _ARCH_X86_GDT_HPP_
 
 #include <nos/types.hpp>
 
 
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
 
 /**
  * @brief GDT entry (segment descriptor) - tells the CPU the attributes of a given segment.
@@ -120,7 +121,8 @@ void set_gdt_gate(u32 num, u32 base, u32 limit, u8 access, u8 gran);
  */
 void tss_write(u32 num, u16 ss0, u32 esp0);
     
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_GDT_HPP_ */
+#endif //_ARCH_X86_GDT_HPP_

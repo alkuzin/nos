@@ -13,17 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 
 # Set paths
-set(INCLUDE_DIR        ${CMAKE_SOURCE_DIR}/../include)
-set(KERNEL_DIR         ${CMAKE_SOURCE_DIR}/../kernel)
-set(BOOT_DIR           ${CMAKE_SOURCE_DIR}/../boot)
-set(LIB_DIR            ${CMAKE_SOURCE_DIR}/../lib)
-set(KERNEL_DRIVERS_DIR ${KERNEL_DIR}/drivers)
-set(KERNEL_COMMON_DIR  ${KERNEL_DIR}/common)
-set(KERNEL_SHELL_DIR   ${KERNEL_DIR}/shell)
-set(KERNEL_CPU_DIR     ${KERNEL_DIR}/cpu)
-set(KERNEL_GFX_DIR     ${KERNEL_DIR}/gfx)
-set(KERNEL_FS_DIR      ${KERNEL_DIR}/fs)
-set(KERNEL_MM_DIR      ${KERNEL_DIR}/mm)
+set(INCLUDE_DIR          ${CMAKE_SOURCE_DIR}/../include)
+set(KERNEL_DIR           ${CMAKE_SOURCE_DIR}/../kernel)
+set(BOOT_DIR             ${CMAKE_SOURCE_DIR}/../boot)
+set(LIB_DIR              ${CMAKE_SOURCE_DIR}/../lib)
+set(KERNEL_ARCH_X86_DIR  ${KERNEL_DIR}/arch/x86)
+set(KERNEL_DRIVERS_DIR   ${KERNEL_DIR}/drivers)
+set(KERNEL_COMMON_DIR    ${KERNEL_DIR}/common)
+set(KERNEL_SHELL_DIR     ${KERNEL_DIR}/shell)
+set(KERNEL_GFX_DIR       ${KERNEL_DIR}/gfx)
+set(KERNEL_FS_DIR        ${KERNEL_DIR}/fs)
+set(KERNEL_MM_DIR        ${KERNEL_DIR}/mm)
 
 # List of kernel library source files
 set(LIB_SOURCES
@@ -46,10 +46,10 @@ set(KERNEL_SOURCES
     "${KERNEL_COMMON_DIR}/nosstd.cpp"
     "${KERNEL_COMMON_DIR}/tty.cpp"
     
-    # Kernel cpu directory:
-    "${KERNEL_CPU_DIR}/gdt.cpp"
-    "${KERNEL_CPU_DIR}/idt.cpp"
-    "${KERNEL_CPU_DIR}/irq.cpp"
+    # Kernel arch/x86 directory:
+    "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
+    "${KERNEL_ARCH_X86_DIR}/idt.cpp"
+    "${KERNEL_ARCH_X86_DIR}/irq.cpp"
 
     # Kernel drivers directory:
     "${KERNEL_DRIVERS_DIR}/keyboard.cpp"
@@ -78,8 +78,8 @@ set(KERNEL_SOURCES
 
 # List of kernel assembly source files
 set(ASM_SOURCES
-    "${KERNEL_CPU_DIR}/gdt_flush.s"
-    "${KERNEL_CPU_DIR}/idt_flush.s"
+    "${KERNEL_ARCH_X86_DIR}/gdt_flush.s"
+    "${KERNEL_ARCH_X86_DIR}/idt_flush.s"
     "${BOOT_DIR}/boot.s"
 )
 

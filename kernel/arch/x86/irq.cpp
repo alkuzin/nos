@@ -17,15 +17,15 @@
  */
 
 #include <arch/x86/system.hpp>
+#include <arch/x86/idt.hpp>
+#include <arch/x86/irq.hpp>
 #include <arch/x86/io.hpp>
 #include <nos/panic.hpp>
-#include <nos/types.hpp>
-#include <nos/idt.hpp>
-#include <nos/irq.hpp>
 
 
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
     
 const char *exception_msgs[] = {
     "division by zero",
@@ -70,18 +70,20 @@ void irq_install_handler(s32 irq, irq_handler_t handler)
     arch::x86::sti();
 }
 
-void irq_uninstall_handler(s32 irq) {
+void irq_uninstall_handler(s32 irq)
+{
     irq_routines[irq] = 0;
 }
 
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel
 
-extern "C" void irq_handler(kernel::core::int_reg_t *regs)
+extern "C" void irq_handler(kernel::arch::x86::int_reg_t *regs)
 {
-    void (*handler)(kernel::core::int_reg_t *regs);
+    void (*handler)(kernel::arch::x86::int_reg_t *regs);
 
-    handler = kernel::core::irq_routines[regs->int_no - 32];
+    handler = kernel::arch::x86::irq_routines[regs->int_no - 32];
 
     if(handler)
         handler(regs);
@@ -92,8 +94,8 @@ extern "C" void irq_handler(kernel::core::int_reg_t *regs)
     kernel::arch::x86::outb(0x20, 0x20);
 }
 
-extern "C" void isr_handler(kernel::core::int_reg_t *regs)
+extern "C" void isr_handler(kernel::arch::x86::int_reg_t *regs)
 {
     if(regs->int_no < 32)
-        kernel::lib::panic(" %s\n", kernel::core::exception_msgs[regs->int_no]);
+        kernel::lib::panic(" %s\n", kernel::arch::x86::exception_msgs[regs->int_no]);
 }

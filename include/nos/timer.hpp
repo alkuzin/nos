@@ -27,7 +27,7 @@
 #ifndef _NOS_KERNEL_TIMER_HPP_
 #define _NOS_KERNEL_TIMER_HPP_
 
-#include <nos/irq.hpp>
+#include <arch/x86/irq.hpp>
 
 
 namespace kernel {
@@ -37,7 +37,7 @@ namespace driver {
 void timer_init(void);
 
 /** @brief Interrupt service routine for IRQ0. */
-void on_irq0(core::int_reg_t *regs);
+void on_irq0(arch::x86::int_reg_t *regs);
 
 /**
  * @brief Delay time. 

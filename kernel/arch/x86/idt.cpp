@@ -16,16 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <arch/x86/idt.hpp>
+#include <arch/x86/irq.hpp>
 #include <arch/x86/io.hpp>
 #include <nos/string.hpp>
-#include <nos/idt.hpp>
-#include <nos/irq.hpp>
 
 
 extern "C" void idt_flush(kernel::u32);
 
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
 
 idt_entry_t idt_entries[256];
 idt_ptr_t   idt_ptr;
@@ -119,5 +120,6 @@ void set_idt_gate(u8 num, u32 base, u16 sel, u8 flags)
     idt_entries[num].flags     = (flags | 0x60);
 }
 
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel

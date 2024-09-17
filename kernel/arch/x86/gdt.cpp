@@ -16,15 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <arch/x86/gdt.hpp>
 #include <nos/string.hpp>
-#include <nos/gdt.hpp>
 
 
 extern "C" void gdt_flush(kernel::u32);
 extern "C" void tss_flush(void);
 
+
 namespace kernel {
-namespace core {
+namespace arch {
+namespace x86 {
 
 gdt_entry_t gdt_entries[6];
 gdt_ptr_t   gdt_ptr;
@@ -100,5 +102,6 @@ void tss_write(u32 num, u16 ss0, u32 esp0)
     tss_entry.gs = 0x10 | 0x3;
 }
 
-} // namespace core
+} // namespace x86
+} // namespace arch
 } // namespace kernel

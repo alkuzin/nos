@@ -18,8 +18,6 @@
 
 #include <arch/x86/io.hpp>
 #include <nos/timer.hpp>
-#include <nos/types.hpp>
-#include <nos/irq.hpp>
 
 
 namespace kernel {
@@ -34,7 +32,7 @@ void timer_delay(u32 seconds)
     // TODO: implement
 }
 
-void on_irq0([[gnu::unused]] core::int_reg_t *regs)
+void on_irq0([[gnu::unused]] arch::x86::int_reg_t *regs)
 {
     ticks++;
 }

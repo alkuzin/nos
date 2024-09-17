@@ -18,9 +18,7 @@
 
 #include <nos/keyboard.hpp>
 #include <arch/x86/io.hpp>
-#include <nos/types.hpp>
 #include <nos/ctype.hpp>
-#include <nos/irq.hpp>
 
 
 namespace kernel {
@@ -108,7 +106,7 @@ void keyboard_init(void)
     irq_install_handler(1, &keyboard_handler);
 }
 
-void keyboard_handler([[gnu::unused]] core::int_reg_t *regs)
+void keyboard_handler([[gnu::unused]] arch::x86::int_reg_t *regs)
 {
     /* do nothing */
 }

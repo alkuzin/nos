@@ -30,8 +30,8 @@
 #ifndef _NOS_KERNEL_KEYBOARD_HPP_
 #define _NOS_KERNEL_KEYBOARD_HPP_
 
+#include <arch/x86/irq.hpp>
 #include <arch/x86/io.hpp>
-#include <nos/irq.hpp>
 
 
 namespace kernel {
@@ -65,7 +65,7 @@ void keyboard_init(void);
  * 
  * @param [in] regs - given pointer to interrupt register state.
  */
-void keyboard_handler(core::int_reg_t *regs);
+void keyboard_handler(arch::x86::int_reg_t *regs);
 
 /** @brief Keyboard wait for user to press a key. */
 void keyboard_wait(void);

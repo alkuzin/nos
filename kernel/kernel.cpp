@@ -17,6 +17,8 @@
  */
 
 #include <nos/shell/ksh.hpp>
+#include <arch/x86/gdt.hpp>
+#include <arch/x86/idt.hpp>
 #include <nos/keyboard.hpp>
 #include <nos/version.hpp>
 #include <nos/nosstd.hpp>
@@ -27,11 +29,8 @@
 #include <nos/login.hpp>
 #include <nos/panic.hpp>
 #include <nos/tty.hpp>
-#include <nos/gdt.hpp>
-#include <nos/idt.hpp>
 #include <nos/vfs.hpp>
 #include <nos/vbe.hpp>
-#include <nos/gfx.hpp>
 #include <nos/mm.hpp>
 
 
@@ -59,11 +58,11 @@ static void test_initrd(void)
 void kboot(multiboot_t *mboot)
 {
     /* initializing Global Descriptor Table */
-    gdt_init();
+    arch::x86::gdt_init();
     lib::kmesg(true, "%s\n", "initialized Global Descriptor Table");
     
     /* initializing Interrupt Descriptor Table */
-    idt_init();
+    arch::x86::idt_init();
     lib::kmesg(true, "%s\n", "initialized Interrupt Descriptor Table");	
     
     /* initializing timer */
