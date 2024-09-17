@@ -42,9 +42,10 @@ namespace core {
  * Initializes kernel components such as TTY, GDT, 
  * IDT, timer and etc.
  * 
+ * @param [in] magic - given magic number.
  * @param [in] mboot - given multiboot information structure.
  */
-void kboot(multiboot_t *mboot);
+void kboot(u32 magic, const multiboot_t& mboot);
 
 } // namespace core
 } // namespace kernel
@@ -57,4 +58,4 @@ void kboot(multiboot_t *mboot);
  */
 extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot);
 
-#endif /* _NOS_KERNEL_HPP_ */
+#endif // _NOS_KERNEL_HPP_

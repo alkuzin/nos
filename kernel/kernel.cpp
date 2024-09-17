@@ -55,8 +55,24 @@ static void test_initrd(void)
     kernel::fs::vfs_close(fd);
 }
 
-void kboot(multiboot_t *mboot)
+void kboot(u32 magic, const multiboot_t& mboot)
 {
+    kernel::driver::vbe_init(mboot);
+    kernel::gfx::tty_init();
+
+    kernel::gfx::tty_set_color(kernel::gfx::color::white, kernel::gfx::color::black);
+    kernel::gfx::tty_set_primary_color(kernel::gfx::color::gray);
+    kernel::gfx::tty_set_secondary_color(kernel::gfx::color::black);
+	kernel::gfx::tty_clear(); 
+
+    kernel::lib::kmesg(true, "%s\n", "initialized VBE mode");
+    kernel::lib::kmesg(true, "%s\n", "initialized TTY");
+    	
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
+        kernel::lib::kmesg(false, "Invalid magic number: %#X\n", magic);
+        return;
+    }
+    
     /* initializing Global Descriptor Table */
     arch::x86::gdt_init();
     lib::kmesg(true, "%s\n", "initialized Global Descriptor Table");
@@ -84,32 +100,7 @@ void kboot(multiboot_t *mboot)
     lib::kmesg(true, "%s\n", "initialized Virtual File System");
 
     test_initrd();
-}
-
-} // namespace core
-} // namespace kernel
-
-extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
-{
-    multiboot_t boot_info = *mboot;
     
-    kernel::driver::vbe_init(&boot_info);
-    kernel::gfx::tty_init();
-
-    kernel::gfx::tty_set_color(kernel::gfx::color::white, kernel::gfx::color::black);
-    kernel::gfx::tty_set_primary_color(kernel::gfx::color::gray);
-    kernel::gfx::tty_set_secondary_color(kernel::gfx::color::black);
-	kernel::gfx::tty_clear(); 
-
-    kernel::lib::kmesg(true, "%s\n", "initialized VBE mode");
-    kernel::lib::kmesg(true, "%s\n", "initialized TTY");
-    	
-    if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        kernel::lib::kmesg(false, "Invalid magic number: %#X\n", magic);
-        return;
-    }
-
-    kernel::core::kboot(&boot_info);
     kernel::login::login_init();
 
     kernel::lib::printk("\n\nLogged in at %s \n", __TIME__);
@@ -119,5 +110,15 @@ extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
 
     /* initializing kernel shell */
     kernel::shell::ksh_init();
+}
+
+} // namespace core
+} // namespace kernel
+
+extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
+{
+    multiboot_t boot_info = *mboot;
+    
+    kernel::core::kboot(magic, boot_info);
     kernel::lib::khalt();
 }
