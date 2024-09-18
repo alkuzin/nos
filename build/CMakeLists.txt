@@ -40,6 +40,7 @@ set(LIB_SOURCES
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
     "${KERNEL_DIR}/version.cpp"
+    "${KERNEL_DIR}/cxa.cpp"
 
     # Kernel common directory:
     "${KERNEL_COMMON_DIR}/login.cpp"
