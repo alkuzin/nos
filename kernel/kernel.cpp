@@ -100,8 +100,9 @@ void kboot(u32 magic, const multiboot_t& mboot)
     lib::kmesg(true, "%s\n", "initialized Virtual File System");
 
     test_initrd();
-    
-    kernel::login::login_init();
+
+    // Disabled for debugging
+    // kernel::login::login_init();
 
     kernel::lib::printk("\n\nLogged in at %s \n", __TIME__);
     kernel::info::display_general_info();
