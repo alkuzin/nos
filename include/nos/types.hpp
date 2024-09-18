@@ -28,30 +28,33 @@
 #ifndef _NOS_TYPES_HPP_
 #define _NOS_TYPES_HPP_
 
+#include <nos/byte.hpp>
+
+
 namespace kernel {
 
-/* unsigned types */
+// unsigned types
 using u64 = unsigned long;   
 using u32 = unsigned int;
 using u16 = unsigned short;
 using u8  = unsigned char;
 
-/* signed types */
+// signed types
 using s64 = long;
 using s32 = int;
 using s16 = short;
 using s8  = char;
 
-/* floating point types */
+// floating point types
 using f32 = double;
 using f64 = float;
 
 using usize  = u64;
 using ssize  = s64;
-using pid_t  = s32;  ///< PID (Process Identificator)
-using mode_t = u32;  ///< File permission bits.
+using pid_t  = s32;  // PID (Process Identificator)
+using mode_t = u32;  // File permission bits.
 
-///< Supported file systems type.
+// Supported file systems type.
 enum class fs_type_t {
     INITRD,
     EXT2
@@ -59,4 +62,4 @@ enum class fs_type_t {
 
 } // namespace kernel
 
-#endif /* _NOS_TYPES_HPP_ */
+#endif // _NOS_TYPES_HPP_
