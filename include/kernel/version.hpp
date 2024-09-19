@@ -26,10 +26,10 @@
  * @date   29.06.2024 
  */
 
-#ifndef _NOS_KERNEL_VERSION_HPP_
-#define _NOS_KERNEL_VERSION_HPP_
+#ifndef _KERNEL_INFO_VERSION_HPP_
+#define _KERNEL_INFO_VERSION_HPP_
 
-#include <nos/printk.hpp>
+#include <kernel/kstd/stdlib.hpp> // TODO: replace with stdio
 
 
 namespace kernel {
@@ -46,9 +46,9 @@ extern const u32   __os_version_minor__;
 extern const u32   __os_version_lower__;
 
 /** @brief Display main OS info: name, version and architecture.*/
-inline void display_general_info(void)
+constexpr inline void display_general_info(void) noexcept
 {
-    lib::printk("%s (v%d.%d.%d %s) %s - 2024\n",
+    kstd::printk("%s (v%d.%d.%d %s) %s - 2024\n",
     __os_name__, 
     __os_version_major__,
     __os_version_minor__,
@@ -59,9 +59,9 @@ inline void display_general_info(void)
 }
 
 /** @brief Display OS build info: build date and time.*/
-inline void display_build_info(void)
+constexpr inline void display_build_info(void) noexcept
 {
-    lib::printk("build time: %s %s [g++-%s]\n",
+    kstd::printk("build time: %s %s [g++-%s]\n",
     __os_build_time__,
     __os_build_date__,
     __os_compiler_version__
@@ -71,4 +71,4 @@ inline void display_build_info(void)
 } // namespace info
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_VERSION_HPP_ */
+#endif // _KERNEL_INFO_VERSION_HPP_

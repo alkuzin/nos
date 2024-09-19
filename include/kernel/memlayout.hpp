@@ -26,10 +26,10 @@
  * @date   25.06.2024
  */
 
-#ifndef _NOS_KERNEL_MEMLAYOUT_HPP_
-#define _NOS_KERNEL_MEMLAYOUT_HPP_
+#ifndef _KERNEL_INFO_MEMLAYOUT_HPP_
+#define _KERNEL_INFO_MEMLAYOUT_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 extern kernel::u32 kernel_phys_start;
@@ -45,5 +45,4 @@ namespace info {
 } // namespace info
 } // namespace kernel
 
-
-#endif /* _NOS_KERNEL_MEMLAYOUT_HPP_ */
+#endif // _KERNEL_INFO_MEMLAYOUT_HPP_

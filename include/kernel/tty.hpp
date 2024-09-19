@@ -25,113 +25,112 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_TTY_HPP_
-#define _NOS_KERNEL_TTY_HPP_ 
+#ifndef _KERNEL_TTY_HPP_
+#define _KERNEL_TTY_HPP_ 
 
-#include <nos/stdarg.hpp>
-#include <nos/types.hpp>
-#include <nos/gfx.hpp>
+#include <kernel/kstd/stdarg.hpp>
+#include <kernel/gfx/gfx.hpp>
 
 
 namespace kernel {
-namespace gfx {
+namespace tty {
 
-///< Default kernel TTY foreground & background color.
-#define TTY_FG_COLOR  RGB(255, 255, 255)
-#define TTY_BG_COLOR  RGB(0, 0, 204)
-#define TTY_TAB_WIDTH 4
+// Default kernel TTY foreground & background color.
+constexpr gfx::rgb FG_COLOR  {gfx::RGB(255, 255, 255)};
+constexpr gfx::rgb BG_COLOR  {gfx::RGB(0, 0, 204)};
+constexpr u32      TAB_WIDTH {4};
 
-///< TTY management structure.
-typedef struct tty_s {
-    s32   x_pos;            ///< X position of the cursor.
-    s32   y_pos;            ///< Y position of the cursor.
-    rgb fg;               ///< Foreground color.
-    rgb bg;               ///< Background color.
-    s32   height;           ///< Screen height.
-    s32   width;            ///< Screen width.
-    rgb primary_color;
-    rgb secondary_color;
-    rgb prev_fg;          ///< Previous foreground color.
-    rgb prev_bg;          ///< Previous background color.
-    rgb prev_prim_color;  ///< Previous primary color.
-    rgb prev_sec_color;   ///< Previous secondary color.
-} tty_t;
+// TTY management structure.
+struct tty_t {
+    s32 x_pos;                  // X position of the cursor.
+    s32 y_pos;                  // Y position of the cursor.
+    gfx::rgb fg;                // Foreground color.
+    gfx::rgb bg;                // Background color.
+    s32 height;                 // Screen height.
+    s32 width;                  // Screen width.
+    gfx::rgb primary_color;
+    gfx::rgb secondary_color;
+    gfx::rgb prev_fg;           // Previous foreground color.
+    gfx::rgb prev_bg;           // Previous background color.
+    gfx::rgb prev_prim_color;   // Previous primary color.
+    gfx::rgb prev_sec_color;    // Previous secondary color.
+};
 
-/* Initialize kernel TTY structure. */ 
-void tty_init(void);
+/* Initialize kernel TTY structure.*/ 
+void init(void);
 
-/* Initialize kernel TTY cursor structure. */ 
-void tty_cursor_init(void);
+/* Initialize kernel TTY cursor structure.*/ 
+void cursor_init(void);
 
 /**
  * @brief Get cursor x position.
  * 
  * @return x position.
  */
-s32  tty_get_x(void);
+s32 get_x(void);
 
 /**
  * @brief Get cursor y position.
  * 
  * @return y position.
  */
-s32  tty_get_y(void);
+s32 get_y(void);
 
 /**
  * @brief Set cursor x position.
  * 
  * @param [in] x - new given cursor x position.
  */
-void tty_set_x(s32 x);
+void set_x(s32 x);
 
 /**
  * @brief Set cursor y position.
  * 
  * @param [in] y - new given cursor y position.
  */
-void tty_set_y(s32 y);
+void set_y(s32 y);
 
 /**
  * @brief Get kernel TTY structure foreground color.
  * 
  * @return current foreground color.
  */
-rgb tty_get_fg(void);
+gfx::rgb get_fg(void);
 
 /**
  * @brief Get kernel TTY structure background color.
  * 
  * @return current background color.
  */
-rgb tty_get_bg(void);
+gfx::rgb get_bg(void);
 
 /**
  * @brief Get TTY primary color. 
  * 
  * @return primary color. 
  */
-rgb tty_get_primary_color(void);
+gfx::rgb get_primary_color(void);
 
 /**
  * @brief Get TTY secondary color. 
  * 
  * @return secondary color. 
  */
-rgb tty_get_secondary_color(void);
+gfx::rgb get_secondary_color(void);
 
 /**
  * @brief Set TTY primary color.
  * 
  * @param [in] color - given new primary color.
  */
-void tty_set_primary_color(rgb color);
+void set_primary_color(gfx::rgb color);
 
 /**
  * @brief Set TTY secondary color. 
  * 
  * @param [in] color - given new secondary color.
  */
-void tty_set_secondary_color(rgb color);
+void set_secondary_color(gfx::rgb color);
 
 /**
  * @brief Set foreground & background color.
@@ -139,27 +138,27 @@ void tty_set_secondary_color(rgb color);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_set_color(rgb fg, rgb bg);
+void set_color(gfx::rgb fg, gfx::rgb bg);
 
 /**
  * @brief Get screen height.
  * 
  * @return current screen height.
  */
-s32  tty_get_height(void);
+s32  get_height(void);
 
 /**
  * @brief Get screen width.
  * 
  * @return current screen width.
  */
-s32  tty_get_width(void);
+s32  get_width(void);
 
 /** @brief Clear screen. */ 
-void tty_clear(void);
+void clear(void);
 
 /** @brief Rewrite TTY buffer. */ 
-void tty_update(void);
+void update(void);
 
 /**
  * @brief Print char with custom color in a specific place.
@@ -170,7 +169,7 @@ void tty_update(void);
  * @param [in] fg - given foreground color. 
  * @param [in] bg - given background color. 
  */
-void tty_kputchar_at(char c, s32 x, s32 y, rgb fg, rgb bg);
+void kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg);
 
 /**
  * @brief Print colored string to the screen.
@@ -179,7 +178,7 @@ void tty_kputchar_at(char c, s32 x, s32 y, rgb fg, rgb bg);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void tty_printc(const char *str, rgb fg, rgb bg);
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg);
 
 } // namespace gfx
 
@@ -201,7 +200,7 @@ void kputchar(const s32 c);
  */
 void kputchar_c(const s32 c, gfx::rgb fg, gfx::rgb bg);
     
-} // namespace lib
+} // namespace tty
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_TTY_HPP_ */
+#endif // _KERNEL_TTY_HPP_

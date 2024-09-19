@@ -24,10 +24,10 @@
  * @date   10.06.2024 
  */
 
-#ifndef _NOS_KERNEL_LOGIN_HPP_
-#define _NOS_KERNEL_LOGIN_HPP_
+#ifndef _KERNEL_LOGIN_LOGIN_HPP_
+#define _KERNEL_LOGIN_LOGIN_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
@@ -62,4 +62,4 @@ void getinput(char *buffer, u32 size);
 } // namespace login
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_LOGIN_HPP_ */
+#endif // _KERNEL_LOGIN_LOGIN_HPP_

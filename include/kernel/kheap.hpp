@@ -27,40 +27,38 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_KHEAP_HPP_
-#define _NOS_KERNEL_KHEAP_HPP_
+#ifndef _KERNEL_CORE_MEMORY_KHEAP_HPP_
+#define _KERNEL_CORE_MEMORY_KHEAP_HPP_
 
-#include <nos/types.hpp>
-#include <nos/pmm.hpp>
-#include <nos/vmm.hpp>
+#include <kernel/pmm.hpp>
+#include <kernel/vmm.hpp>
 
 
 namespace kernel {
 namespace core {
 namespace memory {
+namespace kmalloc {
 
-#define PAGE_SIZE 4096
-
-/** @brief Structure representing a block of memory for kernel dynamic memory allocation */
-typedef struct kmalloc_block_s {
+/** @brief Structure representing a block of memory for kernel dynamic memory allocation.*/
+typedef struct block_s {
     usize size;     ///< size of memory block
     bool is_free;   ///< flag indicating if the block of memory is free
-    struct kmalloc_block_s *next; ///< pointer to the next block of memory
-} kmalloc_block_t;
+    struct block_s *next; ///< pointer to the next block of memory
+} block_t;
 
 /**
  * @brief Get the start of the kmalloc blocks linked list.
  * 
  * @return Pointer to the head of the kmalloc blocks linked list.
  */
-void *kmalloc_get_head(void);
+void *get_head(void);
 
 /**
  * @brief Initialize kernel dynamic memory allocation.
  * 
  * @param [in] n - given size of memory to initialize.
  */
-void kmalloc_init(const usize n);
+void init(const usize n);
 
 /**
  * @brief Split a memory block into two by inserting a new block.
@@ -68,7 +66,7 @@ void kmalloc_init(const usize n);
  * @param [in] node - given pointer to the memory block to split.
  * @param [in] size - given size of the new block to insert.
  */
-void kmalloc_split(kmalloc_block_t *node, const u32 size);
+void split(block_t *node, const u32 size);
 
 /**
  * @brief Find and allocate the next block of memory.
@@ -76,20 +74,21 @@ void kmalloc_split(kmalloc_block_t *node, const u32 size);
  * @param [in] size - given dize of the memory block to allocate.
  * @return Pointer to the allocated memory block.
  */
-void *kmalloc_next_block(const u32 size);
+void *next_block(const u32 size);
 
-/** @brief Merge free blocks of memory to partially prevent memory fragmentation. */
-void kmalloc_merge_free_blocks(void);
+/** @brief Merge free blocks of memory to partially prevent memory fragmentation.*/
+void merge_free_blocks(void);
 
 /**
  * @brief Free allocated memory.
  * 
  * @param [in] ptr - given pointer to the memory block to free.
  */
-void kmalloc_free(void *ptr);
-
+void free(void *ptr);
+    
+} // namespace kmalloc
 } // namespace memory
 } // namespace core
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_KHEAP_HPP_ */
+#endif // _KERNEL_CORE_MEMORY_KHEAP_HPP_

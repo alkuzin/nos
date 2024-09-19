@@ -17,45 +17,35 @@
  */
 
 /**
- * @file  kernel.hpp
- * @brief Contains declarations for kernel functions and structures.
+ * @file  mm.hpp
+ * @brief Contains declarations for memory management.
  * 
- * @details This header file includes functions related to kernel setup & kernel entry point.
+ * @details This header file includes functions related to the
+ * physical and virtual memory management.
  * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_HPP_
-#define _NOS_KERNEL_HPP_
+#ifndef _KERNEL_CORE_MEMORY_MM_HPP_
+#define _KERNEL_CORE_MEMORY_MM_HPP_
 
-#include <nos/multiboot.hpp>
-#include <nos/types.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {
 namespace core {
-
+namespace memory {
+    
 /**
- * @brief Setup kernel.
+ * @brief Initialize memory manager.
  * 
- * Initializes kernel components such as TTY, GDT, 
- * IDT, timer and etc.
- * 
- * @param [in] magic - given magic number.
  * @param [in] mboot - given multiboot information structure.
  */
-void kboot(u32 magic, const multiboot_t& mboot);
+void init(const multiboot_t& mboot);
 
+} // namespace memory
 } // namespace core
 } // namespace kernel
 
-/**
- * @brief Kernel entry point.
- * 
- * @param [in] magic - given magic number.
- * @param [in] mboot - given multiboot information structure.
- */
-extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot);
-
-#endif // _NOS_KERNEL_HPP_
+#endif // _KERNEL_CORE_MEMORY_MM_HPP_

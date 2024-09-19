@@ -27,30 +27,30 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_VMM_HPP_
-#define _NOS_KERNEL_VMM_HPP_
+#ifndef _KERNEL_CORE_MEMORY_VMM_HPP_
+#define _KERNEL_CORE_MEMORY_VMM_HPP_
 
-#include <nos/multiboot.hpp>
-#include <nos/string.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/multiboot.hpp>
 
 
 namespace kernel {
 namespace core {
 namespace memory {
-    
+namespace vmm {
 
-///< Virtual memory management main macros
-#define TABLES_PER_DIR  1024 ///< 1 KB
-#define PAGES_PER_TABLE 1024 ///< 1 KB
-#define PAGE_SIZE       4096 ///< 4 KB
+// Virtual memory management main macros
+#define TABLES_PER_DIR  1024 // 1 KB
+#define PAGES_PER_TABLE 1024 // 1 KB
+#define PAGE_SIZE       4096 // 4 KB
 
-#define PD_INDEX(addr) ((addr) >> 22)
-#define PT_INDEX(addr) (((addr) >> 12) & 0x3FF) /* max index 1023 (0x3FF) */
-#define PAGE_PADDRESS(dir_entry) ((*dir_entry) & ~0xFFF)
-#define SET_ATTRIBUTE(entry, attr) (*entry |= attr) 
+#define PD_INDEX(addr)               ((addr) >> 22)
+#define PT_INDEX(addr)               (((addr) >> 12) & 0x3FF) // max index 1023 (0x3FF)
+#define PAGE_PADDRESS(dir_entry)     ((*dir_entry) & ~0xFFF)
+#define SET_ATTRIBUTE(entry, attr)   (*entry |= attr) 
 #define CLEAR_ATTRIBUTE(entry, attr) (*entry &= ~attr) 
-#define TEST_ATTRIBUTE(entry, attr) (*entry & attr) 
-#define SET_FRAME(entry, addr) (*entry = (*entry & ~ 0x7FFFF000) | addr)
+#define TEST_ATTRIBUTE(entry, attr)  (*entry & attr) 
+#define SET_FRAME(entry, addr)       (*entry = (*entry & ~ 0x7FFFF000) | addr)
 
 ///< Flags for Page Table Entry (PTE).
 typedef enum {
@@ -81,12 +81,12 @@ typedef enum {
     PDE_FRAME         = 0x7FFFF000
 }PAGE_DIR_FLAGS;
 
-///< Structure for a page table.
+// Structure for a page table.
 typedef struct {
     u32 entries[PAGES_PER_TABLE];
 } page_table_t;
 
-///< Structure for a page directory.
+// Structure for a page directory.
 typedef struct {
     u32 entries[TABLES_PER_DIR];
 } page_dir_t;
@@ -99,7 +99,7 @@ typedef struct {
  * @return pointer to the page table entry in case of success.
  * @return null pointer otherwise.
  */
-u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr);
+u32 *get_pt_entry(page_table_t *pt, const u32 addr);
 
 /**
  * @brief Get the page directory entry for a given virtual address.
@@ -109,7 +109,7 @@ u32 *vmm_get_pt_entry(page_table_t *pt, const u32 addr);
  * @return pointer to the page directory entry in case of success.
  * @return null pointer otherwise.
  */
-u32 *vmm_get_pd_entry(page_dir_t *pd, const u32 addr);
+u32 *get_pd_entry(page_dir_t *pd, const u32 addr);
 
 /**
  * @brief Get the page entry for a given virtual address.
@@ -117,7 +117,7 @@ u32 *vmm_get_pd_entry(page_dir_t *pd, const u32 addr);
  * @param [in] vaddr - given virtual address.
  * @return pointer to the page entry.
  */
-u32 *vmm_get_page(const u32 vaddr);
+u32 *get_page(const u32 vaddr);
 
 /**
  * @brief Allocate a page.
@@ -125,14 +125,14 @@ u32 *vmm_get_page(const u32 vaddr);
  * @param [in] page - given page pointer.
  * @return pointer to allocated page. 
  */
-void *vmm_page_alloc(u32 *page);
+void *page_alloc(u32 *page);
 
 /**
  * @brief Free a page.
  * 
  * @param [in] page - given pointer to the page to be freed.
  */
-void vmm_free_page(u32 *page);
+void free_page(u32 *page);
 
 /**
  * @brief Set the page directory. 
@@ -141,7 +141,7 @@ void vmm_free_page(u32 *page);
  * @return true - if page directory is set successfully.
  * @return false - otherwise.
  */
-bool vmm_set_page_dir(page_dir_t *pd);
+bool set_page_dir(page_dir_t *pd);
 
 /**
  * @brief Flush a TLB (Translation Lookaside Buffer) entry.
@@ -152,7 +152,7 @@ bool vmm_set_page_dir(page_dir_t *pd);
  * 
  * @param [in] vaddr - given virtual address to flush. 
  */
-void vmm_flush_tlb_entry(u32 vaddr);
+void flush_tlb_entry(u32 vaddr);
 
 /**
  * @brief Map a physical address to a virtual address.
@@ -162,14 +162,14 @@ void vmm_flush_tlb_entry(u32 vaddr);
  * @return true - if translation is successfull.
  * @return false - otherwise.
  */
-bool vmm_map_page(void *paddr, void *vaddr);
+bool map_page(void *paddr, void *vaddr);
 
 /**
  * @brief Unmap a virtual address.
  * 
  * @param [in] vaddr - given virtual address to unmap. 
  */
-void vmm_unmap_page(void *vaddr);
+void unmap_page(void *vaddr);
 
 /**
  * @brief Initialize the virtual memory manager.
@@ -177,10 +177,11 @@ void vmm_unmap_page(void *vaddr);
  * @return true - if initialization is successfull.
  * @return false - otherwise.
  */
-bool vmm_init(void);
+bool init(void);
 
+} // namespace vmm
 } // namespace memory
 } // namespace core
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_VMM_HPP_ */
+#endif // _KERNEL_CORE_MEMORY_VMM_HPP_
