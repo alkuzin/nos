@@ -26,37 +26,32 @@
  * @date   10.06.2024 
  */
 
-#ifndef _NOS_KERNEL_SHELL_LS_HPP_
-#define _NOS_KERNEL_SHELL_LS_HPP_
+#ifndef _KERNEL_SHELL_LS_HPP_
+#define _KERNEL_SHELL_LS_HPP_
 
-#include <nos/initrd.hpp>
-#include <nos/types.hpp>
-#include <nos/stat.hpp>
+#include <kernel/fs/initrd.hpp>
 
 
 namespace kernel {
 namespace shell {
 
-/* file structure */
-typedef struct __ls_file_s {
+/** @brief Ls file structure.*/
+struct ls_file {
     fs::stat_t stat;
-    char   mode[12];
-    // char date[16];    // TODO: add datetime
-    // char   user[256]; // TODO: add user name
-    // time_t mtime;     // TODO: add time
-} ls_file_t;
+    char       mode[12];
+};
 
-/* ls structure */
-typedef struct __ls_s {
-    char      dirname[INITRD_MAX_NAME_SIZE];
-    ls_file_t files[INITRD_MAX_FILES];
-    u32       count;
-} ls_t;
+/** @brief Ls structure.*/
+struct ls_t {
+    char    dirname[fs::initrd::INITRD_MAX_NAME_SIZE];
+    ls_file files[fs::initrd::INITRD_MAX_FILES];
+    u32     count;
+};
 
-/** @brief Display list of files. */
-void ksh_ls(void);
+/** @brief Display list of files.*/
+void ls(void);
     
 } // namespace shell
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_SHELL_LS_HPP_ */
+#endif // _KERNEL_SHELL_LS_HPP_

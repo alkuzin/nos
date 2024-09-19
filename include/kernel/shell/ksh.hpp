@@ -27,27 +27,27 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_SHELL_HPP_
-#define _NOS_KERNEL_SHELL_HPP_
+#ifndef _KERNEL_SHELL_SHELL_HPP_
+#define _KERNEL_SHELL_SHELL_HPP_
 
-#include <nos/multiboot.hpp>
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
+#include <kernel/multiboot.hpp>
 
 
 namespace kernel {
 namespace shell {
 
 /** @brief Enumeration of builtin CLI themes. */
-typedef enum {
-    THEME_DEFAULT,
-    THEME_CLASSIC,
-    THEME_GREEN_BLACK,
-    THEME_BROWN_BLACK,
-    THEME_PURPLE_BLACK
-} theme_t;
+enum class theme_t {
+    based,
+    classic,
+    green_black,
+    brown_black,
+    purple_black
+};
 
 /** @brief Initialize kernel shell. */
-void ksh_init(void);
+void init(void);
 
 /**
  * @brief Execute builtin shell commands.
@@ -56,51 +56,51 @@ void ksh_init(void);
  * @return 0 - in case of success.
  * @return -1 - in case of error.
  */
-s32 ksh_exec(char *cmd);
+s32 exec(char *cmd);
 
 /**
  * @brief print shell warning in case of incorrect command.
  * 
  * @param [in] cmd - given shell command string.
  */
-void ksh_warning(const char *cmd);
+void warning(const char *cmd);
 
 /** @brief Clear terminal. */
-void ksh_clear(void);
+void clear(void);
 
 /** @brief Display list of free memory. */
-void ksh_free(void);
+void free(void);
 
 /** @brief Display list of available shell commands. */
-void ksh_help(void);
+void help(void);
 
 /**
  * @brief Change CLI theme.
  * 
  * @param [in] theme - given theme type.
  */
-void ksh_theme(theme_t theme);
+void theme(theme_t theme);
 
 /** @brief Display list of current processes. */
-void ksh_ps(void);
+void ps(void);
 
 /** @brief Display executable information. */
-void ksh_readexe(void);
+void readexe(void);
 
 /**
  * @brief Read file. 
  * 
  * @param [in] pathname - given file path.
  */
-void ksh_cat(const char *pathname);
+void cat(const char *pathname);
 
 /** @brief Reboot OS. */
-void ksh_reboot(void);
+void reboot(void);
 
 /** @brief Shutdown OS. */
-void ksh_shutdown(void);
+void shutdown(void);
 
 } // namespace shell
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_SHELL_HPP_ */
+#endif // _KERNEL_SHELL_SHELL_HPP_
