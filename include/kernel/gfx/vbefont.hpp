@@ -35,9 +35,9 @@
 namespace kernel {
 namespace gfx {
 
-constexpr u32 VBE_FONT_SIZE   {4096};
-constexpr u32 VBE_CHAR_HEIGHT {16};
-constexpr u32 VBE_CHAR_WIDTH  {8};
+constexpr s32 VBE_FONT_SIZE   {4096};
+constexpr s32 VBE_CHAR_HEIGHT {16};
+constexpr s32 VBE_CHAR_WIDTH  {8};
 
 extern u8 vbefont[VBE_FONT_SIZE];
 
