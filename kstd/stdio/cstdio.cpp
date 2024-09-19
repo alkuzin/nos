@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/printk.hpp> 
-#include <nos/tty.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/tty.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 static constexpr u32 BUF_SIZE {1024};
 static char buf[BUF_SIZE];
@@ -53,15 +54,15 @@ void kmesg(bool state, const char *fmt, ...)
 {
     va_list args;
     
-    kputchar('[');
+    tty::kputchar('[');
 
     if (state)
-        putk(" OK ", gfx::color::green, gfx::tty_get_bg());
+        putk(" OK ", gfx::color::green, tty::get_bg());
     else
-        putk(" ERR ", gfx::color::red, gfx::tty_get_bg());
+        putk(" ERR ", gfx::color::red, tty::get_bg());
     
-    kputchar(']');
-    kputchar(' ');
+    tty::kputchar(']');
+    tty::kputchar(' ');
 
     va_start(args, fmt);    
     vprintk(fmt, args);
@@ -73,7 +74,7 @@ void putk(const char *str)
     u32 i = 0;
 
     while(str[i]) {
-        kputchar(str[i]);       
+        tty::kputchar(str[i]);       
         i++;
 	}
 }
@@ -83,10 +84,22 @@ void putk(const char *str, gfx::rgb fg, gfx::rgb bg)
 	s32 i = 0;
 
     while (str[i]) {
-        kputchar_c(str[i], fg, bg);
+        tty::kputchar_c(str[i], fg, bg);
 		i++;
 	}
 }
+	
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
+{
+	va_list args;
+	
+	va_start(args, fmt);
+    printk("kernel: panic: in \"%s\" in \"%s()\" at line %d: ", file, func, line);
+	vprintk(fmt, args);
+    va_end(args);
 
-} // namespace lib
+	khalt();
+}
+
+} // namespace kstd
 } // namespace kernel

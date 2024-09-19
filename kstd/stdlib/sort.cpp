@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/stdlib.hpp>
-#include <nos/string.hpp>
-#include <nos/math.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cmath.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
     
 /**
  * @brief Swaps the contents of two memory regions of a given size.
@@ -261,5 +261,5 @@ void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const v
     }
 }
 
-} // namespace lib  
+} // namespace kstd
 } // namespace kernel

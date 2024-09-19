@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/math.hpp>
+#include <kernel/kstd/cmath.hpp>
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 // Trigonometric Functions -----------------------------------------------
 
@@ -244,5 +244,5 @@ f64 floor(f64 x)
         return int_part - 1;
 }
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel

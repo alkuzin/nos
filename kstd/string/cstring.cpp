@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/types.hpp>
-#include <nos/errno.hpp>
+#include <kernel/kstd/types.hpp>
+#include <kernel/kstd/errno.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 // Memory Handeling Functions ----------------------------------------
 
@@ -141,82 +141,82 @@ char *strchr(const char *s, s32 c)
     return nullptr;
 }
 
-const char *strerror(error::ERRNO errnum)
+const char *strerror(ERRNO errnum)
 {
     switch (errnum) {
-        case error::ERRNO::E2BIG:
+        case ERRNO::E2BIG:
             return "Arg list too long";
-        case error::ERRNO::EACCES:
+        case ERRNO::EACCES:
             return "Permission denied";
-        case error::ERRNO::EAGAIN:
+        case ERRNO::EAGAIN:
             return "Try again";
-        case error::ERRNO::EBADF:
+        case ERRNO::EBADF:
             return "Bad file number";
-        case error::ERRNO::EBUSY:
+        case ERRNO::EBUSY:
             return "Device or resource busy";
-        case error::ERRNO::ECHILD:
+        case ERRNO::ECHILD:
             return "No child processes";
-        case error::ERRNO::EDEADLK:
+        case ERRNO::EDEADLK:
             return "Resource deadlock would occur";
-        case error::ERRNO::EDOM:
+        case ERRNO::EDOM:
             return "Math argument out of domain of func";
-        case error::ERRNO::EEXIST:
+        case ERRNO::EEXIST:
             return "File exists";
-        case error::ERRNO::EFAULT:
+        case ERRNO::EFAULT:
             return "Bad address";
-        case error::ERRNO::EFBIG:
+        case ERRNO::EFBIG:
             return "File too large";
-        case error::ERRNO::EINTR:
+        case ERRNO::EINTR:
             return "Interrupted system call";
-        case error::ERRNO::EINVAL:
+        case ERRNO::EINVAL:
             return "Invalid argument";
-        case error::ERRNO::EIO:
+        case ERRNO::EIO:
             return "I/O error";
-        case error::ERRNO::EISDIR:
+        case ERRNO::EISDIR:
             return "Is a directory";
-        case error::ERRNO::EMFILE:
+        case ERRNO::EMFILE:
             return "Too many open files";
-        case error::ERRNO::EMLINK:
+        case ERRNO::EMLINK:
             return "Too many links";
-        case error::ERRNO::ENAMETOOLONG:
+        case ERRNO::ENAMETOOLONG:
             return "File name too long";
-        case error::ERRNO::ENFILE:
+        case ERRNO::ENFILE:
             return "File table overflow";
-        case error::ERRNO::ENODEV:
+        case ERRNO::ENODEV:
             return "No such device";
-        case error::ERRNO::ENOENT:
+        case ERRNO::ENOENT:
             return "No such file or directory";
-        case error::ERRNO::ENOEXEC:
+        case ERRNO::ENOEXEC:
             return "Exec format error";
-        case error::ERRNO::ENOLCK:
+        case ERRNO::ENOLCK:
             return "No record locks available";
-        case error::ERRNO::ENOMEM:
+        case ERRNO::ENOMEM:
             return "Out of memory";
-        case error::ERRNO::ENOSPC:
+        case ERRNO::ENOSPC:
             return "No space left on device";
-        case error::ERRNO::ENOSYS:
+        case ERRNO::ENOSYS:
             return "Function not implemented";
-        case error::ERRNO::ENOTDIR:
+        case ERRNO::ENOTDIR:
             return "Not a directory";
-        case error::ERRNO::ENOTEMPTY:
+        case ERRNO::ENOTEMPTY:
             return "Directory not empty";
-        case error::ERRNO::ENOTTY:
+        case ERRNO::ENOTTY:
             return "Not a typewriter";
-        case error::ERRNO::ENXIO:
+        case ERRNO::ENXIO:
             return "No such device or address";
-        case error::ERRNO::EPERM:
+        case ERRNO::EPERM:
             return "Operation not permitted";
-        case error::ERRNO::EPIPE:
+        case ERRNO::EPIPE:
             return "Broken pipe";
-        case error::ERRNO::ERANGE:
+        case ERRNO::ERANGE:
             return "Math result not representable";
-        case error::ERRNO::EROFS:
+        case ERRNO::EROFS:
             return "Read-only file system";
-        case error::ERRNO::ESPIPE:
+        case ERRNO::ESPIPE:
             return "Illegal seek";
-        case error::ERRNO::ESRCH:
+        case ERRNO::ESRCH:
             return "No such process";
-        case error::ERRNO::EXDEV:
+        case ERRNO::EXDEV:
             return "Cross-device link";
         default:
             return "Unknown error";
@@ -366,5 +366,5 @@ char *strtok(char *str, const char *delim)
     return start;
 }
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel

@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/printk.hpp>
-#include <nos/string.hpp>
-#include <nos/ctype.hpp> 
-#include <nos/panic.hpp>
-#include <nos/math.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/ctype.hpp> 
+#include <kernel/kstd/cmath.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
     
 /** For null pointer in vsnprintk. */
 #define __NIL__ "(nil)"
@@ -427,5 +427,5 @@ void vsnprintk(char *buf, usize size, const char *fmt, va_list args)
     va_end(args_copy);
 }
 
-} // namespace lib  
+} // namespace kstd
 } // namespace kernel

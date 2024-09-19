@@ -16,11 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/stdlib.hpp>
+#include <kernel/arch/x86/system.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kheap.hpp>
+#include <kernel/mm.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 // Convertion Functions ---------------------------------------------
 
@@ -98,5 +101,46 @@ void srand(u32 seed)
     next = seed;
 }
 
-} // namespace lib
+void *kmalloc(usize n)
+{
+    static void *ptr;
+
+    if(!core::memory::kmalloc::get_head())
+        core::memory::kmalloc::init(n);
+
+    ptr = core::memory::kmalloc::next_block(n);
+    core::memory::kmalloc::merge_free_blocks();
+
+    return ptr;
+}
+
+void kfree(void *ptr) {
+    if(!ptr)
+        return;
+
+    core::memory::kmalloc::free(ptr);
+}
+
+void __ksleep(u32 microsec)
+{
+	u32 i;
+
+	for (i = 0; i < microsec * 10000; i++) {
+		for (i = 0; i < microsec * 10000; i++)
+			arch::x86::nop();
+	}
+}
+
+void ksleep(u32 sec)
+{
+	__ksleep(sec * 10000);
+}
+
+void khalt(void) 
+{
+	arch::x86::cli();
+	for(;;);
+}
+
+} // namespace kstd
 } // namespace kernel

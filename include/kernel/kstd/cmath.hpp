@@ -51,7 +51,7 @@ constexpr f64 M_PI_4 {0.78539816339744830962};
 constexpr f64 M_E {2.7182818284590452354};
 
 /** @brief Represents a NaN (Not-a-Number) value.*/
-constexpr auto NAN {(0.0f / 0.0f)};
+const auto NAN {(0.0f / 0.0f)};
 
 /**
  * @brief Calculate the absolute value of a given value.
