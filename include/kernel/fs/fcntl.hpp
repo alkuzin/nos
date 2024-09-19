@@ -32,15 +32,12 @@
 namespace kernel {
 namespace fs {
 
-/* @brief File open flags enumeration.*/
-enum class f_oflags {
-    O_RDONLY = 0x000, // Open for read only.
-    O_WRONLY = 0x001, // Open for write only.
-    O_RDWR	 = 0x002, // Open for read & write.
-    O_CREAT	 = 0x040, // Create a file.
-    O_EXCL	 = 0x080, // Create a file exclusively (in conjunction with O_CREAT).
-    O_APPEND = 0x400  // Open for writing in the end of the file.
-};
+#define O_RDONLY  0x000  // Open for read only.
+#define O_WRONLY  0x001  // Open for write only.
+#define O_RDWR	  0x002  // Open for read & write.
+#define O_CREAT	  0x040  // Create a file.
+#define O_EXCL	  0x080  // Create a file exclusively (in conjunction with O_CREAT).
+#define O_APPEND  0x400  // Open for writing in the end of the file.
 
 } // namespace fs
 } // namespace kernel

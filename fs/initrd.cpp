@@ -16,80 +16,77 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/nosstd.hpp>
-#include <nos/string.hpp>
-#include <nos/initrd.hpp>
-#include <nos/printk.hpp>
-#include <nos/panic.hpp>
-#include <nos/kheap.hpp>
-#include <nos/types.hpp>
-#include <nos/fcntl.hpp>
-#include <nos/stat.hpp>
-#include <nos/vfs.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/fs/initrd.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/types.hpp>
+#include <kernel/fs/vfs.hpp>
 
 
 namespace kernel {
 namespace fs {
+namespace initrd {
 
-static vfs_adapter_t initrd_adapter; ///< Initrd adapter for VFS.
-static initrd_t      initrd;         ///< Main initrd structure.
-static u8            *initrd_buffer; ///< Temporary buffer for file operations.
-static s32           initrd_next_fd;
-static u32           cur_file_index; /* for initrd_opendir() */
+static vfs::fs_adapter  initrd_adapter; ///< Initrd adapter for VFS.
+static initrd_t _initrd;         ///< Main initrd structure.
+static u8               *initrd_buffer; ///< Temporary buffer for file operations.
+static s32              initrd_next_fd;
+static u32              cur_file_index; /* for initrd_opendir() */
 
 
-void initrd_init(void)
+void init(void)
 {
-    initrd.files = (initrd_file_t *)lib::kmalloc(sizeof(initrd_file_t) * INITRD_MAX_FILES);
+    _initrd.files = (file *)kstd::kmalloc(sizeof(file) * INITRD_MAX_FILES);
 
-    if (!initrd.files)
-        lib::panic("%s\n", "kmalloc error");
+    if (!_initrd.files)
+        kstd::panic("%s\n", "kmalloc error");
 
     initrd_next_fd = 0;
-    initrd.count   = 0;
+    _initrd.count  = 0;
 
-    initrd_adapter.open   = initrd_open;
-    initrd_adapter.close  = initrd_close;
-    initrd_adapter.creat  = initrd_creat;
-    initrd_adapter.unlink = initrd_unlink;
-    initrd_adapter.read   = initrd_read;
-    initrd_adapter.write  = initrd_write;
+    initrd_adapter.open   = open;
+    initrd_adapter.close  = close;
+    initrd_adapter.creat  = creat;
+    initrd_adapter.unlink = unlink;
+    initrd_adapter.read   = read;
+    initrd_adapter.write  = write;
 }
 
-void initrd_free(void)
+void free(void)
 {
-    lib::kfree(initrd.files);
+    kstd::kfree(_initrd.files);
 }
 
-s32 initrd_creat(const char* pathname, mode_t mode)
+s32 creat(const char* pathname, mode_t mode)
 {
-    initrd_file_t *file;
+    file *file;
     
     /* handle exceeding total files limit */
-    if (initrd.count + 1 > INITRD_MAX_FILES)
+    if (_initrd.count + 1 > INITRD_MAX_FILES)
         return -1; /* file creation error */
 
     /* handle incorrect path/existed path */
-    if (!pathname || initrd_get_index(pathname) != -1)
+    if (!pathname || get_index(pathname) != -1)
         return -1; /* file creation error */
 
-    file = &initrd.files[initrd.count];
+    file = &_initrd.files[_initrd.count];
 
-    lib::strncpy(file->name, pathname, INITRD_MAX_NAME_SIZE);
-    lib::bzero(file->data, INITRD_FILE_SIZE);
+    kstd::strncpy(file->name, pathname, INITRD_MAX_NAME_SIZE);
+    kstd::bzero(file->data, INITRD_FILE_SIZE);
     file->size  = 0;
     file->mode  = mode;
     file->type  = S_IFREG;
-    file->fd    = initrd_set_fd();
+    file->fd    = set_fd();
     file->flags = 0;
 
-    initrd.count++;
+    _initrd.count++;
     return file->fd;
 }
 
-s32 initrd_unlink(const char* pathname)
+s32 unlink(const char* pathname)
 {
-    initrd_file_t *file;
+    file *file;
     s32 file_index; /* index of the file in files structure */
     
     /* handle incorrect path */
@@ -97,42 +94,42 @@ s32 initrd_unlink(const char* pathname)
         return -1; /* file unlink error */
     
     /* handle missing files */
-    if (initrd.count == 0)
+    if (_initrd.count == 0)
         return -1; /* file unlink error */
     
-    file_index = initrd_get_index(pathname);
+    file_index = get_index(pathname);
     
     if (file_index == -1)
         return -1; /* file unlink error */
 
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
     if (file->state == INITRD_FILE_OPENED)
-        initrd_close(file->fd);
+        close(file->fd);
 
-    lib::bzero(file->data, INITRD_FILE_SIZE);
+    kstd::bzero(file->data, INITRD_FILE_SIZE);
 
     /* shift remaining files to fill the gap */
-    for (u32 j = file_index; j < initrd.count - 1; j++)
-        initrd.files[j] = initrd.files[j + 1];
+    for (u32 j = file_index; j < _initrd.count - 1; j++)
+        _initrd.files[j] = _initrd.files[j + 1];
 
-    initrd.count--;    
+    _initrd.count--;    
     return 0;
 }
 
-s32 initrd_write(s32 fd, void *buf, usize count)
+s32 write(s32 fd, void *buf, usize count)
 {
-    initrd_file_t *file;
+    file *file;
     s32   file_index; /* index of the file in files structure */
     u8    *buffer;
     usize i, j;
 
-    file_index = initrd_get_index_by_fd(fd);
+    file_index = get_index_by_fd(fd);
 
     if (file_index == -1)
         return -1; /* file writing error */
     
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
     if (file->state == INITRD_FILE_CLOSED)
         return -1; /* error to write into closed file */
@@ -170,23 +167,23 @@ s32 initrd_write(s32 fd, void *buf, usize count)
         i++;
     
     initrd_buffer[i] = '\0';
-    initrd.files[file_index].size = i - 1;
+    _initrd.files[file_index].size = i - 1;
     return i - 1;
 }
 
-s32 initrd_read(s32 fd, void *buf, usize count)
+s32 read(s32 fd, void *buf, usize count)
 {
-    initrd_file_t *file;
+    file *file;
     s32   file_index; /* index of the file in files structure */
     u8    *buffer;
     usize i;
 
-    file_index = initrd_get_index_by_fd(fd);
+    file_index = get_index_by_fd(fd);
 
     if (file_index == -1)
         return -1; /* file reading error */
     
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
     if (file->state == INITRD_FILE_CLOSED)
         return -1; /* error to read closed file */
@@ -219,26 +216,26 @@ s32 initrd_read(s32 fd, void *buf, usize count)
     return i;
 }
 
-s32 initrd_open(const char *pathname, s32 flags)
+s32 open(const char *pathname, s32 flags)
 {
-    initrd_file_t *file;
+    file *file;
     s32 file_index; /* index of the file in files structure */
     
     /* handle incorrect path */
     if (!pathname)
         return -1; /* file opening error */
     
-    file_index = initrd_get_index(pathname);
+    file_index = get_index(pathname);
     
     /* create file if it doesn't exist */
     if (file_index == -1) {
         if (flags == (O_CREAT | O_EXCL))
-            return initrd_creat(pathname, 0);
+            return creat(pathname, 0);
         else
             return -1;
     }
     
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
     if (file->state == INITRD_FILE_OPENED)
         return file->fd;   
@@ -246,25 +243,25 @@ s32 initrd_open(const char *pathname, s32 flags)
     file->state = INITRD_FILE_OPENED;
     file->flags = flags;
     
-    initrd_buffer = (u8 *)lib::kmalloc(INITRD_FILE_SIZE);
+    initrd_buffer = (u8 *)kstd::kmalloc(INITRD_FILE_SIZE);
 
-    lib::bzero(initrd_buffer, INITRD_FILE_SIZE);
-    lib::memcpy(initrd_buffer, file->data, file->size);
+    kstd::bzero(initrd_buffer, INITRD_FILE_SIZE);
+    kstd::memcpy(initrd_buffer, file->data, file->size);
 
     return file->fd;
 }
 
-s32 initrd_close(s32 fd)
+s32 close(s32 fd)
 {
-    initrd_file_t *file;
+    file *file;
     s32 file_index; /* index of the file in files structure */
 
-    file_index = initrd_get_index_by_fd(fd);
+    file_index = get_index_by_fd(fd);
     
     if (file_index == -1)
         return -1; /* file closing error */
     
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
     /* handle already closed file */
     if (file->state == INITRD_FILE_CLOSED)
@@ -276,65 +273,65 @@ s32 initrd_close(s32 fd)
     for (u32 i = 0; i < INITRD_FILE_SIZE; i++)
         file->data[i] = initrd_buffer[i];
 
-    lib::kfree(initrd_buffer);
+    kstd::kfree(initrd_buffer);
     return 0;
 }
 
-s32 initrd_get_index(const char *pathname)
+s32 get_index(const char *pathname)
 {
     /* handle incorrect path */
     if (!pathname)
         return -1; /* get file index error */
     
-    for (u32 i = 0; i < initrd.count; i++) {
-        if (lib::strncmp(initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
+    for (u32 i = 0; i < _initrd.count; i++) {
+        if (kstd::strncmp(_initrd.files[i].name, pathname, INITRD_FILE_SIZE) == 0)
             return i;
     }
 
     return -1;
 }
 
-s32 initrd_get_index_by_fd(s32 fd)
+s32 get_index_by_fd(s32 fd)
 {
     /* handle incorrect file descriptor */
     if (fd == -1)
         return -1; /* get file index error */
     
-    for (u32 i = 0; i < initrd.count; i++) {
-        if (initrd.files[i].fd == fd)
+    for (u32 i = 0; i < _initrd.count; i++) {
+        if (_initrd.files[i].fd == fd)
             return i;
     }
 
     return -1;
 }
 
-s32 initrd_set_fd(void)
+s32 set_fd(void)
 {
     return initrd_next_fd++;
 }
 
-vfs_adapter_t *initrd_get_adapter(void)
+vfs::fs_adapter *get_adapter(void)
 {
     return &initrd_adapter;
 }
 
-s32 initrd_stat(const char *pathname, stat_t *sb)
+s32 stat(const char *pathname, stat_t *sb)
 {
-    initrd_file_t *file;
+    file *file;
     s32 file_index; /* index of the file in files structure */
     
     /* handle incorrect path */
     if (!pathname)
         return -1; /* get file stat error */
     
-    file_index = initrd_get_index(pathname);
+    file_index = get_index(pathname);
     
     if (file_index == -1)
         return -1; /* get file stat error */
 
-    file = &initrd.files[file_index];
+    file = &_initrd.files[file_index];
 
-    lib::strncpy(sb->name, file->name, INITRD_MAX_NAME_SIZE);
+    kstd::strncpy(sb->name, file->name, INITRD_MAX_NAME_SIZE);
     sb->size  = file->size;
     sb->mode  = file->mode;
     sb->type  = file->type;
@@ -343,32 +340,33 @@ s32 initrd_stat(const char *pathname, stat_t *sb)
     return 0;
 }
 
-u32 initrd_get_count(void)
+u32 get_count(void)
 {
-    return initrd.count;
+    return _initrd.count;
 }
 
-s32 initrd_opendir(const char *pathname, stat_t *sb)
+s32 opendir(const char *pathname, stat_t *sb)
 {
-    initrd_file_t *file;
+    file *file;
     s32 ret;
 
     // TODO: remove after implementing directories
-    if (lib::strncmp(".", pathname, 1) != 0) {
-        lib::printk("%s\n", "incorrect path");
+    if (kstd::strncmp(".", pathname, 1) != 0) {
+        kstd::printk("%s\n", "incorrect path");
         return -1;
     }
     
-    if (cur_file_index >= initrd.count)
+    if (cur_file_index >= _initrd.count)
         cur_file_index = 0;
     
-    file = &initrd.files[cur_file_index];
+    file = &_initrd.files[cur_file_index];
 
-    ret = initrd_stat(file->name, sb);
+    ret = stat(file->name, sb);
 
     cur_file_index++;
     return ret;
 }
 
+} // namespace initrd
 } // namespace fs
 } // namespace kernel

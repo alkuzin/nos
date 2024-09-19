@@ -16,97 +16,95 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/string.hpp>
-#include <nos/printk.hpp>
-#include <nos/panic.hpp>
-#include <nos/types.hpp>
-#include <nos/vfs.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/fs/vfs.hpp>
 
 
 namespace kernel {
 namespace fs {
 
-static vfs_t vfs;
+static vfs::fs_adapter _vfs;
 
-void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter)
+void vfs::init(fs_type type, vfs::fs_adapter *fs_adapter)
 {
-    vfs_register(type, fs_adapter);
+    vfs::set(type, fs_adapter);
 }
 
-void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter)
+void vfs::set(fs_type type, vfs::fs_adapter *fs_adapter)
 {
     switch (type) {
         
-        case fs_type_t::INITRD:
-            lib::kmesg(true, "VFS: set filesystem %d (INITRD)\n", type);
+        case fs_type::INITRD:
+            kstd::kmesg(true, "VFS: set filesystem %d (INITRD)\n", type);
             break;
 
-        case fs_type_t::EXT2:
-            lib::kmesg(true, "VFS: set filesystem %d (EXT2)\n", type);
+        case fs_type::EXT2:
+            kstd::kmesg(true, "VFS: set filesystem %d (EXT2)\n", type);
             break;
         
         default:
-            lib::kmesg(false, "Unknown file system: %d\n", type);
-            lib::panic("%s\n", "VFS error");
+            kstd::kmesg(false, "Unknown file system: %d\n", type);
+            kstd::panic("%s\n", "VFS error");
             break;
     };
 
-    lib::bzero(&vfs, sizeof(vfs_t));
+    kstd::bzero(&_vfs, sizeof(vfs::fs_adapter));
 
-    vfs.open   = fs_adapter->open; 
-    vfs.close  = fs_adapter->close;
-    vfs.read   = fs_adapter->read;
-    vfs.write  = fs_adapter->write;
-    vfs.creat  = fs_adapter->creat;
-    vfs.unlink = fs_adapter->unlink;
+    _vfs.open   = fs_adapter->open; 
+    _vfs.close  = fs_adapter->close;
+    _vfs.read   = fs_adapter->read;
+    _vfs.write  = fs_adapter->write;
+    _vfs.creat  = fs_adapter->creat;
+    _vfs.unlink = fs_adapter->unlink;
 }
 
-s32 vfs_open(const char *pathname, s32 flags)
+s32 vfs::open(const char *pathname, s32 flags)
 {
-    if (!vfs.open)
+    if (!_vfs.open)
         return -1;
     
-    return vfs.open(pathname, flags);
+    return _vfs.open(pathname, flags);
 }
 
-s32 vfs_close(s32 fd)
+s32 vfs::close(s32 fd)
 {
-    if (!vfs.close)
+    if (!_vfs.close)
         return -1;
     
-    return vfs.close(fd);
+    return _vfs.close(fd);
 }
 
-s32 vfs_read(s32 fd, void *buf, usize count)
+s32 vfs::read(s32 fd, void *buf, usize count)
 {
-    if (!vfs.read)
+    if (!_vfs.read)
         return -1;
     
-    return vfs.read(fd, buf, count);
+    return _vfs.read(fd, buf, count);
 }
 
-s32 vfs_write(s32 fd, void *buf, usize count)
+s32 vfs::write(s32 fd, void *buf, usize count)
 {
-    if (!vfs.write)
+    if (!_vfs.write)
         return -1;
     
-    return vfs.write(fd, buf, count);
+    return _vfs.write(fd, buf, count);
 }
 
-s32 vfs_creat(const char* pathname, mode_t mode)
+s32 vfs::creat(const char* pathname, mode_t mode)
 {
-    if (!vfs.creat)
+    if (!_vfs.creat)
         return -1;
     
-    return vfs.creat(pathname, mode);
+    return _vfs.creat(pathname, mode);
 }
 
-s32 vfs_unlink(const char* pathname)
+s32 vfs::unlink(const char* pathname)
 {
-    if (!vfs.unlink)
+    if (!_vfs.unlink)
         return -1;
     
-    return vfs.unlink(pathname);
+    return _vfs.unlink(pathname);
 }
 
 } // namespace fs
