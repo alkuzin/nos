@@ -28,11 +28,10 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_STDARG_HPP_
-#define _NOS_KERNEL_STDARG_HPP_
+#ifndef _KERNEL_KSTD_STDARG_HPP_
+#define _KERNEL_KSTD_STDARG_HPP_
 
 namespace kernel {
-namespace lib {
 
 /**
  * @brief This macro initializes ap for subsequent use by
@@ -76,7 +75,7 @@ namespace lib {
  * @param [in] v - arguments list.
  * @param [in] l - number of arguments.
  */
-#define va_arg(v,l)   __builtin_va_arg(v,l)
+#define va_arg(v,l) __builtin_va_arg(v,l)
 
 /**
  * @brief This macro copies the (previously initialized) variable argument
@@ -89,7 +88,7 @@ namespace lib {
  * @param [in] v - arguments list.
  * @param [in] l - number of arguments.
  */
-#define va_copy(d,s)  __builtin_va_copy(d,s)
+#define va_copy(d,s) __builtin_va_copy(d,s)
 
 /**
  * @brief Each invocation of va_start() must be matched by a corresponding 
@@ -102,11 +101,10 @@ namespace lib {
  * @param [in] v - arguments list.
  * @param [in] l - number of arguments.
  */
-#define va_end(v)     __builtin_va_end(v)
+#define va_end(v) __builtin_va_end(v)
 
 using va_list = __builtin_va_list;
     
-} // namespace lib
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_STDARG_HPP_ */
+#endif // _KERNEL_KSTD_STDARG_HPP_

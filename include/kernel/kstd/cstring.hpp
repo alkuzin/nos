@@ -17,7 +17,7 @@
  */
 
 /**
- * @file  string.hpp
+ * @file  cstring.hpp
  * @brief Defines several strings and memory management functions.
  *
  * @details This header file provides functions for manipulating strings,
@@ -27,14 +27,14 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_STRING_HPP_
-#define _NOS_KERNEL_STRING_HPP_
+#ifndef _KERNEL_KSTD_CSTRING_HPP_
+#define _KERNEL_KSTD_CSTRING_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
     
 /**
  * @brief Get string length.
@@ -42,7 +42,7 @@ namespace lib {
  * @param [in] str - given null terminated string.
  * @return str length.
  */
-s32   strlen(const char *str);
+s32 strlen(const char *str);
 
 /**
  * @brief Compares the two strings s1 and s2.
@@ -54,7 +54,7 @@ s32   strlen(const char *str);
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-s32   strncmp(const char *s1, const char *s2, usize n);
+s32 strncmp(const char *s1, const char *s2, usize n);
 
 /**
  * @brief Copy a string with truncation.
@@ -138,7 +138,7 @@ char *strnstr(const char *big, const char *little, usize len);
  * @param [out] s - given buffer pointer.
  * @param [in] n - given number of buffer bytes to erase.
  */
-void  bzero(void *s, usize n);
+void bzero(void *s, usize n);
 
 /**
  * @brief Copies n bytes from memory area src to memory area dest.
@@ -148,7 +148,7 @@ void  bzero(void *s, usize n);
  * @param [in] n - given number of bytes to copy.
  * @return destination buffer pointer.
  */
-void  *memcpy(void *dest, const void *src, usize n);
+void *memcpy(void *dest, const void *src, usize n);
 
 /**
  * @brief Copies @a n bytes from memory area @a src to memory area @a dest.
@@ -171,7 +171,7 @@ void *memmove(void *dest, const void *src, usize n);
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-s32   memcmp(const void *s1, const void *s2, usize n);
+s32 memcmp(const void *s1, const void *s2, usize n);
 
 /**
  * @brief Fills the first n bytes of the memory of the area pointed to by s 
@@ -182,7 +182,7 @@ s32   memcmp(const void *s1, const void *s2, usize n);
  * @param [in] n - given number of buffer bytes to fill.
  * @return filled buffer pointer.
  */
-void  *memset(void *s, s32 c, usize n);
+void *memset(void *s, s32 c, usize n);
 
 /**
  * @brief Scans the initial @a n bytes of the memory area 
@@ -204,7 +204,7 @@ void *memchr(const void *s, s32 c, usize n);
  */
 const char *strerror(s32 errnum);
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_STRING_HPP_ */
+#endif // _KERNEL_KSTD_CSTRING_HPP_

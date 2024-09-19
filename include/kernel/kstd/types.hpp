@@ -25,10 +25,10 @@
  * @date   07.06.2024 
  */
 
-#ifndef _NOS_TYPES_HPP_
-#define _NOS_TYPES_HPP_
+#ifndef _KERNEL_KSTD_TYPES_HPP_
+#define _KERNEL_KSTD_TYPES_HPP_
 
-#include <nos/byte.hpp>
+#include <kernel/kstd/byte.hpp>
 
 
 namespace kernel {
@@ -54,12 +54,6 @@ using ssize  = s64;
 using pid_t  = s32;  // PID (Process Identificator)
 using mode_t = u32;  // File permission bits.
 
-// Supported file systems type.
-enum class fs_type_t {
-    INITRD,
-    EXT2
-};
-
 } // namespace kernel
 
-#endif // _NOS_TYPES_HPP_
+#endif // _KERNEL_KSTD_TYPES_HPP_

@@ -17,7 +17,7 @@
  */
 
 /**
- * @file  math.hpp
+ * @file  cmath.hpp
  * @brief Standard mathematical functions and constants.
  *
  * @details 
@@ -29,47 +29,41 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_MATH_HPP_
-#define _NOS_KERNEL_MATH_HPP_
+#ifndef _KERNEL_KSTD_CMATH_HPP_
+#define _KERNEL_KSTD_CMATH_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
     
 /** @brief The mathematical constant Pi. */
-#define M_PI 3.14159265358979323846
+constexpr f64 M_PI {3.14159265358979323846};
 
 /** @brief The mathematical constant Pi divided by 2.*/
-#define M_PI_2 1.57079632679489661923
+constexpr f64 M_PI_2 {1.57079632679489661923};
 
 /** @brief The mathematical constant Pi divided by 4.*/
-#define M_PI_4 0.78539816339744830962
+constexpr f64 M_PI_4 {0.78539816339744830962};
 
-/**
- * @brief The mathematical constant e (Euler's number).
- *
- * This constant defines the value of the mathematical constant e (approximately 2.718).
- */
-#define M_E  2.7182818284590452354
+/** @brief The mathematical constant e (Euler's number).*/
+constexpr f64 M_E {2.7182818284590452354};
 
-/**
- * @brief Represents a NaN (Not-a-Number) value.
- *
- * This constant represents a NaN value, which is the result of dividing 0.0 by 0.0.
- */
-#define NAN (0.0f / 0.0f)
+/** @brief Represents a NaN (Not-a-Number) value.*/
+constexpr auto NAN {(0.0f / 0.0f)};
 
 /**
  * @brief Calculate the absolute value of a given value.
  *
- * This macro calculates the absolute value of the given value.
- *
  * @param [in] x - given value.
  * @return the absolute value of the given value.
  */
-#define abs(x) ((x) < 0 ? -(x) : (x))
+template <typename T>
+constexpr inline T abs(T x) noexcept
+{
+    return ((x) < 0 ? -(x) : (x));
+}
 
 /**
  * @brief Calculate max value between a & b
@@ -78,7 +72,24 @@ namespace lib {
  * @param [in] b - given value.
  * @return max value of the given values.
 */
-#define max(a, b) ((a) > (b) ? (a) : (b))
+template <typename T>
+constexpr inline T max(T a, T b) noexcept
+{
+    return ((a) > (b) ? (a) : (b));
+}
+
+/**
+ * @brief Calculate max value between a & b
+ * 
+ * @param [in] a - given value.
+ * @param [in] b - given value.
+ * @return min value of the given values.
+*/
+template <typename T>
+constexpr inline T min(T a, T b) noexcept
+{
+    return ((a) < (b) ? (a) : (b));
+}
 
 /**
  * @brief Perform ceiling division of two numbers.
@@ -89,7 +100,11 @@ namespace lib {
  * @param [in] y - the divisor.
  * @return the result of ceiling division of x by y.
  */
-#define ceil_div(x, y) (((x + y) - 1) / y)
+template <typename T>
+constexpr inline T ceil_div(T x, T y) noexcept
+{
+    return (((x + y) - 1) / y);
+}
 
 /**
  * @brief Calculate natural logarithm.
@@ -263,7 +278,7 @@ f64 ceil(f64 x);
  */
 f64 floor(f64 x);
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_MATH_HPP_ */
+#endif // _KERNEL_KSTD_CMATH_HPP_

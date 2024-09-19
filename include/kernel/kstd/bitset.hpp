@@ -24,14 +24,14 @@
  * @date   18.09.2024 
  */
 
-#ifndef _NOS_KERNEL_BITSET_HPP_
-#define _NOS_KERNEL_BITSET_HPP_
+#ifndef _KERNEL_KSTD_BITSET_HPP_
+#define _KERNEL_KSTD_BITSET_HPP_
 
-#include <nos/string.hpp>
+#include <kernel/kstd/cstring.hpp>
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 static constexpr inline usize bitset_words(usize n) noexcept
 {
@@ -268,7 +268,7 @@ constexpr bool bitset<N>::operator[](usize pos) const noexcept
     return get_bit(pos);
 }
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel
 
-#endif // _NOS_KERNEL_BITSET_HPP_
+#endif // _KERNEL_KSTD_BITSET_HPP_

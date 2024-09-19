@@ -24,12 +24,12 @@
  * @date   18.09.2024 
  */
 
-#ifndef _NOS_KERNEL_BYTE_HPP_
-#define _NOS_KERNEL_BYTE_HPP_
+#ifndef _KERNEL_KSTD_BYTE_HPP_
+#define _KERNEL_KSTD_BYTE_HPP_
 
 
 namespace kernel {
-namespace lib {
+namespace kstd {
     
 enum class byte : unsigned char {};
 
@@ -174,7 +174,7 @@ constexpr inline byte operator~(byte l) noexcept
     return byte(~static_cast<unsigned int>(l));
 }
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel
 
-#endif // _NOS_KERNEL_BYTE_HPP_
+#endif // _KERNEL_KSTD_BYTE_HPP_

@@ -28,11 +28,11 @@
  * @date   15.05.2024 
  */
 
-#ifndef _NOS_KERNEL_CTYPE_HPP_
-#define _NOS_KERNEL_CTYPE_HPP_
+#ifndef _KERNEL_KSTD_CTYPE_HPP_
+#define _KERNEL_KSTD_CTYPE_HPP_
 
 namespace kernel {
-namespace lib {
+namespace kstd {
 
 /**
  * @brief Checks for an alphabetic character.
@@ -142,7 +142,7 @@ constexpr inline bool tolower(T c) noexcept
     return (isupper(c) ? (c + ('a' - 'A')) : c);
 }
 
-} // namespace lib
+} // namespace kstd
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_CTYPE_HPP_ */
+#endif // _KERNEL_KSTD_CTYPE_HPP_

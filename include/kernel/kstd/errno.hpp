@@ -24,13 +24,14 @@
  * @date   27.06.2024
  */
 
-#ifndef _NOS_KERNEL_ERRNO_HPP_
-#define _NOS_KERNEL_ERRNO_HPP_
+#ifndef _KERNEL_KSTD_ERRNO_HPP_
+#define _KERNEL_KSTD_ERRNO_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
+
 
 namespace kernel {
-namespace error {
+namespace kstd {
 
 extern s32 errno;
 
@@ -73,7 +74,8 @@ enum class ERRNO : s32 {
     ESRCH		  = 36,  // No such process.
     EXDEV		  = 37   // Cross-device link.
 };
-} // namespace error
+
+} // namespace kstd
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_ERRNO_HPP_ */
+#endif // _KERNEL_KSTD_ERRNO_HPP_
