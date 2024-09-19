@@ -26,20 +26,22 @@
  * @date   26.06.2024
  */
 
-#ifndef _NOS_KERNEL_VBEFONT_HPP_
-#define _NOS_KERNEL_VBEFONT_HPP_
+#ifndef _KERNEL_GFX_VBEFONT_HPP_
+#define _KERNEL_GFX_VBEFONT_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
+namespace gfx {
 
-#define VBE_FONT_SIZE   4096
-#define VBE_CHAR_HEIGHT 16
-#define VBE_CHAR_WIDTH  8
+constexpr u32 VBE_FONT_SIZE   {4096};
+constexpr u32 VBE_CHAR_HEIGHT {16};
+constexpr u32 VBE_CHAR_WIDTH  {8};
 
 extern u8 vbefont[VBE_FONT_SIZE];
 
+} // namespace gfx
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_VBEFONT_HPP_ */
+#endif // _KERNEL_GFX_VBEFONT_HPP_
