@@ -16,14 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/keyboard.hpp>
-#include <arch/x86/io.hpp>
-#include <nos/ctype.hpp>
+#include <kernel/drivers/keyboard.hpp>
+#include <kernel/arch/x86/io.hpp>
+#include <kernel/kstd/ctype.hpp>
 
 
 namespace kernel {
 namespace driver {
-    
+namespace keyboard {
+
 const u32 UNKNOWN = 0xFFFFFFFF;
 const u32 ESC     = 0xFFFFFFFF - 1;
 const u32 CTRL    = 0xFFFFFFFF - 2;
@@ -98,29 +99,29 @@ UNKNOWN,UNKNOWN,UNKNOWN };
 bool caps_is_on, caps_lock_is_on;
 
 
-void keyboard_init(void)
+void init(void)
 {
     caps_is_on      = false;
     caps_lock_is_on = false;
 
-    irq_install_handler(1, &keyboard_handler);
+    irq_install_handler(1, &handler);
 }
 
-void keyboard_handler([[gnu::unused]] arch::x86::int_reg_t *regs)
+void handler([[gnu::unused]] arch::x86::int_reg_t *regs)
 {
     /* do nothing */
 }
 
-void keyboard_wait(void)
+void wait(void)
 {
     while((arch::x86::inb(0x64) & 0x01) == 0);
 }
 
-u8 keyboard_getchar(void)
+u8 getchar(void)
 {
     u8 scan_code, press, cc;
     
-    keyboard_wait();
+    wait();
 
     /* get code of key that is pressed */
     scan_code = arch::x86::inb(0x60) & 0x7F;
@@ -128,19 +129,19 @@ u8 keyboard_getchar(void)
     /* is key is pressed down or released */
     press = arch::x86::inb(0x60) & 0x80;
     
-    switch(static_cast<KEY>(scan_code)) {    
-        case KEY::UP_ARROW:
-        case KEY::DOWN_ARROW:
-        case KEY::LEFT_ARROW:
-        case KEY::RIGHT_ARROW:
-        case KEY::LSHFT:
+    switch(static_cast<key>(scan_code)) {    
+        case key::up_arrow:
+        case key::down_arrow:
+        case key::left_arrow:
+        case key::right_arrow:
+        case key::lshft:
             if(!press)
                 caps_is_on = true;
             else
                 caps_is_on = false;
             break;
 
-        case KEY::CAPS_LOCK:
+        case key::caps_lock:
             if(!caps_lock_is_on && !press)
                 caps_lock_is_on = true;
             else if(caps_lock_is_on && !press)
@@ -161,5 +162,6 @@ u8 keyboard_getchar(void)
     return 0;
 }
 
+} // namespace keyboard
 } // namespace driver
 } // namespace kernel

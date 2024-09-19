@@ -16,17 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <arch/x86/io.hpp>
-#include <nos/timer.hpp>
+#include <kernel/drivers/timer.hpp>
+#include <kernel/arch/x86/io.hpp>
 
 
 namespace kernel {
 namespace driver {
-    
+namespace timer {
+
 const u32 freq = 100;
 u32 ticks;
 
-void timer_delay(u32 seconds)
+void delay(u32 seconds)
 {
     (void)seconds;
     // TODO: implement
@@ -37,19 +38,18 @@ void on_irq0([[gnu::unused]] arch::x86::int_reg_t *regs)
     ticks++;
 }
 
-void timer_init(void)
+void init(void)
 {
-    u32 divisor;
-
     ticks = 0;
     irq_install_handler(0, &on_irq0);
 
-    divisor = 1193180 / freq; /* MHz */
+    u32 divisor = 1193180 / freq; // MHz
 
     arch::x86::outb(0x43, 0x36);
-    arch::x86::outb(0x40, (u8)(divisor & 0xFF));
-    arch::x86::outb(0x40, (u8)((divisor >> 8) & 0xFF));
+    arch::x86::outb(0x40, static_cast<u8>(divisor & 0xFF));
+    arch::x86::outb(0x40, static_cast<u8>((divisor >> 8) & 0xFF));
 }
 
+} // namespace timer
 } // namespace driver
 } // namespace kernel

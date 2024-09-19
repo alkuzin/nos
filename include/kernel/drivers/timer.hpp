@@ -32,7 +32,7 @@
 
 namespace kernel {
 namespace driver {
-namespace driver {
+namespace timer {
 
 /** @brief Initialize the timer.*/
 void init(void) noexcept;
@@ -47,7 +47,7 @@ void on_irq0(arch::x86::int_reg_t *regs) noexcept;
  */
 void delay(u32 seconds) noexcept;
 
-} // namespace driver
+} // namespace timer
 } // namespace driver
 } // namespace kernel
 

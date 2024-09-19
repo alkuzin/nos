@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <arch/x86/io.hpp>
-#include <nos/vbe.hpp>
-#include <nos/gfx.hpp>
+#include <kernel/arch/x86/io.hpp>
+#include <kernel/drivers/vbe.hpp>
+#include <kernel/gfx/gfx.hpp>
 
 
 namespace kernel {
 namespace driver {
+namespace vbe {
 
 /**
  * @brief Set VBE params.
@@ -30,7 +31,7 @@ namespace driver {
  * @param [in] index - given index to set. 
  * @param [in] data - given data to set. 
  */
-static constexpr inline void vbe_write(u16 index, u16 data) noexcept
+static constexpr inline void write(u16 index, u16 data) noexcept
 {
     arch::x86::outw(VBE_DISPI_IOPORT_INDEX, index);
     arch::x86::outw(VBE_DISPI_IOPORT_DATA, data);
@@ -45,23 +46,23 @@ static constexpr inline void vbe_write(u16 index, u16 data) noexcept
  * @param [in] pitch - given number of bytes per scanline.
  * @param [in] fb_addr - given framebuffer pointer.
  */
-static constexpr void vbe_set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr) noexcept
+static constexpr void set_video_mode(u16 width, u16 height, u16 depth, u16 pitch, u32 *fb_addr) noexcept
 {
-    gfx::gfx_set_framebuffer(fb_addr);
-    gfx::gfx_set_height(height);
-    gfx::gfx_set_width(width);
-    gfx::gfx_set_pitch(pitch);
+    gfx::set_framebuffer(fb_addr);
+    gfx::set_height(height);
+    gfx::set_width(width);
+    gfx::set_pitch(pitch);
 
-    vbe_write(0x00, 0x4F02); // set VBE mode
-    vbe_write(0x01, width);
-    vbe_write(0x02, height);
-    vbe_write(0x03, depth);
-    vbe_write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); // enable LFB mode
+    write(0x00, 0x4F02); // set VBE mode
+    write(0x01, width);
+    write(0x02, height);
+    write(0x03, depth);
+    write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); // enable LFB mode
 }
 
-void vbe_init(const multiboot_info_t& mboot)
+void init(const multiboot_info_t& mboot)
 {
-    vbe_set_video_mode(
+    set_video_mode(
         mboot.framebuffer_width,
         mboot.framebuffer_height,
         mboot.framebuffer_bpp,
@@ -70,5 +71,6 @@ void vbe_init(const multiboot_info_t& mboot)
     );
 }
 
+} // namespace vbe
 } // namespace driver
 } // namespace kernel

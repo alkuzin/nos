@@ -51,7 +51,7 @@ constexpr u32 VBE_DISPI_LFB_ENABLED  {0x40};
  * 
  * @param [in] mboot - given multiboot information structure.
  */
-void vbe_init(const multiboot_info_t& mboot) noexcept;
+void init(const multiboot_info_t& mboot) noexcept;
 
 } // namespace vbe
 } // namespace driver
