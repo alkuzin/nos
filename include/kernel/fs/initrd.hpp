@@ -27,53 +27,49 @@
  * @date   08.06.2024
  */
 
-#ifndef _NOS_KERNEL_INITRD_HPP_
-#define _NOS_KERNEL_INITRD_HPP_
+#ifndef _KERNEL_FS_INITRD_HPP_
+#define _KERNEL_FS_INITRD_HPP_
 
-#include <nos/fcntl.hpp>
-#include <nos/stat.hpp>
-#include <nos/vfs.hpp>
+#include <kernel/fs/fcntl.hpp>
+#include <kernel/fs/stat.hpp>
+#include <kernel/fs/vfs.hpp>
 
 
 namespace kernel {
 namespace fs {
+namespace initrd {
 
-#define INITRD_MAX_NAME_SIZE 64
-#define INITRD_MAX_FILES     16
-#define INITRD_FILE_SIZE     1024 /* 1KB */
+constexpr u32 INITRD_MAX_NAME_SIZE {MAX_FILENAME_SIZE};
+constexpr u32 INITRD_MAX_FILES     {16};
+constexpr u32 INITRD_FILE_SIZE     {1024}; // 1KB
 
-/* file states */
-#define INITRD_FILE_OPENED 1
-#define INITRD_FILE_CLOSED 2
+// file states
+constexpr u32 INITRD_FILE_OPENED {1};
+constexpr u32 INITRD_FILE_CLOSED {2};
 
-/** @brief Initrd file structure. */
-typedef struct {
-    char    name[INITRD_MAX_NAME_SIZE]; ///< Name of the file.
-    u8      data[INITRD_FILE_SIZE];     ///< File content.
-    u32     size;                       ///< Size of the file in bytes.
-    mode_t  mode;                       ///< File permissions.
-    s32     fd;                         ///< File descriptor.
-    u32     state;                      ///< File state (e.g. opened/closed/etc.).
-    u32     type;                       ///< File type.
-    s32     flags;                      ///< File handeling flags.
-} initrd_file_t;
+/** @brief Initrd file structure.*/
+struct file {
+    char    name[INITRD_MAX_NAME_SIZE]; // Name of the file.
+    u8      data[INITRD_FILE_SIZE];     // File content.
+    u32     size;                       // Size of the file in bytes.
+    mode_t  mode;                       // File permissions.
+    s32     fd;                         // File descriptor.
+    u32     state;                      // File state (e.g. opened/closed/etc.).
+    u32     type;                       // File type.
+    s32     flags;                      // File handeling flags.
+};
 
-/** @brief Initrd main structure. */
-typedef struct {
-    initrd_file_t *files;   ///< All files.
-    u32 count;              ///< Total number of files.
-} initrd_t;
+/** @brief Initrd main structure.*/
+struct initrd_t {
+    file *files;   // All files.
+    u32  count;    // Total number of files.
+};
 
-/**
- * @brief Initialize initial ramdisk.
- * 
- * @param [in] begin_paddr - given begin physical address.
- * @param [in] end_paddr - given end physical address.
- */
-void initrd_init(void);
+/** @brief Initialize initial ramdisk.*/
+void init(void);
 
 /** @brief Free all allocated memory for initrd. */
-void initrd_free(void);
+void free(void);
 
 /**
  * @brief Initrd create file.
@@ -83,7 +79,7 @@ void initrd_free(void);
  * @return file descriptor of created file.
  * @return -1 in case of error.
  */
-s32 initrd_creat(const char* pathname, mode_t mode);
+s32 creat(const char* pathname, mode_t mode);
 
 /**
  * @brief Deletes a specified file from the file system.
@@ -92,7 +88,7 @@ s32 initrd_creat(const char* pathname, mode_t mode);
  * @return 0 - in case of success.
  * @return -1 - in case of error.
  */
-s32 initrd_unlink(const char* pathname);
+s32 unlink(const char* pathname);
 
 /**
  * @brief Write bytes to file.
@@ -103,7 +99,7 @@ s32 initrd_unlink(const char* pathname);
  * @return number of written bytes.
  * @return -1 in case of error.
  */
-s32 initrd_write(s32 fd, void *buf, usize count);
+s32 write(s32 fd, void *buf, usize count);
 
 /**
  * @brief Read bytes from file.
@@ -114,7 +110,7 @@ s32 initrd_write(s32 fd, void *buf, usize count);
  * @return number of read bytes.
  * @return -1 in case of error.
  */
-s32 initrd_read(s32 fd, void *buf, usize count);
+s32 read(s32 fd, void *buf, usize count);
 
 /**
  * @brief Open file.
@@ -124,7 +120,7 @@ s32 initrd_read(s32 fd, void *buf, usize count);
  * @return file descriptor.
  * @return -1 in case of error.
  */
-s32 initrd_open(const char *pathname, s32 flags);
+s32 open(const char *pathname, s32 flags);
 
 /**
  * @brief Close file. 
@@ -133,7 +129,7 @@ s32 initrd_open(const char *pathname, s32 flags);
  * @return 0 - on success.
  * @return -1 - in case of error.
  */
-s32 initrd_close(s32 fd);
+s32 close(s32 fd);
 
 /**
  * @brief Get file index in files structure. 
@@ -142,7 +138,7 @@ s32 initrd_close(s32 fd);
  * @return file index.
  * @return -1 - in case of error.
  */
-s32 initrd_get_index(const char *pathname);
+s32 get_index(const char *pathname);
 
 /**
  * @brief Get file index in files structure by file descriptor. 
@@ -151,21 +147,21 @@ s32 initrd_get_index(const char *pathname);
  * @return file index.
  * @return -1 - in case of error.
  */
-s32 initrd_get_index_by_fd(s32 fd);
+s32 get_index_by_fd(s32 fd);
 
 /**
  * @brief Set new file descriptor. 
  * 
  * @return new file descriptor.
  */
-s32 initrd_set_fd(void);
+s32 set_fd(void);
 
 /**
  * @brief Get initial ramdisk adapter for VFS.
  * 
  * @return VFS adapter structure pointer. 
  */
-vfs_adapter_t *initrd_get_adapter(void);
+vfs::fs_adapter *get_adapter(void);
 
 /**
  * @brief Get file information. 
@@ -175,14 +171,14 @@ vfs_adapter_t *initrd_get_adapter(void);
  * @return 0 - in case of success.
  * @return -1 - in case of error.
  */
-s32 initrd_stat(const char *pathname, stat_t *sb);
+s32 stat(const char *pathname, stat_t *sb);
 
 /**
  * @brief Get total number of files. 
  * 
  * @return total number of initrd files.
  */
-u32 initrd_get_count(void);
+u32 get_count(void);
 
 /**
  * @brief Get file information.
@@ -192,9 +188,10 @@ u32 initrd_get_count(void);
  * @return 0 - in case of success.
  * @return -1 - in case of error.
  */
-s32 initrd_opendir(const char *pathname, stat_t *sb);
+s32 opendir(const char *pathname, stat_t *sb);
 
+} // namespace initrd
 } // namespace fs
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_INITRD_HPP_ */
+#endif // _KERNEL_FS_INITRD_HPP_

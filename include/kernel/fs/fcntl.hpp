@@ -26,23 +26,23 @@
  * @date   09.06.2024
  */
 
-#ifndef _NOS_KERNEL_FCNTL_HPP_
-#define _NOS_KERNEL_FCNTL_HPP_
-
+#ifndef _KERNEL_FS_FCNTL_HPP_
+#define _KERNEL_FS_FCNTL_HPP_
 
 namespace kernel {
 namespace fs {
 
-/* file open flags */
-#define O_RDONLY  0x000 ///< open for read only.
-#define O_WRONLY  0x001 ///< open for write only.
-#define O_RDWR	  0x002 ///< open for read & write.
-#define O_CREAT	  0x040 ///< create a file.
-/* file will only be created if it does not already exist. */
-#define O_EXCL	  0x080 ///< create a file exclusively (in conjunction with O_CREAT).
-#define O_APPEND  0x400 ///< open for writing in the end of the file.
+/* @brief File open flags enumeration.*/
+enum class f_oflags {
+    O_RDONLY = 0x000, // Open for read only.
+    O_WRONLY = 0x001, // Open for write only.
+    O_RDWR	 = 0x002, // Open for read & write.
+    O_CREAT	 = 0x040, // Create a file.
+    O_EXCL	 = 0x080, // Create a file exclusively (in conjunction with O_CREAT).
+    O_APPEND = 0x400  // Open for writing in the end of the file.
+};
 
 } // namespace fs
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_FCNTL_HPP_ */
+#endif // _KERNEL_FS_FCNTL_HPP_

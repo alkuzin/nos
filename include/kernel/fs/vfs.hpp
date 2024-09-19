@@ -27,32 +27,25 @@
  * @date   30.05.2024
  */
 
-#ifndef _NOS_KERNEL_VFS_HPP_
-#define _NOS_KERNEL_VFS_HPP_
+#ifndef _KERNEL_FS_HPP_
+#define _KERNEL_FS_HPP_
 
-#include <nos/fcntl.hpp>
-#include <nos/stat.hpp>
+#include <kernel/fs/fcntl.hpp>
+#include <kernel/fs/stat.hpp>
 
-
-#define MAX_PATH_SIZE 64
 
 namespace kernel {
 namespace fs {
+namespace vfs {
 
-/** @brief VFS interface for different types of file systems. */
-struct vfs_s {
-    s32 (*open)(const char *pathname, s32 flags);
-    s32 (*close)(s32 fd);
-    s32 (*read)(s32 fd, void *buf, usize count);
-    s32 (*write)(s32 fd, void *buf, usize count);
-    s32 (*creat)(const char* pathname, mode_t mode);
-    s32 (*unlink)(const char* pathname);
+// Supported file systems type.
+enum class fs_type {
+    INITRD,
+    EXT2
 };
-
-typedef struct vfs_s vfs_t;
 
 /** @brief VFS adapter for specific file system. */
-struct vfs_adapter_s {
+struct fs_adapter {
     s32 (*open)(const char *pathname, s32 flags);
     s32 (*close)(s32 fd);
     s32 (*read)(s32 fd, void *buf, usize count);
@@ -61,15 +54,11 @@ struct vfs_adapter_s {
     s32 (*unlink)(const char* pathname);
 };
 
-typedef struct vfs_adapter_s vfs_adapter_t;
-
-struct file_s {
-    char name[MAX_PATH_SIZE]; ///< Absolute file name.
-    char *data; ///< File content.
-    u32  size;  ///< Size of the file in bytes.
+struct file {
+    char name[MAX_PATH_SIZE]; // Absolute file name.
+    char *data;               // File content.
+    u32  size;                // Size of the file in bytes.
 };
-
-typedef struct file_s file_t;
 
 /**
  * @brief Register current active file system.
@@ -77,7 +66,7 @@ typedef struct file_s file_t;
  * @param [in] type - given type of file system to register. 
  * @param [in] fs_adapter - given file system adapter. 
  */
-void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter);
+void set(fs_type type, fs_adapter *fs_adapter);
 
 /**
  * @brief Initialize virtual file system.
@@ -85,7 +74,7 @@ void vfs_register(fs_type_t type, vfs_adapter_t *fs_adapter);
  * @param [in] type - given type of file system to register. 
  * @param [in] fs_adapter - given file system adapter. 
  */
-void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter);
+void init(fs_type type, fs_adapter *fs_adapter);
 
 /**
  * @brief Open file.
@@ -95,7 +84,7 @@ void vfs_init(fs_type_t type, vfs_adapter_t *fs_adapter);
  * @return file descriptor.
  * @return -1 - in case of error.
  */
-s32 vfs_open(const char *pathname, s32 flags);
+s32 open(const char *pathname, s32 flags);
 
 /**
  * @brief Close file. 
@@ -104,7 +93,7 @@ s32 vfs_open(const char *pathname, s32 flags);
  * @return 0 - on success.
  * @return -1 - in case of error.
  */
-s32 vfs_close(s32 fd);
+s32 close(s32 fd);
 
 /**
  * @brief Read bytes from file.
@@ -115,7 +104,7 @@ s32 vfs_close(s32 fd);
  * @return number of read bytes.
  * @return -1 in case of error.
  */
-s32 vfs_read(s32 fd, void *buf, usize count);
+s32 read(s32 fd, void *buf, usize count);
 
 /**
  * @brief Write bytes to file.
@@ -126,7 +115,7 @@ s32 vfs_read(s32 fd, void *buf, usize count);
  * @return number of written bytes.
  * @return -1 in case of error.
  */
-s32 vfs_write(s32 fd, void *buf, usize count);
+s32 write(s32 fd, void *buf, usize count);
 
 /**
  * @brief Create file.
@@ -136,7 +125,7 @@ s32 vfs_write(s32 fd, void *buf, usize count);
  * @return file descriptor of created file.
  * @return -1 in case of error.
  */
-s32 vfs_creat(const char* pathname, mode_t mode);
+s32 creat(const char* pathname, mode_t mode);
 
 /**
  * @brief Deletes a specified file from the file system.
@@ -145,9 +134,10 @@ s32 vfs_creat(const char* pathname, mode_t mode);
  * @return 0 - in case of success.
  * @return -1 - in case of error.
  */
-s32 vfs_unlink(const char* pathname);
+s32 unlink(const char* pathname);
 
+} // namespace vfs
 } // namespace fs
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_VFS_HPP_ */
+#endif // _KERNEL_FS_HPP_
