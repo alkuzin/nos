@@ -27,57 +27,59 @@
  * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_KEYBOARD_HPP_
-#define _NOS_KERNEL_KEYBOARD_HPP_
+#ifndef _KERNEL_DRIVER_KEYBOARD_HPP_
+#define _KERNEL_DRIVER_KEYBOARD_HPP_
 
-#include <arch/x86/irq.hpp>
-#include <arch/x86/io.hpp>
+#include <kernel/arch/x86/irq.hpp>
+#include <kernel/arch/x86/io.hpp>
 
 
 namespace kernel {
 namespace driver {
+namespace keyboard {
 
 constexpr u32 INPUT_BUFFER_SIZE {256};
 
-/** @brief Keyboard special keys enumeration. */
-enum class KEY : u8 {
-    ESC         = 0x01,
-    BACKSPACE   = 0x0E,
-    TAB         = 0x0F,
-    ENTER       = 0x1C,
-    LCTRL       = 0x1D,
-    LSHFT       = 0x2A,
-    BACKSLASH   = 0x2B,
-    LALT        = 0x38,
-    SPACE       = 0x39,
-    CAPS_LOCK   = 0x3A,
-    LEFT_ARROW  = 0x4B,
-    RIGHT_ARROW = 0x4D,
-    UP_ARROW    = 0x48,
-    DOWN_ARROW  = 0x50
+/** @brief Keyboard special keys enumeration.*/
+enum class key : u8 {
+    esc         = 0x01,
+    backspace   = 0x0E,
+    tab         = 0x0F,
+    enter       = 0x1C,
+    lctrl       = 0x1D,
+    lshft       = 0x2A,
+    backslash   = 0x2B,
+    lalt        = 0x38,
+    space       = 0x39,
+    caps_lock   = 0x3A,
+    left_arrow  = 0x4B,
+    right_arrow = 0x4D,
+    up_arrow    = 0x48,
+    down_arrow  = 0x50
 };
 
-/** @brief keyboard initialization */
-void keyboard_init(void);
+/** @brief keyboard initialization.*/
+void init(void) noexcept;
 
 /**
  * @brief Keyboard key press handler.
  * 
  * @param [in] regs - given pointer to interrupt register state.
  */
-void keyboard_handler(arch::x86::int_reg_t *regs);
+void handler(arch::x86::int_reg_t *regs) noexcept;
 
-/** @brief Keyboard wait for user to press a key. */
-void keyboard_wait(void);
+/** @brief Keyboard wait for user to press a key.*/
+void wait(void) noexcept;
 
 /**
  * @brief Keyboard get character on key press.
  * 
  * @return Character read from the keyboard.
  */
-u8   keyboard_getchar(void);
+u8 getchar(void) noexcept;
 
+} // namespace keyboard
 } // namespace driver
 } // namespace kernel
 
-#endif /* _NOS_KERNEL_KEYBOARD_HPP_ */
+#endif // _KERNEL_DRIVER_KEYBOARD_HPP_

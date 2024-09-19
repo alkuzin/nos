@@ -17,42 +17,38 @@
  */
 
 /**
- * @file  vbe.hpp
- * @brief Contains declarations for VBE (VESA BIOS Extensions).
- * 
- * @details This header file includes functions and structs related to the standard
- * interface for accessing advanced video modes and features on graphics hardware.
+ * @file  timer.hpp
+ * @brief Contains functions related to timer operations.
  * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   24.06.2024
+ * @date   17.05.2024 
  */
 
-#ifndef _NOS_KERNEL_VBE_HPP_
-#define _NOS_KERNEL_VBE_HPP_
+#ifndef _KERNEL_DRIVER_TIMER_HPP_
+#define _KERNEL_DRIVER_TIMER_HPP_
 
-#include <nos/multiboot.hpp>
-#include <nos/types.hpp>
+#include <kernel/arch/x86/irq.hpp>
 
 
 namespace kernel {
 namespace driver {
+namespace driver {
 
-// VBE ports
-constexpr u32 VBE_DISPI_IOPORT_INDEX {0x01CE};
-constexpr u32 VBE_DISPI_IOPORT_DATA  {0x01CF};
+/** @brief Initialize the timer.*/
+void init(void) noexcept;
 
-// VBE control bits
-constexpr u32 VBE_DISPI_ENABLED      {0x01};
-constexpr u32 VBE_DISPI_LFB_ENABLED  {0x40};
+/** @brief Interrupt service routine for IRQ0.*/
+void on_irq0(arch::x86::int_reg_t *regs) noexcept;
 
 /**
- * @brief Initialize VBE mode. 
+ * @brief Delay time. 
  * 
- * @param [in] boot_info - given multiboot information structure.
+ * @param [in] seconds - given number of seconds to delay.
  */
-void vbe_init(const multiboot_info_t& mboot) noexcept;
+void delay(u32 seconds) noexcept;
 
+} // namespace driver
 } // namespace driver
 } // namespace kernel
 
-#endif // _NOS_KERNEL_VBE_HPP_
+#endif // _KERNEL_DRIVER_TIMER_HPP_
