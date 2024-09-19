@@ -16,26 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/shell/ksh.hpp>
-#include <arch/x86/io.hpp>
-#include <nos/printk.hpp>
-#include <nos/initrd.hpp> 
-#include <nos/nosstd.hpp>
-#include <nos/tty.hpp>
-#include <nos/mm.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/arch/x86/io.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/shell/ksh.hpp>
+#include <kernel/fs/initrd.hpp> 
+#include <kernel/tty.hpp>
+#include <kernel/mm.hpp>
 
 
 namespace kernel {
 namespace shell {
 
-void ksh_warning(const char *cmd)
+void warning(const char *cmd)
 {
-    lib::printk("ksh: %s: command not found \n", cmd);
+    kstd::printk("ksh: %s: command not found \n", cmd);
 }
 
-void ksh_help(void)
+void help(void)
 {
-    lib::putk(
+    kstd::putk(
          "help, ?      - display information about builtin commands.\n"
          "clear        - clear screen\n"
          "uname        - print system information\n"
@@ -50,68 +50,65 @@ void ksh_help(void)
     );
 }
 
-void ksh_clear(void)
+void clear(void)
 {
-    gfx::tty_clear();
+    tty::clear();
 }
 
-void ksh_free(void)
+void free(void)
 {
-    u32 max_blocks, used_blocks, phys_mem_total, phys_mem_free; 
-    u32 free_blocks, total_bytes, used_bytes, free_bytes;
-    
-    max_blocks     = core::memory::pmm_get_max_blocks();
-    used_blocks    = core::memory::pmm_get_used_blocks();
-    phys_mem_total = core::memory::pmm_get_phys_mem_total();
-    phys_mem_free  = core::memory::pmm_get_phys_mem_free();
-    free_blocks    = max_blocks - used_blocks;
-    total_bytes    = max_blocks  * BLOCK_SIZE;
-    used_bytes     = used_blocks * BLOCK_SIZE;
-    free_bytes     = free_blocks * BLOCK_SIZE;
+    u32 max_blocks     = core::memory::pmm::get_max_blocks();
+    u32 used_blocks    = core::memory::pmm::get_used_blocks();
+    u32 phys_mem_total = core::memory::pmm::get_phys_mem_total();
+    u32 phys_mem_free  = core::memory::pmm::get_phys_mem_free();
+    u32 free_blocks    = max_blocks - used_blocks;
+    u32 total_bytes    = max_blocks  * core::memory::pmm::BLOCK_SIZE;
+    u32 used_bytes     = used_blocks * core::memory::pmm::BLOCK_SIZE;
+    u32 free_bytes     = free_blocks * core::memory::pmm::BLOCK_SIZE;
 
-    lib::printk("\nMem: \n\t total: %u KB   free: %u KB   used: %u KB\n\n", phys_mem_total >> 10, 
+    kstd::printk("\nMem: \n\t total: %u KB   free: %u KB   used: %u KB\n\n", phys_mem_total >> 10, 
     phys_mem_free >> 10, (phys_mem_total - phys_mem_free) >> 10);
-    lib::putk("Blocks:\n\n");
-    lib::printk("\ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
-    lib::printk("\tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
-    lib::printk("\tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
+    kstd::putk("Blocks:\n\n");
+    kstd::printk("\ttotal: %u (%u KB) (%u MB)\n", max_blocks, total_bytes >> 10, total_bytes >> 20);
+    kstd::printk("\tused : %u (%u KB) (%u MB)\n", used_blocks, used_bytes >> 10, used_bytes >> 20);
+    kstd::printk("\tfree : %u (%u KB) (%u MB)\n \n", free_blocks, free_bytes >> 10, free_bytes >> 20);
 }
 
-void ksh_theme(theme_t theme)
+void theme(theme_t theme)
 {
     gfx::rgb fg, bg, primary_color, secondary_color;
 
     switch (theme) {
 
-        case THEME_DEFAULT:
+        case theme_t::based:
             fg              = gfx::color::white;
             bg              = gfx::color::black;
             primary_color   = gfx::color::gray;
             secondary_color = gfx::color::black;
             break;
         
-        case THEME_CLASSIC:
+        case  theme_t::classic:
             fg              = gfx::color::white;
             bg              = gfx::color::blue;
             primary_color   = gfx::color::white;
             secondary_color = gfx::color::blue;
             break;
         
-        case THEME_GREEN_BLACK:
+        case theme_t::green_black:
             fg              = gfx::color::green;
             bg              = gfx::color::black;
             primary_color   = gfx::color::green;
             secondary_color = gfx::color::black;
             break;
         
-        case THEME_BROWN_BLACK:
+        case theme_t::brown_black:
             fg              = gfx::color::brown;
             bg              = gfx::color::black;
             primary_color   = gfx::color::brown;
             secondary_color = gfx::color::black;
             break;
         
-        case THEME_PURPLE_BLACK:
+        case theme_t::purple_black:
             fg              = gfx::color::purple;
             bg              = gfx::color::black;
             primary_color   = gfx::color::purple;
@@ -119,21 +116,20 @@ void ksh_theme(theme_t theme)
             break;
     
         default:
-            lib::printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
+            kstd::printk("theme: incorrect theme \"%d\" \nksh: type \"help\""
                    " to see list of available commands\n", theme);
             return;
     }
     
-    gfx::tty_set_color(fg, bg);
-    gfx::tty_set_primary_color(primary_color);
-    gfx::tty_set_secondary_color(secondary_color);
-
-    gfx::tty_update();
+    tty::set_color(fg, bg);
+    tty::set_primary_color(primary_color);
+    tty::set_secondary_color(secondary_color);
+    tty::update();
 }
 
-void ksh_ps(void)
+void ps(void)
 {
-    lib::putk("comming soon ...\n");
+    kstd::putk("comming soon ...\n");
     // sched_t *scheduler;
     // pcb_t   *proc;
 
@@ -153,7 +149,7 @@ void ksh_ps(void)
     // printk(" \n total processes: %d\n", scheduler->rear + 1);   
 }
 
-void ksh_readexe(void)
+void readexe(void)
 {
     // TODO: exstract exe header from file
 
@@ -164,37 +160,37 @@ void ksh_readexe(void)
     // exe_display_info(header);
 }
 
-void ksh_cat(const char *pathname)
+void cat(const char *pathname)
 {
-    char buffer[INITRD_FILE_SIZE];
+    char buffer[fs::initrd::INITRD_FILE_SIZE];
     s32 fd, ret;
 
-    fd = fs::vfs_open(pathname, O_RDONLY);
+    fd = fs::vfs::open(pathname, O_RDONLY);
 
     if (fd == -1) {
-        lib::printk("cat: error to open file \"%s\"\n", pathname);
+        kstd::printk("cat: error to open file \"%s\"\n", pathname);
         return;
     }
 
-    ret = fs::vfs_read(fd, buffer, INITRD_FILE_SIZE);
+    ret = fs::vfs::read(fd, buffer, fs::initrd::INITRD_FILE_SIZE);
 
     if (ret == -1)
-        lib::printk("cat: error to read file \"%s\"\n", pathname);
+        kstd::printk("cat: error to read file \"%s\"\n", pathname);
     
-    lib::printk("%s", buffer);
+    kstd::printk("%s", buffer);
 
-    ret = fs::vfs_close(fd);
+    ret = fs::vfs::close(fd);
 
     if (ret == -1)
-        lib::printk("cat: error to close file \"%s\"\n", pathname);
+        kstd::printk("cat: error to close file \"%s\"\n", pathname);
 }
 
-void ksh_reboot(void)
+void reboot(void)
 {
     arch::x86::outb(0x64, 0xFE);
 }
 
-void ksh_shutdown(void)
+void shutdown(void)
 {
     arch::x86::outw(0xB004, 0x2000);
     arch::x86::outw(0x0604, 0x2000);

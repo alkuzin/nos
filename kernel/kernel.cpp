@@ -16,22 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/shell/ksh.hpp>
-#include <arch/x86/gdt.hpp>
-#include <arch/x86/idt.hpp>
-#include <nos/keyboard.hpp>
-#include <nos/version.hpp>
-#include <nos/nosstd.hpp>
-#include <nos/initrd.hpp>
-#include <nos/kernel.hpp>
-#include <nos/printk.hpp>
-#include <nos/timer.hpp>
-#include <nos/login.hpp>
-#include <nos/panic.hpp>
-#include <nos/tty.hpp>
-#include <nos/vfs.hpp>
-#include <nos/vbe.hpp>
-#include <nos/mm.hpp>
+// drivers
+#include <kernel/drivers/keyboard.hpp>
+#include <kernel/drivers/timer.hpp>
+#include <kernel/drivers/vbe.hpp>
+
+// x86 architecture
+#include <kernel/arch/x86/gdt.hpp>
+#include <kernel/arch/x86/idt.hpp>
+
+// kernel standard library
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/shell/ksh.hpp>
+
+// filesystem
+#include <kernel/fs/initrd.hpp>
+#include <kernel/fs/stat.hpp>
+#include <kernel/fs/vfs.hpp>
+
+// core
+#include <kernel/version.hpp>
+#include <kernel/kernel.hpp>
+#include <kernel/login.hpp>
+#include <kernel/tty.hpp>
+#include <kernel/mm.hpp>
 
 
 namespace kernel {
@@ -43,74 +52,74 @@ static void test_initrd(void)
     const char *author_content = " \nAuthor: Alexander (@alkuzin) \n"
                            "GitHub: https://github.com/alkuzin \n";    
 
-    kernel::fs::vfs_creat("AUTHOR", S_IFREG | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
-    kernel::fs::vfs_creat("hw.txt", S_IFREG | S_IRUSR | S_IWUSR);
+    fs::vfs::creat("AUTHOR", S_IFREG | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    fs::vfs::creat("hw.txt", S_IFREG | S_IRUSR | S_IWUSR);
     
-    fd = kernel::fs::vfs_open("AUTHOR", O_RDWR);
-    kernel::fs::vfs_write(fd, const_cast<char*>(author_content), 69);
-    kernel::fs::vfs_close(fd);
+    fd = fs::vfs::open("AUTHOR", O_RDWR);
+    fs::vfs::write(fd, const_cast<char*>(author_content), 69);
+    fs::vfs::close(fd);
     
-    fd = kernel::fs::vfs_open("hw.txt", O_RDWR);
-    kernel::fs::vfs_write(fd, const_cast<char*>("Hello, World!\n"), 15);
-    kernel::fs::vfs_close(fd);
+    fd = fs::vfs::open("hw.txt", O_RDWR);
+    fs::vfs::write(fd, const_cast<char*>("Hello, World!\n"), 15);
+    fs::vfs::close(fd);
 }
 
 void kboot(u32 magic, const multiboot_t& mboot)
 {
-    kernel::driver::vbe_init(mboot);
-    kernel::gfx::tty_init();
+    driver::vbe::init(mboot);
+    tty::init();
 
-    kernel::gfx::tty_set_color(kernel::gfx::color::white, kernel::gfx::color::black);
-    kernel::gfx::tty_set_primary_color(kernel::gfx::color::gray);
-    kernel::gfx::tty_set_secondary_color(kernel::gfx::color::black);
-	kernel::gfx::tty_clear(); 
+    tty::set_color(gfx::color::white, gfx::color::black);
+    tty::set_primary_color(gfx::color::gray);
+    tty::set_secondary_color(gfx::color::black);
+	tty::clear(); 
 
-    kernel::lib::kmesg(true, "%s\n", "initialized VBE mode");
-    kernel::lib::kmesg(true, "%s\n", "initialized TTY");
+    kstd::kmesg(true, "%s\n", "initialized VBE mode");
+    kstd::kmesg(true, "%s\n", "initialized TTY");
     	
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        kernel::lib::kmesg(false, "Invalid magic number: %#X\n", magic);
+        kstd::kmesg(false, "Invalid magic number: %#X\n", magic);
         return;
     }
     
-    /* initializing Global Descriptor Table */
+    // initializing Global Descriptor Table
     arch::x86::gdt_init();
-    lib::kmesg(true, "%s\n", "initialized Global Descriptor Table");
+    kstd::kmesg(true, "%s\n", "initialized Global Descriptor Table");
     
-    /* initializing Interrupt Descriptor Table */
+    // initializing Interrupt Descriptor Table
     arch::x86::idt_init();
-    lib::kmesg(true, "%s\n", "initialized Interrupt Descriptor Table");	
+    kstd::kmesg(true, "%s\n", "initialized Interrupt Descriptor Table");	
     
-    /* initializing timer */
-    driver::timer_init();
-    lib::kmesg(true, "%s\n", "initialized timer");	
+    // initializing timer
+    driver::timer::init();
+    kstd::kmesg(true, "%s\n", "initialized timer");	
 
-    /* initializing memory management */
-    memory::memory_init(mboot);
-    lib::kmesg(true, "%s\n", "initialized memory management");
+    // initializing memory management
+    memory::init(mboot);
+    kstd::kmesg(true, "%s\n", "initialized memory management");
 
-    /* initializing initial ramdisk */
-    fs::initrd_init();
-    lib::kmesg(true, "%s\n", "initialized initial ramdisk");
+    // initializing initial ramdisk
+    fs::initrd::init();
+    kstd::kmesg(true, "%s\n", "initialized initial ramdisk");
 
-    /* initializing Virtual File System */
-    fs::vfs_adapter_t *initrd_adapter = fs::initrd_get_adapter();
+    // initializing Virtual File System
+    fs::vfs::fs_adapter *initrd_adapter = fs::initrd::get_adapter();
 
-    fs::vfs_init(fs_type_t::INITRD, initrd_adapter);
-    lib::kmesg(true, "%s\n", "initialized Virtual File System");
+    fs::vfs::init(fs::vfs::fs_type::INITRD, initrd_adapter);
+    kstd::kmesg(true, "%s\n", "initialized Virtual File System");
 
     test_initrd();
 
     // Disabled for debugging
-    // kernel::login::login_init();
+    // login::init();
 
-    kernel::lib::printk("\n\nLogged in at %s \n", __TIME__);
-    kernel::info::display_general_info();
-    kernel::lib::printk("%s\n", "The programs included in NOS are free software.\n"
+    kstd::printk("\n\nLogged in at %s \n", __TIME__);
+    info::display_general_info();
+    kstd::printk("%s\n", "The programs included in NOS are free software.\n"
     "The software is provided \"as is\", without warranty of any kind.\n");
 
-    /* initializing kernel shell */
-    kernel::shell::ksh_init();
+    // initializing kernel shell
+    shell::init();
 }
 
 } // namespace core
@@ -121,5 +130,5 @@ extern "C" void kmain(kernel::u32 magic, multiboot_t *mboot)
     multiboot_t boot_info = *mboot;
     
     kernel::core::kboot(magic, boot_info);
-    kernel::lib::khalt();
+    kernel::kstd::khalt();
 }

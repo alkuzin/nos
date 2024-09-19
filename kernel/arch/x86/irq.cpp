@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <arch/x86/system.hpp>
-#include <arch/x86/idt.hpp>
-#include <arch/x86/irq.hpp>
-#include <arch/x86/io.hpp>
-#include <nos/panic.hpp>
+#include <kernel/arch/x86/system.hpp>
+#include <kernel/arch/x86/idt.hpp>
+#include <kernel/arch/x86/irq.hpp>
+#include <kernel/arch/x86/io.hpp>
+#include <kernel/kstd/cstdio.hpp>
 
 
 namespace kernel {
@@ -97,5 +97,5 @@ extern "C" void irq_handler(kernel::arch::x86::int_reg_t *regs)
 extern "C" void isr_handler(kernel::arch::x86::int_reg_t *regs)
 {
     if(regs->int_no < 32)
-        kernel::lib::panic(" %s\n", kernel::arch::x86::exception_msgs[regs->int_no]);
+        kernel::kstd::panic(" %s\n", kernel::arch::x86::exception_msgs[regs->int_no]);
 }

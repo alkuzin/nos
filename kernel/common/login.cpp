@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/keyboard.hpp>
-#include <nos/version.hpp>
-#include <nos/printk.hpp>
-#include <nos/nosstd.hpp>
-#include <nos/string.hpp>
-#include <nos/ctype.hpp>
-#include <nos/login.hpp>
-#include <nos/tty.hpp>
+#include <kernel/drivers/keyboard.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/ctype.hpp>
+#include <kernel/version.hpp>
+#include <kernel/login.hpp>
+#include <kernel/tty.hpp>
 
 
 namespace kernel {
@@ -35,32 +35,32 @@ void login_init(void)
     char login[MAX_USERNAME_SIZE];
     s32  attempts;
     
-    gfx::tty_clear();
-    driver::keyboard_init();
+    tty::clear();
+    driver::keyboard::init();
 
-    lib::printk("%s", LOGIN_BANNER);
+    kstd::printk("%s", LOGIN_BANNER);
 
     info::display_general_info();
     info::display_build_info();
 
-    lib::kputchar('\n');
+    tty::kputchar('\n');
 
     attempts = MAX_ATTEMPTS;
 
     do {
-        lib::printk("%s", "login: ");
+        kstd::printk("%s", "login: ");
         getinput(login, MAX_USERNAME_SIZE);
         
-        if (lib::strncmp(login, USERNAME, MAX_USERNAME_SIZE) != 0) {
-            lib::printk("nos: %s\n", "incorrect login");
+        if (kstd::strncmp(login, USERNAME, MAX_USERNAME_SIZE) != 0) {
+            kstd::printk("nos: %s\n", "incorrect login");
             break;
         }
 
-        lib::printk("%s", "password: ");
+        kstd::printk("%s", "password: ");
         getinput(password, SUPER_SECURE_PASSWORD_SIZE);
     
-        if (lib::strncmp(password, SUPER_SECURE_PASSWORD, SUPER_SECURE_PASSWORD_SIZE) != 0)
-            lib::printk("nos: %s\n", "incorrect password");
+        if (kstd::strncmp(password, SUPER_SECURE_PASSWORD, SUPER_SECURE_PASSWORD_SIZE) != 0)
+            kstd::printk("nos: %s\n", "incorrect password");
         else
             return;
         
@@ -77,11 +77,11 @@ void getinput(char *buffer, u32 size)
 
     i = 0;
 
-    if (size > driver::INPUT_BUFFER_SIZE)
-        size = driver::INPUT_BUFFER_SIZE;
+    if (size > driver::keyboard::INPUT_BUFFER_SIZE)
+        size = driver::keyboard::INPUT_BUFFER_SIZE;
 
     do {
-        cc = (char)driver::keyboard_getchar();
+        cc = (char)driver::keyboard::getchar();
 
         if(cc != 0 && cc != '\n') {    
             if (cc == '\b' && i == 0)
@@ -92,9 +92,9 @@ void getinput(char *buffer, u32 size)
                 buffer[i] = 0;
             }
             
-            lib::kputchar(cc);
+            tty::kputchar(cc);
 
-            if(i < size && lib::isprint(cc)) {
+            if(i < size && kstd::isprint(cc)) {
                 buffer[i] = cc;
                 i++;
             }
@@ -103,7 +103,7 @@ void getinput(char *buffer, u32 size)
     } while(cc != '\n');
 
     buffer[i] = '\0';
-    lib::kputchar('\n');
+    tty::kputchar('\n');
 }
     
 } // namespace login

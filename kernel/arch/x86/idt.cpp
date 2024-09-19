@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <arch/x86/idt.hpp>
-#include <arch/x86/irq.hpp>
-#include <arch/x86/io.hpp>
-#include <nos/string.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/arch/x86/idt.hpp>
+#include <kernel/arch/x86/irq.hpp>
+#include <kernel/arch/x86/io.hpp>
 
 
 extern "C" void idt_flush(kernel::u32);
@@ -37,7 +37,7 @@ void idt_init(void)
     idt_ptr.limit = sizeof(idt_entries) - 1;
     idt_ptr.base  = (u32) &idt_entries;
 
-    lib::bzero(&idt_entries, sizeof(idt_entries));
+    kstd::bzero(&idt_entries, sizeof(idt_entries));
 
     /* chips initialization mode */
     arch::x86::outb(0x20, 0x11);

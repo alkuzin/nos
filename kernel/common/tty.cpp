@@ -16,244 +16,240 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/vbefont.hpp>
-#include <nos/printk.hpp>
-#include <nos/nosstd.hpp>
-#include <nos/string.hpp>
-#include <nos/ctype.hpp>
-#include <nos/types.hpp>
-#include <nos/timer.hpp>
-#include <nos/tty.hpp>
-#include <nos/gfx.hpp>
+#include <kernel/drivers/timer.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/gfx/vbefont.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/ctype.hpp>
+#include <kernel/kstd/types.hpp>
+#include <kernel/gfx/gfx.hpp>
+#include <kernel/tty.hpp>
 
 
 namespace kernel {
-namespace gfx {
+namespace tty {
 
 /** @brief Screen scroll function */
-void tty_scroll(void);
+void scroll(void);
 
-/* main kernel TTY structure */
-static tty_t tty;
+/* main kernel terminal.structure */
+static tty_t terminal;
 
 
-void tty_init(void)
+void init(void)
 {
-    tty.x_pos  			= 0;
-    tty.y_pos  			= 0;
-    tty.fg     			= gfx::TTY_FG_COLOR;
-    tty.bg     			= TTY_BG_COLOR;
-    tty.height 			= gfx_get_height();
-    tty.width  			= gfx_get_width();
-	tty.primary_color   = TTY_FG_COLOR;
-	tty.secondary_color = TTY_BG_COLOR;
-	tty.prev_fg 		= TTY_FG_COLOR;
-	tty.prev_bg 		= TTY_BG_COLOR;
-	tty.primary_color   = TTY_FG_COLOR;
-	tty.secondary_color = TTY_BG_COLOR;
+    terminal.x_pos			 = 0;
+    terminal.y_pos			 = 0;
+    terminal.fg				 = FG_COLOR;
+    terminal.bg				 = BG_COLOR;
+    terminal.height			 = gfx::get_height();
+    terminal.width			 = gfx::get_width();
+	terminal.primary_color   = FG_COLOR;
+	terminal.secondary_color = BG_COLOR;
+	terminal.prev_fg		 = FG_COLOR;
+	terminal.prev_bg		 = BG_COLOR;
+	terminal.primary_color   = FG_COLOR;
+	terminal.secondary_color = BG_COLOR;
 }
 
-s32 tty_get_x(void)
+s32 get_x(void)
 {
-    return tty.x_pos;
+    return terminal.x_pos;
 }
 
-s32 tty_get_y(void)
+s32 get_y(void)
 {
-    return tty.y_pos;
+    return terminal.y_pos;
 }
 
-void tty_set_x(s32 x)
+void set_x(s32 x)
 {
-    tty.x_pos = x;
+    terminal.x_pos = x;
 }
 
-void tty_set_y(s32 y)
+void set_y(s32 y)
 {
-    tty.y_pos = y;
+    terminal.y_pos = y;
 }
 
-rgb tty_get_fg(void)
+gfx::rgb get_fg(void)
 {
-    return tty.fg;
+    return terminal.fg;
 }
 
-rgb tty_get_bg(void)
+gfx::rgb get_bg(void)
 {
-    return tty.bg;
+    return terminal.bg;
 }
 
-rgb tty_get_primary_color(void)
+gfx::rgb get_primary_color(void)
 {
-	return tty.primary_color;
+	return terminal.primary_color;
 }
 
-rgb tty_get_secondary_color(void)
+gfx::rgb get_secondary_color(void)
 {
-	return tty.secondary_color;
+	return terminal.secondary_color;
 }
 
-void tty_set_primary_color(rgb color)
+void set_primary_color(gfx::rgb color)
 {
-	tty.prev_prim_color = tty.primary_color;
-	tty.primary_color   = color;
+	terminal.prev_prim_color = terminal.primary_color;
+	terminal.primary_color   = color;
 }
 
-void tty_set_secondary_color(rgb color)
+void set_secondary_color(gfx::rgb color)
 {
-	tty.prev_sec_color  = tty.secondary_color;
-	tty.secondary_color = color;
+	terminal.prev_sec_color  = terminal.secondary_color;
+	terminal.secondary_color = color;
 }
 
-void tty_set_color(rgb fg, rgb bg)
+void set_color(gfx::rgb fg, gfx::rgb bg)
 {
-	tty.prev_fg = tty.fg;
-	tty.prev_bg = tty.bg;
-    tty.fg 		= fg;
-    tty.bg 		= bg;
+	terminal.prev_fg = terminal.fg;
+	terminal.prev_bg = terminal.bg;
+    terminal.fg 		= fg;
+    terminal.bg 		= bg;
 }
 
-s32  tty_get_height(void)
+s32  get_height(void)
 {
-    return tty.height;
+    return terminal.height;
 }
 
-s32  tty_get_width(void)
+s32  get_width(void)
 {
-    return tty.width;
+    return terminal.width;
 }
 
-void tty_kputchar_at(char c, s32 x, s32 y, rgb fg, rgb bg)
+void kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg)
 {
-	gfx_draw_char((u8)c, x, y, fg, bg, true);
+	gfx::draw_char((u8)c, x, y, fg, bg, true);
 }
 
-void tty_scroll(void)
+void scroll(void)
 {
-	u32 *framebuffer = gfx_get_framebuffer();
-	u16 pitch		 = gfx_get_pitch();
-	u32 size		 = static_cast<u32>(tty.height) * pitch;
+	u32 *framebuffer = gfx::get_framebuffer();
+	u16 pitch		 = gfx::get_pitch();
+	u32 size		 = static_cast<u32>(terminal.height) * pitch;
 	u32 offset;
 
     for (u32 i = 0; i < size; i++) {
-		offset         = i + static_cast<u32>(tty.width) * VBE_CHAR_HEIGHT;
+		offset         = i + static_cast<u32>(terminal.width) * gfx::VBE_CHAR_HEIGHT;
         framebuffer[i] = framebuffer[offset];
     }
 
-	auto pos = size - tty.width * VBE_CHAR_HEIGHT;
-	kernel::lib::bzero(&framebuffer[pos], size - pos);
+	auto pos = size - terminal.width * gfx::VBE_CHAR_HEIGHT;
+	kstd::bzero(&framebuffer[pos], size - pos);
 }
 
-void tty_clear(void)
+void clear(void)
 {
-	gfx_fill_screen(tty.bg);
+	gfx::fill_screen(terminal.bg);
 	
-    tty_set_x(0);
-    tty_set_y(0);
+    set_x(0);
+    set_y(0);
 }
 
-void tty_update(void)
+void update(void)
 {
-	rgb pixel;
+	gfx::rgb pixel;
 
-    for (s32 y = 0; y < tty.height; y++) {
-        for (s32 x = 0; x < tty.width; x++) {
-			pixel = gfx_get_pixel(x, y);
+    for (s32 y = 0; y < terminal.height; y++) {
+        for (s32 x = 0; x < terminal.width; x++) {
+			pixel = gfx::get_pixel(x, y);
 
-			if (gfx_rgb_compare(pixel, tty.prev_fg))
-            	gfx_draw_pixel(x, y, tty.fg);
-			else if (gfx_rgb_compare(pixel, tty.prev_bg))
-            	gfx_draw_pixel(x, y, tty.bg);
-			else if (gfx_rgb_compare(pixel, tty.prev_prim_color))
-            	gfx_draw_pixel(x, y, tty.primary_color);
-			else if (gfx_rgb_compare(pixel, tty.prev_sec_color))
-            	gfx_draw_pixel(x, y, tty.secondary_color);
+			if (gfx::rgb_compare(pixel, terminal.prev_fg))
+            	gfx::draw_pixel(x, y, terminal.fg);
+			else if (gfx::rgb_compare(pixel, terminal.prev_bg))
+            	gfx::draw_pixel(x, y, terminal.bg);
+			else if (gfx::rgb_compare(pixel, terminal.prev_prim_color))
+            	gfx::draw_pixel(x, y, terminal.primary_color);
+			else if (gfx::rgb_compare(pixel, terminal.prev_sec_color))
+            	gfx::draw_pixel(x, y, terminal.secondary_color);
 			else
-            	gfx_draw_pixel(x, y, tty.fg);
+            	gfx::draw_pixel(x, y, terminal.fg);
 		}
     }
 }
 
-void tty_printc(const char *str, rgb fg, rgb bg)
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg)
 {
     u32 i = 0;
 
     while(str[i]) {
-        lib::kputchar_c(str[i], fg, bg);
+        kputchar_c(str[i], fg, bg);
         i++;
 	}
 }
 
-} // namespace gfx
-
-namespace lib {
-
 void kputchar(const s32 c)
 {
-	kputchar_c(c, gfx::tty.fg, gfx::tty.bg);
+	kputchar_c(c, terminal.fg, terminal.bg);
 }
 
 void kputchar_c(const s32 c, gfx::rgb fg, gfx::rgb bg)
 {
 	s32 rows_to_scroll;
 
-	if(gfx::tty.x_pos >= gfx::tty.width) {
-		gfx::tty.x_pos = 0;
-		gfx::tty.y_pos += VBE_CHAR_HEIGHT;
+	if(terminal.x_pos >= terminal.width) {
+		terminal.x_pos = 0;
+		terminal.y_pos += gfx::VBE_CHAR_HEIGHT;
 	}
 
 	switch(c) {
 		case '\n':
-			for (s32 i = 0; i < gfx::tty.width / VBE_CHAR_WIDTH; i++) {
-            	gfx::tty_kputchar_at(' ', gfx::tty.x_pos, gfx::tty.y_pos, fg, bg);
-			    gfx::tty.x_pos += VBE_CHAR_WIDTH;
+			for (s32 i = 0; i < terminal.width / gfx::VBE_CHAR_WIDTH; i++) {
+            	kputchar_at(' ', terminal.x_pos, terminal.y_pos, fg, bg);
+			    terminal.x_pos += gfx::VBE_CHAR_WIDTH;
 			}
 
-			gfx::tty.y_pos += VBE_CHAR_HEIGHT;
-			gfx::tty.x_pos = 0;
+			terminal.y_pos += gfx::VBE_CHAR_HEIGHT;
+			terminal.x_pos = 0;
 			
 			break;
 		
 		case '\t':
-			for (s32 i = 0; i < TTY_TAB_WIDTH; i++) {
-            	gfx::tty_kputchar_at(' ', gfx::tty.x_pos, gfx::tty.y_pos, fg, bg);
-				gfx::tty.x_pos += VBE_CHAR_WIDTH;
+			for (s32 i = 0; i < TAB_WIDTH; i++) {
+            	kputchar_at(' ', terminal.x_pos, terminal.y_pos, fg, bg);
+				terminal.x_pos += gfx::VBE_CHAR_WIDTH;
 			}
 			break;
 		
 		case '\v':
-			gfx::tty.y_pos += VBE_CHAR_HEIGHT;
+			terminal.y_pos += gfx::VBE_CHAR_HEIGHT;
 			break;
 		
 		case '\r':
-			gfx::tty.x_pos = 0;
+			terminal.x_pos = 0;
 			break;
 		
 		case '\b':
-            gfx::tty.x_pos -= VBE_CHAR_WIDTH;
+            terminal.x_pos -= gfx::VBE_CHAR_WIDTH;
             
-            if(!gfx::tty.x_pos && gfx::tty.y_pos) {
-			    gfx::tty.y_pos -= VBE_CHAR_HEIGHT;
-                gfx::tty.x_pos = gfx::tty.width;
+            if(!terminal.x_pos && terminal.y_pos) {
+			    terminal.y_pos -= gfx::VBE_CHAR_HEIGHT;
+                terminal.x_pos = terminal.width;
             }
 			
-            gfx::tty_kputchar_at(' ', gfx::tty.x_pos, gfx::tty.y_pos, fg, bg);
+            kputchar_at(' ', terminal.x_pos, terminal.y_pos, fg, bg);
 			break;
 		
 		default:
-            if(lib::isprint(c)) {
-            	tty_kputchar_at(c, gfx::tty.x_pos, gfx::tty.y_pos, fg, bg);
-			    gfx::tty.x_pos += VBE_CHAR_WIDTH;
+            if(kstd::isprint(c)) {
+            	kputchar_at(c, terminal.x_pos, terminal.y_pos, fg, bg);
+			    terminal.x_pos += gfx::VBE_CHAR_WIDTH;
             }
 			break;
 	};
 
-	if (gfx::tty.y_pos >= gfx::tty.height) {
-        rows_to_scroll = (gfx::tty.y_pos - gfx::tty.height) / VBE_CHAR_HEIGHT + 1;
-        gfx::tty_scroll();
-        gfx::tty.y_pos -= rows_to_scroll * VBE_CHAR_HEIGHT;
+	if (terminal.y_pos >= terminal.height) {
+        rows_to_scroll = (terminal.y_pos - terminal.height) / gfx::VBE_CHAR_HEIGHT + 1;
+        scroll();
+        terminal.y_pos -= rows_to_scroll * gfx::VBE_CHAR_HEIGHT;
     }
 }
 
-} // namespace lib
+} // namespace tty
 } // namespace kernel

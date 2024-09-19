@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/version.hpp>
+#include <kernel/version.hpp>
 
 
 namespace kernel {

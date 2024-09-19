@@ -16,19 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/shell/ksh.hpp>
-#include <nos/shell/ls.hpp>
-#include <nos/keyboard.hpp>
-#include <nos/version.hpp>
-#include <nos/string.hpp>
-#include <nos/printk.hpp>
-#include <nos/kernel.hpp>
-#include <nos/nosstd.hpp>
-#include <nos/stdlib.hpp>
-#include <nos/ctype.hpp>
-#include <nos/login.hpp>
-#include <nos/tty.hpp>
-#include <nos/mm.hpp>
+#include <kernel/drivers/keyboard.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/ctype.hpp>
+#include <kernel/shell/ksh.hpp>
+#include <kernel/shell/ls.hpp>
+#include <kernel/version.hpp>
+#include <kernel/kernel.hpp>
+#include <kernel/login.hpp>
+#include <kernel/tty.hpp>
+#include <kernel/mm.hpp>
 
 
 namespace kernel {
@@ -37,15 +36,15 @@ namespace shell {
 static gfx::rgb primary_color, secondary_color;
 
 /** @brief Display promt for user input. */
-static constexpr inline void ksh_display_prompt(void) noexcept
+static constexpr inline void display_prompt(void) noexcept
 {
-    primary_color   = gfx::tty_get_primary_color();
-    secondary_color = gfx::tty_get_secondary_color();
+    primary_color   = tty::get_primary_color();
+    secondary_color = tty::get_secondary_color();
 
-    tty_printc(USERNAME, primary_color, secondary_color);
-    lib::kputchar('@');
-    tty_printc("nos", primary_color, secondary_color);
-    lib::putk(":-/ ");
+    tty::printc(USERNAME, primary_color, secondary_color);
+    tty::kputchar('@');
+    tty::printc("nos", primary_color, secondary_color);
+    kstd::putk(":-/ ");
 }
 
 /**
@@ -59,30 +58,30 @@ static constexpr inline void ksh_display_prompt(void) noexcept
  * @return 0 - if command is correct.
  * @return -1 - otherwise.
  */
-static inline s32 ksh_is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len) noexcept
+static inline s32 is_valid(const char *cmd, const s32 cmd_len, const char *input, const s32 input_len) noexcept
 {
-    return (cmd_len == input_len) && (lib::strncmp(cmd, input, cmd_len) == 0);
+    return (cmd_len == input_len) && (kstd::strncmp(cmd, input, cmd_len) == 0);
 }
 
 
-void ksh_init(void)
+void init(void)
 {
-    char input_buffer[driver::INPUT_BUFFER_SIZE];
+    char input_buffer[driver::keyboard::INPUT_BUFFER_SIZE];
     u32  buf_pos = 0;
     char cc;
 
     // initializing keyboard
-    driver::keyboard_init();
+    driver::keyboard::init();
 
     // clear user input buffer
-    lib::bzero(input_buffer, sizeof(input_buffer));
-    lib::kputchar('\n');
+    kstd::bzero(input_buffer, sizeof(input_buffer));
+    tty::kputchar('\n');
 
     for(;;) {
-        ksh_display_prompt();
+        display_prompt();
         
         do {
-            cc = (char) driver::keyboard_getchar();
+            cc = static_cast<char>(driver::keyboard::getchar());
 
             if(cc != 0 && cc != '\n') {
 
@@ -94,9 +93,9 @@ void ksh_init(void)
                     input_buffer[buf_pos] = 0;
                 }
             
-                lib::kputchar(cc);
+                tty::kputchar(cc);
 
-                if(buf_pos < driver::INPUT_BUFFER_SIZE && lib::isprint(cc)) {
+                if(buf_pos < driver::keyboard::INPUT_BUFFER_SIZE && kstd::isprint(cc)) {
                     input_buffer[buf_pos] = cc;
                     buf_pos++;
                 }
@@ -105,64 +104,64 @@ void ksh_init(void)
         } while(cc != '\n');
 
         input_buffer[buf_pos] = '\0';
-        lib::kputchar('\n');
+        tty::kputchar('\n');
 
         if(input_buffer[0])
-            ksh_exec(input_buffer);
+            exec(input_buffer);
 
-        lib::bzero(input_buffer, sizeof(input_buffer));
+        kstd::bzero(input_buffer, sizeof(input_buffer));
         buf_pos = 0;
     }
     
-    lib::khalt(); 
+    kstd::khalt(); 
 }
 
-s32 ksh_exec(char *cmd)
+s32 exec(char *cmd)
 {
-    [[gnu::unused]]s32 cmd_len = lib::strlen(cmd);
+    [[gnu::unused]]s32 cmd_len = kstd::strlen(cmd);
     
-    if(ksh_is_valid("free", 4, cmd, cmd_len))
-        ksh_free();
-    else if(ksh_is_valid("clear", 5, cmd, cmd_len))
-        ksh_clear();
-    else if(ksh_is_valid("help", 4, cmd, cmd_len) || ksh_is_valid("?", 1, cmd, cmd_len))
-        ksh_help();
-    else if(ksh_is_valid("theme", 5, cmd, 5)) {
+    if(is_valid("free", 4, cmd, cmd_len))
+        free();
+    else if(is_valid("clear", 5, cmd, cmd_len))
+        clear();
+    else if(is_valid("help", 4, cmd, cmd_len) || is_valid("?", 1, cmd, cmd_len))
+        help();
+    else if(is_valid("theme", 5, cmd, 5)) {
         char *theme_type;
 
-        theme_type = lib::strtok(cmd, " ");
-        theme_type = lib::strtok(nullptr, " ");
+        theme_type = kstd::strtok(cmd, " ");
+        theme_type = kstd::strtok(nullptr, " ");
 
         if (theme_type)
-            ksh_theme(static_cast<theme_t>(lib::atoi(theme_type)));
+            theme(static_cast<theme_t>(kstd::atoi(theme_type)));
         else
-            lib::printk(" theme: %s\n", "incorrect argument\n");
+            kstd::printk(" theme: %s\n", "incorrect argument\n");
     }
-    else if(ksh_is_valid("ps", 2, cmd, cmd_len))
-        ksh_ps();
-    else if(ksh_is_valid("ls", 2, cmd, cmd_len))
-        ksh_ls();
-    else if(ksh_is_valid("cat", 3, cmd, 3)) {
+    else if(is_valid("ps", 2, cmd, cmd_len))
+        ps();
+    else if(is_valid("ls", 2, cmd, cmd_len))
+        ls();
+    else if(is_valid("cat", 3, cmd, 3)) {
         char *pathname;
 
-        pathname = lib::strtok(cmd, " ");
-        pathname = lib::strtok(nullptr, " ");
+        pathname = kstd::strtok(cmd, " ");
+        pathname = kstd::strtok(nullptr, " ");
 
         if (pathname)
-            ksh_cat(pathname);
+            cat(pathname);
         else
-            lib::printk("cat: %s\n", "incorrect argument\n");
+            kstd::printk("cat: %s\n", "incorrect argument\n");
     }
-    else if(ksh_is_valid("gfx", 3, cmd, 3))
-        gfx::gfx_test();
-    else if(ksh_is_valid("uname", 5, cmd, 5))
+    else if(is_valid("gfx", 3, cmd, 3))
+        gfx::test();
+    else if(is_valid("uname", 5, cmd, 5))
         info::display_general_info();
-    else if(ksh_is_valid("reboot", 5, cmd, 5))
-        ksh_reboot();
-    else if(ksh_is_valid("shutdown", 8, cmd, 8))
-        ksh_shutdown();
+    else if(is_valid("reboot", 5, cmd, 5))
+        reboot();
+    else if(is_valid("shutdown", 8, cmd, 8))
+        shutdown();
     else {
-        ksh_warning(cmd);
+        warning(cmd);
         return -1;
     }
 

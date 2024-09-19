@@ -38,7 +38,7 @@ namespace tty {
 // Default kernel TTY foreground & background color.
 constexpr gfx::rgb FG_COLOR  {gfx::RGB(255, 255, 255)};
 constexpr gfx::rgb BG_COLOR  {gfx::RGB(0, 0, 204)};
-constexpr u32      TAB_WIDTH {4};
+constexpr s32      TAB_WIDTH {4};
 
 // TTY management structure.
 struct tty_t {
@@ -145,14 +145,14 @@ void set_color(gfx::rgb fg, gfx::rgb bg);
  * 
  * @return current screen height.
  */
-s32  get_height(void);
+s32 get_height(void);
 
 /**
  * @brief Get screen width.
  * 
  * @return current screen width.
  */
-s32  get_width(void);
+s32 get_width(void);
 
 /** @brief Clear screen. */ 
 void clear(void);
@@ -179,10 +179,6 @@ void kputchar_at(char c, s32 x, s32 y, gfx::rgb fg, gfx::rgb bg);
  * @param [in] bg - given background color.
  */
 void printc(const char *str, gfx::rgb fg, gfx::rgb bg);
-
-} // namespace gfx
-
-namespace lib {
 
 /**
  * @brief Print character to screen.

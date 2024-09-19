@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/nosstd.hpp>
+#include <kernel/kstd/cstdlib.hpp>
 
 
 extern "C" void __cxa_construct(void *obj, void *type_info)
@@ -33,7 +33,7 @@ extern "C" void __cxa_desstruct(void *obj, void *type_info)
 
 extern "C" void *__cxa_new(kernel::usize size)
 {
-    return kernel::lib::kmalloc(size);
+    return kernel::kstd::kmalloc(size);
 }
 
 extern "C" void __cxa_delete(void *ptr, void (*destructor)(void*))
@@ -42,19 +42,19 @@ extern "C" void __cxa_delete(void *ptr, void (*destructor)(void*))
         if (destructor)
             destructor(ptr);
         
-        kernel::lib::kfree(ptr);
+        kernel::kstd::kfree(ptr);
     }
 }
 
 void *operator new(kernel::u32 size)
 {
-    return kernel::lib::kmalloc(size);
+    return kernel::kstd::kmalloc(size);
 }
 
 void operator delete(void *ptr, kernel::u32 size)
 {
     if (ptr)
-        kernel::lib::kfree(ptr);
+        kernel::kstd::kfree(ptr);
 
     (void)size;
 }
@@ -62,5 +62,5 @@ void operator delete(void *ptr, kernel::u32 size)
 void operator delete(void *ptr)
 {
     if (ptr)
-        kernel::lib::kfree(ptr);
+        kernel::kstd::kfree(ptr);
 }

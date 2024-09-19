@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <arch/x86/gdt.hpp>
-#include <nos/string.hpp>
+#include <kernel/kstd/cstring.hpp>
+#include <kernel/arch/x86/gdt.hpp>
 
 
 extern "C" void gdt_flush(kernel::u32);
@@ -88,7 +88,7 @@ void tss_write(u32 num, u16 ss0, u32 esp0)
     limit = base + sizeof(tss_entry);
 
     set_gdt_gate(num, base, limit, 0xE9, 0x00);
-    lib::bzero(&tss_entry, sizeof(tss_entry));
+    kstd::bzero(&tss_entry, sizeof(tss_entry));
 
     tss_entry.ss0  = ss0;
     tss_entry.esp0 = esp0;

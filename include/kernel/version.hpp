@@ -29,7 +29,7 @@
 #ifndef _KERNEL_INFO_VERSION_HPP_
 #define _KERNEL_INFO_VERSION_HPP_
 
-#include <kernel/kstd/stdlib.hpp> // TODO: replace with stdio
+#include <kernel/kstd/cstdio.hpp> // TODO: replace with stdio
 
 
 namespace kernel {

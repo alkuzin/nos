@@ -13,58 +13,71 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 
 # Set paths
+set(BOOT_DIR             ${CMAKE_SOURCE_DIR}/../boot)
+set(DRIVERS_DIR          ${CMAKE_SOURCE_DIR}/../drivers)
+set(FS_DIR               ${CMAKE_SOURCE_DIR}/../fs)
+set(GFX_DIR              ${CMAKE_SOURCE_DIR}/../gfx)
 set(INCLUDE_DIR          ${CMAKE_SOURCE_DIR}/../include)
 set(KERNEL_DIR           ${CMAKE_SOURCE_DIR}/../kernel)
-set(BOOT_DIR             ${CMAKE_SOURCE_DIR}/../boot)
-set(LIB_DIR              ${CMAKE_SOURCE_DIR}/../lib)
+set(KSTD_DIR             ${CMAKE_SOURCE_DIR}/../kstd)
 set(KERNEL_ARCH_X86_DIR  ${KERNEL_DIR}/arch/x86)
-set(KERNEL_DRIVERS_DIR   ${KERNEL_DIR}/drivers)
 set(KERNEL_COMMON_DIR    ${KERNEL_DIR}/common)
-set(KERNEL_SHELL_DIR     ${KERNEL_DIR}/shell)
-set(KERNEL_GFX_DIR       ${KERNEL_DIR}/gfx)
-set(KERNEL_FS_DIR        ${KERNEL_DIR}/fs)
 set(KERNEL_MM_DIR        ${KERNEL_DIR}/mm)
+set(KERNEL_SHELL_DIR     ${KERNEL_DIR}/shell)
 
-# List of kernel library source files
-set(LIB_SOURCES
-    "${LIB_DIR}/math/math.cpp"
-    "${LIB_DIR}/string/string.cpp"
-    "${LIB_DIR}/stdlib/stdlib.cpp"
-    "${LIB_DIR}/stdlib/sort.cpp"
-    "${LIB_DIR}/stdlib/panic.cpp"
-    "${LIB_DIR}/stdlib/printk.cpp"
-    "${LIB_DIR}/stdlib/vsnprintk.cpp"
+set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
+
+# List of kernel standard library source files
+set(KSTD_SOURCES
+    # math
+    "${KSTD_DIR}/math/math.cpp"
+    
+    # stdio
+    "${KSTD_DIR}/stdio/cstdio.cpp"
+    "${KSTD_DIR}/stdio/vsnprintk.cpp"
+    
+    # stdlib
+    "${KSTD_DIR}/stdlib/cstdlib.cpp"
+    "${KSTD_DIR}/stdlib/sort.cpp"
+    
+    # string
+    "${KSTD_DIR}/string/cstring.cpp"
+)
+
+# List of kernel drivers source files
+set(DRIVERS_SOURCES
+    "${DRIVERS_DIR}/keyboard.cpp"
+    "${DRIVERS_DIR}/timer.cpp"
+    "${DRIVERS_DIR}/vbe.cpp"
+)
+
+# List of kernel filesystem source files
+set(FS_SOURCES
+    "${FS_DIR}/initrd.cpp"
+    "${FS_DIR}/vfs.cpp"
+)
+
+# List of kernel graphics source files
+set(GFX_SOURCES
+    "${GFX_DIR}/vbefont.cpp"
+    "${GFX_DIR}/gfx.cpp"
 )
 
 # List of kernel core source files
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
     "${KERNEL_DIR}/version.cpp"
-    "${KERNEL_DIR}/cxa.cpp"
-
-    # Kernel common directory:
-    "${KERNEL_COMMON_DIR}/login.cpp"
-    "${KERNEL_COMMON_DIR}/nosstd.cpp"
-    "${KERNEL_COMMON_DIR}/tty.cpp"
     
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
     "${KERNEL_ARCH_X86_DIR}/idt.cpp"
     "${KERNEL_ARCH_X86_DIR}/irq.cpp"
 
-    # Kernel drivers directory:
-    "${KERNEL_DRIVERS_DIR}/keyboard.cpp"
-    "${KERNEL_DRIVERS_DIR}/timer.cpp"
-
-    # Kernel fs directory:
-    "${KERNEL_FS_DIR}/initrd.cpp"
-    "${KERNEL_FS_DIR}/vfs.cpp"
-
-    # Kernel gfx directory:
-    "${KERNEL_GFX_DIR}/gfx.cpp"
-    "${KERNEL_GFX_DIR}/vbe.cpp"
-    "${KERNEL_GFX_DIR}/vbefont.cpp"
-
+    # Kernel common directory:
+    "${KERNEL_COMMON_DIR}/cxa.cpp"
+    "${KERNEL_COMMON_DIR}/login.cpp"
+    "${KERNEL_COMMON_DIR}/tty.cpp"
+    
     # Kernel mm directory:
     "${KERNEL_MM_DIR}/kheap.cpp"
     "${KERNEL_MM_DIR}/mm.cpp"
@@ -86,7 +99,10 @@ set(ASM_SOURCES
 
 # List of all source files
 set(SOURCES
-    ${LIB_SOURCES}
+    ${KSTD_SOURCES}
+    ${DRIVERS_SOURCES}
+    ${FS_SOURCES}
+    ${GFX_SOURCES}
     ${KERNEL_SOURCES}
 )
 
@@ -140,7 +156,7 @@ add_library(kernel_objects OBJECT ${SOURCES} ${ASM_OBJECTS})
 target_compile_options(kernel_objects PRIVATE ${CXXFLAGS})
 
 # Include directories
-target_include_directories(kernel_objects PRIVATE ${INCLUDE_DIR} ${LIB_DIR})
+target_include_directories(kernel_objects PRIVATE ${INCLUDE_DIRECTORIES})
 
 # Executable that uses the object file
 add_executable(kernel ${ASM_OBJECTS} $<TARGET_OBJECTS:kernel_objects>)

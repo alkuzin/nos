@@ -16,30 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <nos/panic.hpp>
-#include <nos/mm.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/mm.hpp>
 
 
 namespace kernel {
 namespace core {
 namespace memory {
 
-void memory_init(const multiboot_t& mboot)
+void init(const multiboot_t& mboot)
 {
-    u32  start_addr, size;
+    u32 start_addr, size;
 
     if(!(mboot.flags >> 6 & 0x1))
-        lib::panic("%s\n", "invalid memory map given by GRUB bootloader");
+        kstd::panic("%s\n", "invalid memory map given by GRUB bootloader");
 
-    /* initializing physical memory manager */
+    // initializing physical memory manager
 
-    /* set start address, size of available memory
-     * set total, used & free physical memory */
-    pmm_get_memory(mboot, &start_addr, &size);
-    pmm_init(start_addr, size);
+    // set start address, size of available memory
+    // set total, used & free physical memory
+    pmm::get_memory(mboot, &start_addr, &size);
+    pmm::init(start_addr, size);
     
-    /* free some available blocks of memory */
-    pmm_region_init(start_addr, size);
+    // free some available blocks of memory
+    pmm::region_init(start_addr, size);
 }
 
 } // namespace memory
