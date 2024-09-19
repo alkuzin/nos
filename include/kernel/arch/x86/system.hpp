@@ -24,8 +24,8 @@
  * @date   17.05.2024 
  */
 
-#ifndef _ARCH_X86_SYSTEM_HPP_
-#define _ARCH_X86_SYSTEM_HPP_
+#ifndef _KERNEL_ARCH_X86_SYSTEM_HPP_
+#define _KERNEL_ARCH_X86_SYSTEM_HPP_
 
 namespace kernel {
 namespace arch {
@@ -58,4 +58,4 @@ constexpr inline void enable_paging(void) noexcept
 } // namespace arch
 } // namespace kernel
 
-#endif /* _ARCH_X86_SYSTEM_HPP_ */
+#endif // _KERNEL_ARCH_X86_SYSTEM_HPP_

@@ -34,42 +34,39 @@
  * @date   17.05.2024 
  */
 
-#ifndef _ARCH_X86_IRQ_HPP_
-#define _ARCH_X86_IRQ_HPP_
+#ifndef _KERNEL_ARCH_X86_IRQ_HPP_
+#define _KERNEL_ARCH_X86_IRQ_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
 namespace arch {
 namespace x86 {
 
-/** @brief Structure representing interrupt register state */
+/** @brief Structure representing interrupt register state.*/
 struct int_reg_s {
-    u32 cr2;        ///< Control Register 2
-    u32 ds;         ///< Data Segment
-    u32 edi;        ///< Destination Index
-    u32 esi;        ///< Source Index
-    u32 ebp;        ///< Base Pointer
-    u32 esp;        ///< Stack Pointer
-    u32 ebx;        ///< Base Register
-    u32 edx;        ///< Data Register
-    u32 ecx;        ///< Counter Register
-    u32 eax;        ///< Accumulator Register
-    u32 int_no;     ///< Interrupt Number
-    u32 err_code;   ///< Error Code
-    u32 eip;        ///< Instruction Pointer
-    u32 csm;        ///< Code Segment
-    u32 eflags;     ///< Flags Register
-    u32 useresp;    ///< User Stack Pointer
-    u32 ss;         ///< Stack Segment
-} __attribute__((packed)); /*Prevent the compiler from optimizing*/
+    u32 cr2;        // Control Register 2
+    u32 ds;         // Data Segment
+    u32 edi;        // Destination Index
+    u32 esi;        // Source Index
+    u32 ebp;        // Base Pointer
+    u32 esp;        // Stack Pointer
+    u32 ebx;        // Base Register
+    u32 edx;        // Data Register
+    u32 ecx;        // Counter Register
+    u32 eax;        // Accumulator Register
+    u32 int_no;     // Interrupt Number
+    u32 err_code;   // Error Code
+    u32 eip;        // Instruction Pointer
+    u32 csm;        // Code Segment
+    u32 eflags;     // Flags Register
+    u32 useresp;    // User Stack Pointer
+    u32 ss;         // Stack Segment
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-/** @brief Typedef for int_reg_s */
-typedef struct int_reg_s int_reg_t;
-
-/** @brief Typedef for IRQ handler function pointer */
-typedef void (*irq_handler_t) (int_reg_t *);
+using int_reg_t     = int_reg_s;
+using irq_handler_t = void (*)(int_reg_t *);
 
 /**
  * @brief ISR handler function.
@@ -104,7 +101,7 @@ void irq_uninstall_handler(int irq);
 } // namespace arch
 } // namespace kernel
 
-/** @brief Declare ISR functions for hardware interrupts 0-31. */
+/** @brief Declare ISR functions for hardware interrupts 0-31.*/
 extern "C" void isr0(void);
 extern "C" void isr1(void);
 extern "C" void isr2(void);
@@ -138,11 +135,11 @@ extern "C" void isr29(void);
 extern "C" void isr30(void);
 extern "C" void isr31(void);
 
-/** @brief Declare ISR functions for system calls. */
+/** @brief Declare ISR functions for system calls.*/
 extern "C" void isr128(void);
 extern "C" void isr177(void);
 
-/** @brief Declare ISR functions for hardware interrupts 0-15. */
+/** @brief Declare ISR functions for hardware interrupts 0-15.*/
 extern "C" void irq0(void);
 extern "C" void irq1(void);
 extern "C" void irq2(void);
@@ -160,4 +157,4 @@ extern "C" void irq13(void);
 extern "C" void irq14(void);
 extern "C" void irq15(void);
 
-#endif // _ARCH_X86_IRQ_HPP_
+#endif // _KERNEL_ARCH_X86_IRQ_HPP_

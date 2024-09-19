@@ -28,10 +28,10 @@
  * @date   17.05.2024 
  */
 
-#ifndef _ARCH_X86_IO_HPP_
-#define _ARCH_X86_IO_HPP_
+#ifndef _KERNEL_ARCH_X86_IO_HPP_
+#define _KERNEL_ARCH_X86_IO_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
@@ -77,4 +77,4 @@ constexpr inline u8 inb(u16 port) noexcept
 } // namespace arch
 } // namespace kernel
 
-#endif /* _ARCH_X86_IO_HPP_ */
+#endif // _KERNEL_ARCH_X86_IO_HPP_

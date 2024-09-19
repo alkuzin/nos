@@ -31,10 +31,10 @@
  * @date   15.05.2024 
  */
 
-#ifndef _ARCH_X86_GDT_HPP_
-#define _ARCH_X86_GDT_HPP_
+#ifndef _KERNEL_ARCH_X86_GDT_HPP_
+#define _KERNEL_ARCH_X86_GDT_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
@@ -53,52 +53,52 @@ struct gdt_entry_s {
     u8  access;
     u8  flags;
     u8  base_high;
-} __attribute__((packed)); /* prevent the compiler from optimizing */
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-typedef struct gdt_entry_s gdt_entry_t;
+using gdt_entry_t = gdt_entry_s;
 
-/** @brief GDT pointer structure. */
+/** @brief GDT pointer structure.*/
 struct gdt_ptr_s {
     u16 limit;
     u32 base;
-} __attribute__((packed)); /* prevent the compiler from optimizing */
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-typedef struct gdt_ptr_s gdt_ptr_t;
+using gdt_ptr_t = gdt_ptr_s;
 
-/** @brief TSS (Task State Segment) entry. */
+/** @brief TSS (Task State Segment) entry.*/
 struct tss_entry_s {
-    u32 prev_tss;   ///< previous TSS entry
-    u32 esp0;       ///< stack pointer register 0
-    u32 ss0;        ///< stack segment register 0
-    u32 esp1;       ///< stack pointer register 1
-    u32 ss1;        ///< stack segment register 1
-    u32 esp2;       ///< stack pointer register 2
-    u32 ss2;        ///< stack segment register 2
-    u32 cr3;        ///< control register
-    u32 eip;        ///< instruction pointer
-    u32 eflags;     ///< flags register
-    u32 eax;        ///< extended accumulator register
-    u32 ecx;        ///< extended counter register
-    u32 edx;        ///< extended data register
-    u32 ebx;        ///< extended base register
-    u32 esp;        ///< extended stack pointer
-    u32 ebp;        ///< extended base pointer
-    u32 esi;        ///< extended source index
-    u32 edi;        ///< extended destination index
-    u32 es;         ///< extra segment
-    u32 cs;         ///< code segment
-    u32 ss;         ///< stack segment
-    u32 ds;         ///< data segment
-    u32 fs;         ///< additional segment
-    u32 gs;         ///< global segment
-    u32 ldt;        ///< Local Descriptor Table register
-    u32 trap;       ///< flag in the EFLAGS register
-    u32 iomap_base; ///< input/output map base register
-} __attribute__((packed)); ///< prevent the compiler from optimizing
+    u32 prev_tss;   // previous TSS entry
+    u32 esp0;       // stack pointer register 0
+    u32 ss0;        // stack segment register 0
+    u32 esp1;       // stack pointer register 1
+    u32 ss1;        // stack segment register 1
+    u32 esp2;       // stack pointer register 2
+    u32 ss2;        // stack segment register 2
+    u32 cr3;        // control register
+    u32 eip;        // instruction pointer
+    u32 eflags;     // flags register
+    u32 eax;        // extended accumulator register
+    u32 ecx;        // extended counter register
+    u32 edx;        // extended data register
+    u32 ebx;        // extended base register
+    u32 esp;        // extended stack pointer
+    u32 ebp;        // extended base pointer
+    u32 esi;        // extended source index
+    u32 edi;        // extended destination index
+    u32 es;         // extra segment
+    u32 cs;         // code segment
+    u32 ss;         // stack segment
+    u32 ds;         // data segment
+    u32 fs;         // additional segment
+    u32 gs;         // global segment
+    u32 ldt;        // Local Descriptor Table register
+    u32 trap;       // flag in the EFLAGS register
+    u32 iomap_base; // input/output map base register
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-typedef struct tss_entry_s tss_entry_t;
+using tss_entry_t = tss_entry_s;
 
-/** @brief initialize Global Descriptor Table */
+/** @brief initialize Global Descriptor Table.*/
 void gdt_init(void);
 
 /**
@@ -125,4 +125,4 @@ void tss_write(u32 num, u16 ss0, u32 esp0);
 } // namespace arch
 } // namespace kernel
 
-#endif //_ARCH_X86_GDT_HPP_
+#endif //_KERNEL_ARCH_X86_GDT_HPP_

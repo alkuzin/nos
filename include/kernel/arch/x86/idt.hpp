@@ -28,36 +28,36 @@
  * @date   15.05.2024 
  */
 
-#ifndef _ARCH_X86_IDT_HPP_
-#define _ARCH_X86_IDT_HPP_
+#ifndef _KERNEL_ARCH_X86_IDT_HPP_
+#define _KERNEL_ARCH_X86_IDT_HPP_
 
-#include <nos/types.hpp>
+#include <kernel/kstd/types.hpp>
 
 
 namespace kernel {
 namespace arch {
 namespace x86 {
 
-/** @brief Interrupt Descriptor Table entry structure */
+/** @brief Interrupt Descriptor Table entry structure.*/
 struct idt_entry_s {
     u16 base_low;    
     u16 sel;    
     u8  always0;    
     u8  flags;    
     u16 base_high;    
-} __attribute__((packed)); /* prevent the compiler from optimizing */
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-typedef struct idt_entry_s idt_entry_t;
+using idt_entry_t = idt_entry_s;
 
-/** @brief Interrupt Descriptor Table pointer structure */
+/** @brief Interrupt Descriptor Table pointer structure.*/
 struct idt_ptr_s {
     u16 limit;
     u32 base;
-} __attribute__((packed)); /* prevent the compiler from optimizing */
+} __attribute__((packed)); // prevent the compiler from optimizing
 
-typedef struct idt_ptr_s idt_ptr_t;
+using idt_ptr_t = idt_ptr_s;
 
-/** @brief  initialize Interrupt Descriptor Table. */
+/** @brief  initialize Interrupt Descriptor Table.*/
 void idt_init(void);
 
 /**
@@ -74,4 +74,4 @@ void set_idt_gate(u8 num, u32 base, u16 sel, u8 flags);
 } // namespace arch
 } // namespace kernel
 
-#endif // _ARCH_X86_IDT_HPP_
+#endif // _KERNEL_ARCH_X86_IDT_HPP_
