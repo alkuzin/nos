@@ -30,7 +30,7 @@ const char *__os_build_time__         {__TIME__};
 const char *__os_compiler_version__   {__VERSION__};
 const u32   __os_version_major__      {0};
 const u32   __os_version_minor__      {3};
-const u32   __os_version_lower__      {0};
+const u32   __os_version_lower__      {5};
 
 } // namespace info
 } // namespace kernel
