@@ -28,6 +28,7 @@
 #define _KERNEL_KSTD_BITSET_HPP_
 
 #include <kernel/kstd/cstring.hpp>
+#include <kernel/klog.hpp>
 
 
 namespace kernel {
@@ -205,9 +206,8 @@ constexpr usize bitset<N>::count(void) const noexcept
 template <usize N>
 constexpr bool bitset<N>::test(usize pos) const noexcept
 {
-    // TODO: create error function that print colored text
     if (pos >= N)
-        lib::panic("\n[ ERR ] %s\n", "given position out of range");
+        log::error("%s\n", "given position out of range");
     
     return get_bit(pos);
 }

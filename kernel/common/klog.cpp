@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/kstd/cstdlib.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/klog.hpp>
 
@@ -45,6 +46,7 @@ void error(const char *fmt, ...) noexcept
     va_start(args, fmt);
     klog(kmessage::error, fmt, args);
     va_end(args);
+    kstd::khalt();
 }
 
 void klog(kmessage type, const char *fmt, va_list args) noexcept
