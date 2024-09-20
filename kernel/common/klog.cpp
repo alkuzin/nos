@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/terminal.hpp>
 #include <kernel/klog.hpp>
-#include <kernel/tty.hpp>
 
 
 namespace kernel {
@@ -49,27 +49,27 @@ void error(const char *fmt, ...) noexcept
 
 void klog(kmessage type, const char *fmt, va_list args) noexcept
 {
-    tty::kputchar('[');
+    kstd::kputchar('[');
 
     switch (type) {
     case kmessage::success:
-        kstd::putk("  OK   ", gfx::color::green, tty::get_bg());
+        kstd::putk("  OK   ", gfx::color::green, tty::terminal.bg());
         break;
     
     case kmessage::error:
-        kstd::putk("  ERR  ", gfx::color::red, tty::get_bg());
+        kstd::putk("  ERR  ", gfx::color::red, tty::terminal.bg());
         break;
     
     case kmessage::debug:
-        kstd::putk(" DEBUG ", gfx::color::gray, tty::get_bg());
+        kstd::putk(" DEBUG ", gfx::color::gray, tty::terminal.bg());
         break;
     
     default:
         break;
     }
     
-    tty::kputchar(']');
-    tty::kputchar(' ');
+    kstd::kputchar(']');
+    kstd::kputchar(' ');
 
     va_list args_copy;
     va_copy(args_copy, args);

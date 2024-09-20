@@ -21,9 +21,9 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/ctype.hpp>
+#include <kernel/terminal.hpp>
 #include <kernel/version.hpp>
 #include <kernel/login.hpp>
-#include <kernel/tty.hpp>
 
 
 namespace kernel {

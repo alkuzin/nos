@@ -36,12 +36,12 @@
 #include <kernel/fs/vfs.hpp>
 
 // core
-#include <kernel/gfx/framebuffer.hpp>
+#include <kernel/gfx/graphics.hpp>
+#include <kernel/terminal.hpp>
 #include <kernel/version.hpp>
 #include <kernel/kernel.hpp>
-#include <kernel/login.hpp>
+// #include <kernel/login.hpp> // Disabled for debugging
 #include <kernel/klog.hpp>
-#include <kernel/tty.hpp>
 #include <kernel/mm.hpp>
 
 
@@ -70,12 +70,16 @@ void kboot(u32 magic, const multiboot_t& mboot)
 {
     driver::vbe::init(mboot);
     gfx::Framebuffer framebuffer(mboot);
-    tty::init();
+    gfx::graphics.init(framebuffer);
+    tty::terminal.init(framebuffer);
 
-    tty::set_color(gfx::color::white, gfx::color::black);
-    tty::set_primary_color(gfx::color::gray);
-    tty::set_secondary_color(gfx::color::black);
-    tty::clear(); 
+    tty::terminal.set_color(
+        gfx::color::white,
+        gfx::color::black,
+        gfx::color::gray,
+        gfx::color::black
+    );
+    tty::terminal.clear();
 
     log::success("%s\n", "initialized VBE mode");
     log::success("%s\n", "initialized TTY");

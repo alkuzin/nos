@@ -18,7 +18,7 @@
 
 #include <kernel/kstd/cstdlib.hpp>
 #include <kernel/kstd/cstdio.hpp>
-#include <kernel/tty.hpp>
+#include <kernel/terminal.hpp>
 
 
 namespace kernel {
@@ -55,7 +55,7 @@ void putk(const char *str)
     u32 i = 0;
 
     while(str[i]) {
-        tty::kputchar(str[i]);       
+        kstd::kputchar(str[i]);       
         i++;
 	}
 }
@@ -65,7 +65,7 @@ void putk(const char *str, gfx::rgb fg, gfx::rgb bg)
 	s32 i = 0;
 
     while (str[i]) {
-        tty::kputchar_c(str[i], fg, bg);
+        tty::terminal.put_c(str[i], fg, bg);
 		i++;
 	}
 }
@@ -80,6 +80,21 @@ void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
     va_end(args);
 
 	khalt();
+}
+
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg)
+{
+    u32 i = 0;
+
+    while(str[i]) {
+        tty::terminal.put_c(str[i], fg, bg);
+        i++;
+	}
+}
+
+void kputchar(const s32 c)
+{
+	tty::terminal.put_c(c, tty::terminal.fg(), tty::terminal.bg());
 }
 
 } // namespace kstd

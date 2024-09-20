@@ -29,7 +29,7 @@
 
 #include <kernel/kstd/stdarg.hpp>
 #include <kernel/kstd/types.hpp>
-#include <kernel/gfx/gfx.hpp>
+#include <kernel/gfx/rgb.hpp>
 
 
 namespace kernel {
@@ -100,6 +100,22 @@ void putk(const char *str, gfx::rgb fg, gfx::rgb bg);
  * @param [in] ... - given variable number of arguments.
  */
 void __panic(const char *file, const char *func, u32 line, const char *fmt, ...);
+    
+/**
+ * @brief Print colored string to the screen.
+ * 
+ * @param [in] str - given string to print.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg);
+
+/**
+ * @brief Print character to screen.
+ * 
+ * @param [in] c - given character to print.
+ */
+void kputchar(const s32 c);
 
 } // namespace kstd
 } // namespace kernel

@@ -32,7 +32,6 @@
 
 #include <kernel/kstd/stdarg.hpp>
 #include <kernel/kstd/types.hpp>
-#include <kernel/gfx/gfx.hpp>
 
 
 namespace kernel {
