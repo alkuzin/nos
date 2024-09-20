@@ -59,6 +59,7 @@ set(FS_SOURCES
 
 # List of kernel graphics source files
 set(GFX_SOURCES
+    "${GFX_DIR}/framebuffer.cpp"
     "${GFX_DIR}/vbefont.cpp"
     "${GFX_DIR}/gfx.cpp"
 )
@@ -75,6 +76,7 @@ set(KERNEL_SOURCES
 
     # Kernel common directory:
     "${KERNEL_COMMON_DIR}/cxa.cpp"
+    "${KERNEL_COMMON_DIR}/klog.cpp"
     "${KERNEL_COMMON_DIR}/login.cpp"
     "${KERNEL_COMMON_DIR}/tty.cpp"
     

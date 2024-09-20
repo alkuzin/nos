@@ -36,9 +36,11 @@
 #include <kernel/fs/vfs.hpp>
 
 // core
+#include <kernel/gfx/framebuffer.hpp>
 #include <kernel/version.hpp>
 #include <kernel/kernel.hpp>
 #include <kernel/login.hpp>
+#include <kernel/klog.hpp>
 #include <kernel/tty.hpp>
 #include <kernel/mm.hpp>
 
@@ -67,46 +69,53 @@ static void test_initrd(void)
 void kboot(u32 magic, const multiboot_t& mboot)
 {
     driver::vbe::init(mboot);
+    gfx::Framebuffer framebuffer(mboot);
     tty::init();
 
     tty::set_color(gfx::color::white, gfx::color::black);
     tty::set_primary_color(gfx::color::gray);
     tty::set_secondary_color(gfx::color::black);
-	tty::clear(); 
+    tty::clear(); 
 
-    kstd::kmesg(true, "%s\n", "initialized VBE mode");
-    kstd::kmesg(true, "%s\n", "initialized TTY");
+    log::success("%s\n", "initialized VBE mode");
+    log::success("%s\n", "initialized TTY");
+    
+    log::debug("framebuffer address: <%p>\n", framebuffer.addr());
+    log::debug("framebuffer pitch:   %u\n", framebuffer.pitch());
+    log::debug("framebuffer width:   %u\n", framebuffer.width());
+    log::debug("framebuffer height:  %u\n", framebuffer.height());
+    log::debug("framebuffer bpp:     %u\n", framebuffer.bpp());
     	
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        kstd::kmesg(false, "Invalid magic number: %#X\n", magic);
+        log::error("Invalid magic number: %#X\n", magic);
         return;
     }
     
     // initializing Global Descriptor Table
     arch::x86::gdt_init();
-    kstd::kmesg(true, "%s\n", "initialized Global Descriptor Table");
+    log::success("%s\n", "initialized Global Descriptor Table");
     
     // initializing Interrupt Descriptor Table
     arch::x86::idt_init();
-    kstd::kmesg(true, "%s\n", "initialized Interrupt Descriptor Table");	
+    log::success("%s\n", "initialized Interrupt Descriptor Table");	
     
     // initializing timer
     driver::timer::init();
-    kstd::kmesg(true, "%s\n", "initialized timer");	
+    log::success("%s\n", "initialized timer");	
 
     // initializing memory management
     memory::init(mboot);
-    kstd::kmesg(true, "%s\n", "initialized memory management");
+    log::success("%s\n", "initialized memory management");
 
     // initializing initial ramdisk
     fs::initrd::init();
-    kstd::kmesg(true, "%s\n", "initialized initial ramdisk");
+    log::success("%s\n", "initialized initial ramdisk");
 
     // initializing Virtual File System
     fs::vfs::fs_adapter *initrd_adapter = fs::initrd::get_adapter();
 
     fs::vfs::init(fs::vfs::fs_type::INITRD, initrd_adapter);
-    kstd::kmesg(true, "%s\n", "initialized Virtual File System");
+    log::success("%s\n", "initialized Virtual File System");
 
     test_initrd();
 
