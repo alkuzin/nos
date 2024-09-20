@@ -50,25 +50,6 @@ void printk(const char *fmt, ...)
     putk(buf);
 }
 
-void kmesg(bool state, const char *fmt, ...)
-{
-    va_list args;
-    
-    tty::kputchar('[');
-
-    if (state)
-        putk(" OK ", gfx::color::green, tty::get_bg());
-    else
-        putk(" ERR ", gfx::color::red, tty::get_bg());
-    
-    tty::kputchar(']');
-    tty::kputchar(' ');
-
-    va_start(args, fmt);    
-    vprintk(fmt, args);
-    va_end(args);
-}
-
 void putk(const char *str)
 {
     u32 i = 0;

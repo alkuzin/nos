@@ -78,15 +78,6 @@ void putk(const char *str);
 void putk(const char *str, gfx::rgb fg, gfx::rgb bg);
 
 /**
- * @brief Print kernel component initialization message.
- * 
- * @param [in] state - given initialization state (OK/ERR). 
- * @param [in] fmt - given format string.
- * @param [in] args - given variable number of arguments.
- */
-void kmesg(bool state, const char *fmt, ...); // TODO: move to kernel::log / kernel::info
-
-/**
  * @brief Macro for kernel panic (detecting an internal fatal error).
  * 
  * It displaying error message, file, function and line where error occured.

@@ -17,8 +17,8 @@
  */
 
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/kstd/cstdio.hpp>
 #include <kernel/fs/vfs.hpp>
+#include <kernel/klog.hpp>
 
 
 namespace kernel {
@@ -36,15 +36,15 @@ void vfs::set(fs_type type, vfs::fs_adapter *fs_adapter)
     switch (type) {
         
         case fs_type::INITRD:
-            kstd::kmesg(true, "VFS: set filesystem %d (INITRD)\n", type);
+            log::success("VFS: set filesystem %d (INITRD)\n", type);
             break;
 
         case fs_type::EXT2:
-            kstd::kmesg(true, "VFS: set filesystem %d (EXT2)\n", type);
+            log::success("VFS: set filesystem %d (EXT2)\n", type);
             break;
         
         default:
-            kstd::kmesg(false, "Unknown file system: %d\n", type);
+            log::error("Unknown file system: %d\n", type);
             kstd::panic("%s\n", "VFS error");
             break;
     };
