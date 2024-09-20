@@ -45,13 +45,13 @@ class Framebuffer
     u8   m_bpp;     // bytes per pixel
 
 public:
-    Framebuffer(const Framebuffer&)       = delete; // prevent copying
     Framebuffer(Framebuffer&&)            = delete; // prevent moving
     Framebuffer& operator=(Framebuffer&&) = delete; // prevent moving assignment
     virtual ~Framebuffer(void)            = default;
 
     /** @brief Framebuffer default constructor.*/
     Framebuffer(void) noexcept = default;
+    Framebuffer(const Framebuffer&) = default;
 
     /**
      * @brief Construct a new Framebuffer object.

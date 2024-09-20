@@ -23,10 +23,10 @@
 #include <kernel/kstd/ctype.hpp>
 #include <kernel/shell/ksh.hpp>
 #include <kernel/shell/ls.hpp>
+#include <kernel/terminal.hpp>
 #include <kernel/version.hpp>
 #include <kernel/kernel.hpp>
 #include <kernel/login.hpp>
-#include <kernel/tty.hpp>
 #include <kernel/mm.hpp>
 
 
@@ -38,12 +38,12 @@ static gfx::rgb primary_color, secondary_color;
 /** @brief Display promt for user input. */
 static constexpr inline void display_prompt(void) noexcept
 {
-    primary_color   = tty::get_primary_color();
-    secondary_color = tty::get_secondary_color();
+    primary_color   = tty::terminal.primary_color();
+    secondary_color = tty::terminal.secondary_color();
 
-    tty::printc(USERNAME, primary_color, secondary_color);
-    tty::kputchar('@');
-    tty::printc("nos", primary_color, secondary_color);
+    kstd::printc(USERNAME, primary_color, secondary_color);
+    kstd::kputchar('@');
+    kstd::printc("nos", primary_color, secondary_color);
     kstd::putk(":-/ ");
 }
 
@@ -75,7 +75,7 @@ void init(void)
 
     // clear user input buffer
     kstd::bzero(input_buffer, sizeof(input_buffer));
-    tty::kputchar('\n');
+    kstd::kputchar('\n');
 
     for(;;) {
         display_prompt();
@@ -93,7 +93,7 @@ void init(void)
                     input_buffer[buf_pos] = 0;
                 }
             
-                tty::kputchar(cc);
+                kstd::kputchar(cc);
 
                 if(buf_pos < driver::keyboard::INPUT_BUFFER_SIZE && kstd::isprint(cc)) {
                     input_buffer[buf_pos] = cc;
@@ -104,7 +104,7 @@ void init(void)
         } while(cc != '\n');
 
         input_buffer[buf_pos] = '\0';
-        tty::kputchar('\n');
+        kstd::kputchar('\n');
 
         if(input_buffer[0])
             exec(input_buffer);
@@ -152,8 +152,16 @@ s32 exec(char *cmd)
         else
             kstd::printk("cat: %s\n", "incorrect argument\n");
     }
-    else if(is_valid("gfx", 3, cmd, 3))
-        gfx::test();
+    else if(is_valid("gfx", 3, cmd, 3)) {
+        gfx::graphics.draw_circle(400, 400, 100, gfx::color::red);
+        gfx::graphics.draw_line(500, 500, 900, 600, gfx::color::green);
+        gfx::graphics.draw_rectangle(100, 100, 50, 300, gfx::color::purple);
+        gfx::graphics.draw_square(200, 100, 30, gfx::color::blue);
+        gfx::graphics.draw_triangle(300, 50, 300, 300, 600, 300, gfx::color::white);
+
+        gfx::graphics.draw_line(10, 1000 - 10, 478 - 10, 1000 - 10, gfx::color::white);
+        gfx::graphics.draw_line(10, 1000 - 11, 478 - 10, 1000 - 11, gfx::color::white);
+    }
     else if(is_valid("uname", 5, cmd, 5))
         info::display_general_info();
     else if(is_valid("reboot", 5, cmd, 5))

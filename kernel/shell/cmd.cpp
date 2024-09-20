@@ -21,7 +21,7 @@
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/shell/ksh.hpp>
 #include <kernel/fs/initrd.hpp> 
-#include <kernel/tty.hpp>
+#include <kernel/terminal.hpp>
 #include <kernel/mm.hpp>
 
 
@@ -52,7 +52,7 @@ void help(void)
 
 void clear(void)
 {
-    tty::clear();
+    tty::terminal.clear();
 }
 
 void free(void)
@@ -121,10 +121,8 @@ void theme(theme_t theme)
             return;
     }
     
-    tty::set_color(fg, bg);
-    tty::set_primary_color(primary_color);
-    tty::set_secondary_color(secondary_color);
-    tty::update();
+    tty::terminal.set_color(fg, bg, primary_color, secondary_color);
+    tty::terminal.clear();
 }
 
 void ps(void)
