@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/kstd/cstdlib.hpp>
+#include <kernel/kstd/kmalloc.hpp>
 #include <kernel/icxxabi.hpp>
 
 
