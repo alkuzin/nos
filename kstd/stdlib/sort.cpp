@@ -23,7 +23,7 @@
 
 namespace kernel {
 namespace kstd {
-    
+
 /**
  * @brief Swaps the contents of two memory regions of a given size.
  * 
@@ -31,7 +31,14 @@ namespace kstd {
  * @param [in] p2 - given pointer to the start of the second memory block to swap.
  * @param [in] size - given size of the memory blocks to swap, in bytes.
  */
-static void __swap(void *p1, void *p2, usize size);
+static inline void __swap(void *p1, void *p2, usize size) noexcept
+{
+    char temp[size];
+
+    memcpy(temp, p1, size);
+    memcpy(p1, p2, size);
+    memcpy(p2, temp, size);
+}
 
 /**
  * @brief Quick sort algorithm.
@@ -43,7 +50,43 @@ static void __swap(void *p1, void *p2, usize size);
  * @param [in] size - given size of each element in sequence in bytes.
  * @param [in] cmp - given comparison function pointer.
  */
-static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
+static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *)) noexcept
+{
+    char  pivot[size];
+    char  temp[size];
+
+    if (nmemb <= 1)
+        return;
+    
+    memcpy(pivot, static_cast<char*>(base) + (nmemb / 2) * size, size);
+
+    usize i = 0;
+    usize j = nmemb - 1;
+
+    while (i <= j) {
+
+        while (cmp(static_cast<char*>(base) + i * size, pivot) < 0)
+            i++;
+
+        while (cmp(static_cast<char*>(base) + j * size, pivot) > 0)
+            j--;
+
+        if (i <= j) {
+            memcpy(temp, static_cast<char*>(base) + i * size, size);
+            memcpy(static_cast<char*>(base) + i * size, static_cast<char*>(base) + j * size, size);
+            memcpy(static_cast<char*>(base) + j * size, temp, size);
+
+            i++;
+            j--;
+        }
+    }
+
+    if (j > 0)
+        __quick_sort(base, j + 1, size, cmp);
+
+    if (i < nmemb)
+        __quick_sort(static_cast<char*>(base) + i * size, nmemb - i, size, cmp);
+}
 
 /**
  * @brief Organizes the elements in the array so that the subtree
@@ -55,108 +98,11 @@ static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const v
  * @param [in] cmp - given comparison function pointer.
  * @param [in] i - given index of the root node of the subtree to heapify. 
  */
-static void __heapify(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *), usize i);
-
-/**
- * @brief Heap sort algorithm.
- * 
- * This function sorts an array with @a nmemb elements of size @a size.
- * 
- * @param [in] base - given pointer to the first element of the sequence to sort.
- * @param [in] nmemb - given number of elements in the sequence.
- * @param [in] size - given size of each element in sequence in bytes.
- * @param [in] cmp - given comparison function pointer.
- */
-static void __heap_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
-
-/**
- * @brief Insertion sort algorithm.
- * 
- * This function sorts an array with @a nmemb elements of size @a size.
- * 
- * @param [in] base - given pointer to the first element of the sequence to sort.
- * @param [in] nmemb - given number of elements in the sequence.
- * @param [in] size - given size of each element in sequence in bytes.
- * @param [in] cmp - given comparison function pointer.
- */
-static void __insertion_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
-
-/**
- * @brief Count sort algorithm.
- * 
- * This function sorts an array @a arr with @a nmemb elements.
- * 
- * @param [in] arr - given array of integers to sort.
- * @param [in] nmemb - given number of elements in the sequence.
- * @param [in] exp - given digit position to sort by.
- */
-static void __count_sort(s32 *arr, s32 nmemb, s32 exp);
-
-/**
- * @brief Radix sort algorithm.
- * 
- * This function sorts an array @a arr with @a nmemb elements.
- * 
- * @param [in] arr - given array of integers to sort.
- * @param [in] nmemb - given number of elements in the sequence.
- */
-static void __radix_sort(s32 *arr, s32 nmemb);
-
-
-static void __swap(void *p1, void *p2, usize size)
-{
-    char temp[size];
-
-    memcpy(temp, p1, size);
-    memcpy(p1, p2, size);
-    memcpy(p2, temp, size);
-}
-
-static void __quick_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
-{
-    char  pivot[size];
-    char  temp[size];
-    usize i, j;
-
-    if (nmemb <= 1)
-        return;
-    
-    memcpy(pivot, (char *)base + (nmemb / 2) * size, size);
-
-    i = 0;
-    j = nmemb - 1;
-
-    while (i <= j) {
-
-        while (cmp((char *)base + i * size, pivot) < 0)
-            i++;
-
-        while (cmp((char *)base + j * size, pivot) > 0)
-            j--;
-
-        if (i <= j) {
-            memcpy(temp, (char *)base + i * size, size);
-            memcpy((char *)base + i * size, (char *)base + j * size, size);
-            memcpy((char *)base + j * size, temp, size);
-
-            i++;
-            j--;
-        }
-    }
-
-    if (j > 0)
-        __quick_sort(base, j + 1, size, cmp);
-
-    if (i < nmemb)
-        __quick_sort((char *)base + i * size, nmemb - i, size, cmp);
-}
-
-static void __heapify(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *), usize i)
+static void __heapify(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *), usize i) noexcept
 {
     usize largest, left, right;
-    char  *arr;
+    char  *arr = static_cast<char*>(base);
 
-    arr     = (char *)base;
     largest = i;
     left    = 2 * i + 1;
     right   = 2 * i + 2;
@@ -173,11 +119,19 @@ static void __heapify(void *base, usize nmemb, usize size, s32 (*cmp)(const void
     }
 }
 
-static void __heap_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
+/**
+ * @brief Heap sort algorithm.
+ * 
+ * This function sorts an array with @a nmemb elements of size @a size.
+ * 
+ * @param [in] base - given pointer to the first element of the sequence to sort.
+ * @param [in] nmemb - given number of elements in the sequence.
+ * @param [in] size - given size of each element in sequence in bytes.
+ * @param [in] cmp - given comparison function pointer.
+ */
+static void __heap_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *)) noexcept
 {
-    char *arr;
-
-    arr = (char *)base;
+    char *arr = static_cast<char*>(base);
 
     for (usize i = nmemb / 2 - 1; i < nmemb; i--)
         __heapify(arr, nmemb, size, cmp, i);
@@ -188,22 +142,41 @@ static void __heap_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const vo
     }
 }
 
-static void __insertion_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
+/**
+ * @brief Insertion sort algorithm.
+ * 
+ * This function sorts an array with @a nmemb elements of size @a size.
+ * 
+ * @param [in] base - given pointer to the first element of the sequence to sort.
+ * @param [in] nmemb - given number of elements in the sequence.
+ * @param [in] size - given size of each element in sequence in bytes.
+ * @param [in] cmp - given comparison function pointer.
+ */
+static void __insertion_sort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *)) noexcept
 {
     char   tmp[size];
     usize  i, j;
 
     for (i = 1; i < nmemb; i++) {
-        memcpy(tmp, (char *)base + i * size, size);
+        memcpy(tmp, static_cast<char*>(base) + i * size, size);
         
-        for (j = i; j > 0 && cmp((char *)base + (j - 1) * size, tmp) > 0; j--)
-            memcpy((char *)base + j * size, (char *)base + (j - 1) * size, size);
+        for (j = i; j > 0 && cmp(static_cast<char*>(base) + (j - 1) * size, tmp) > 0; j--)
+            memcpy(static_cast<char*>(base) + j * size, static_cast<char*>(base) + (j - 1) * size, size);
         
-        memcpy((char *)base + j * size, tmp, size);
+        memcpy(static_cast<char*>(base) + j * size, tmp, size);
     }
 }
 
-static void __count_sort(s32 *arr, s32 nmemb, s32 exp)
+/**
+ * @brief Count sort algorithm.
+ * 
+ * This function sorts an array @a arr with @a nmemb elements.
+ * 
+ * @param [in] arr - given array of integers to sort.
+ * @param [in] nmemb - given number of elements in the sequence.
+ * @param [in] exp - given digit position to sort by.
+ */
+static void __count_sort(s32 *arr, s32 nmemb, s32 exp) noexcept
 {
     s32 count[10] = {0};
     s32 output[nmemb];
@@ -223,11 +196,17 @@ static void __count_sort(s32 *arr, s32 nmemb, s32 exp)
         arr[i] = output[i];
 }
 
-static void __radix_sort(s32 *arr, s32 nmemb)
+/**
+ * @brief Radix sort algorithm.
+ * 
+ * This function sorts an array @a arr with @a nmemb elements.
+ * 
+ * @param [in] arr - given array of integers to sort.
+ * @param [in] nmemb - given number of elements in the sequence.
+ */
+static void __radix_sort(s32 *arr, s32 nmemb) noexcept
 {
-    s32 max;
-
-    max = arr[0];
+    s32 max = arr[0];
     
     for (s32 i = 1; i < nmemb; i++) {
         if (arr[i] > max)
@@ -238,14 +217,12 @@ static void __radix_sort(s32 *arr, s32 nmemb)
         __count_sort(arr, nmemb, exp);
 }
 
-void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *))
+void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *)) noexcept
 {
-    s32 depth_limit;
-    
     if (size == sizeof(s32))
-        __radix_sort((s32 *)base, nmemb);
+        __radix_sort(static_cast<s32*>(base), nmemb);
     else {
-        depth_limit = 2 * log(size);
+        auto depth_limit = 2 * log(size);
         
         if (nmemb <= QSORT_THRESHOLD) {
             __insertion_sort(base, nmemb, size, cmp);

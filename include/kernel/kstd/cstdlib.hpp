@@ -186,7 +186,7 @@ inline void ksleep(u32 sec) noexcept
  * @param [in] size - given size of each element in sequence in bytes.
  * @param [in] cmp - given comparison function pointer.
  */
-void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
+void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *)) noexcept;
 
 } // namespace kstd
 } // namespace kernel
