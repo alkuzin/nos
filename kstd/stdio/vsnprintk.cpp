@@ -17,27 +17,37 @@
  */
 
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/kstd/cstdlib.hpp>
 #include <kernel/kstd/cstdio.hpp>
-#include <kernel/kstd/ctype.hpp> 
+#include <kernel/kstd/ctype.hpp>
 #include <kernel/kstd/cmath.hpp>
 
 
 namespace kernel {
 namespace kstd {
     
-/** For null pointer in vsnprintk. */
-#define __NIL__ "(nil)"
+// For null pointer in vsnprintk.
+constexpr auto __NIL__ {"(nil)"};
 
-/** Print buffer info struct. */
+// Print buffer info struct.
 typedef struct pinfo_s {
     char  *buf; 
-    usize size; 		/** Buffer size. */
-    s32   pos;  		/** Current buffer position. */
-    s32   pref_flag; 	/** '#' flag */
+    usize size; 		// Buffer size.
+    s32   pos;  		// Current buffer position.
+    s32   pref_flag; 	// '#' flag
 } pinfo_t;
 
-static pinfo_t  pinfo;
+static pinfo_t pinfo;
+
+/**
+ * @brief Append character to pinfo struct buffer.
+ * 
+ * @param [in] c - given character to append.
+ */
+static inline void buf_append(char c) noexcept
+{
+	pinfo.buf[pinfo.pos] = c;
+	pinfo.pos++;
+}
 
 /**
  * @brief Initialize pinfo struct.
@@ -45,119 +55,28 @@ static pinfo_t  pinfo;
  * @param [out] buf - given buffer for containing printk output.
  * @param [in] size - given size of the buffer.
  */
-static void pinfo_init(char *buf, usize size);
+static void pinfo_init(char *buf, usize size) noexcept
+{
+	bzero(&pinfo, sizeof(pinfo));
+	bzero(buf, size);
+
+    pinfo.buf  		= buf;
+    pinfo.size 		= size;
+    pinfo.pos  		= 0;
+    pinfo.pref_flag = 0;
+}
+
+// Print Unsigned s32 --------------------------------------------------------------------------
 
 /**
- * @brief Append character to pinfo struct buffer.
- * 
- * @param [in] c - given character to append.
- */
-static void  buf_append(char c);
-
-/**
- * @brief %x %X options (hexadecimal).
- * 
- * @param [in] n - given number to convert.
- * @param [in] is_upper - given is uppercase/lowercase flag.
- */
-static void  print_hex(u64 n, s32 is_upper);
-
-/**
- * @brief Hexadecimal to alphanumeric lenght.
- * 
- * @param [in] n - given number.
- * @return length of hex string representation of @a n.
- */
-static s32   xtoa_len(u32 n);
-
-/**
- * @brief %i %d options (int)
- * 
- * @param [in] n - given number to convert.
- */
-static void  print_int(s32 n);
-
-/**
- * @brief Integer to alphanumeric lenght.
- * 
- * @param [in] n - given number.
- * @return length of int string representation of @a n.
- */
-static usize itoa_len(s32 n);
-
-/**
- * @brief %p option (pointer).
- * 
- * @param [in] p - given pointer to convert.
- */
-static void  print_ptr(u64 p);
-
-/**
- * @brief Digit to hex.
- * 
- * @param [in] v - given digit to convert. 
- * @return hex representation of digit.
- */
-static char  dtoh(s32 v);
-
-/**
- * @brief %u option (unsigned int).
- * 
- * @param [in] n - given number.
- */
-static void  print_uint(u32 n);
-
-/**
- * @brief Unsigned s32 to alphanumeric lenght.
+ * @brief Unsigned s32 to alphanumeric length.
  * 
  * @param [in] n - given number.
  * @return length of unsigned int string representation of @a n.
  */
-static usize utoa_len(u32 n);
-
-/**
- * @brief Print vsnprintk arguments.
- * 
- * @param [in] type - given type of argument.
- * @param [in] args - given list of arguments.
- */
-static void  print_args(char type, va_list * args);
-
-/**
- * @brief Parse printk arguments.
- * 
- * @param [in] str - given format string.
- * @param [in] args - given list of arguments.
- */
-static void  parse(const char* str, va_list * args);
-
-
-static void pinfo_init(char *buf, usize size)
+static constexpr usize utoa_len(u32 n) noexcept
 {
-    /* set pinfo struct */
-	bzero(&pinfo, sizeof(pinfo));
-	bzero(buf, size);
-    pinfo.buf  = buf;
-    pinfo.size = size;
-    pinfo.pos  = 0;
-
-    /* set pinfo struct flags */
-    pinfo.pref_flag = 0;
-}
-
-/* append character to vsnprintf buffer */
-static void buf_append(char c)
-{
-	pinfo.buf[pinfo.pos] = c;
-	pinfo.pos++;
-}
-
-/* kprintf unsigned s32 */
-static usize utoa_len(u32 n)
-{
-	usize len;
-
-	len = 0;
+	usize len = 0;
 
 	if (n == 0)
 		return 1;
@@ -170,12 +89,15 @@ static usize utoa_len(u32 n)
 	return len;
 }
 
-static void print_uint(u32 n)
+/**
+ * @brief %u option (unsigned int).
+ * 
+ * @param [in] n - given number.
+ */
+static void print_uint(u32 n) noexcept
 {
-	usize length, i;
-
-	i      = utoa_len(n);
-	length = i;
+	usize i      = utoa_len(n);
+	usize length = i;
 
 	char uint_buffer[i];
 
@@ -199,8 +121,15 @@ static void print_uint(u32 n)
 	}
 }
 
-/* kprintf pointer */
-static char dtoh(s32 v) 
+// Print Pointer -----------------------------------------------------------------------------------------
+
+/**
+ * @brief Digit to hex.
+ * 
+ * @param [in] v - given digit to convert. 
+ * @return hex representation of digit.
+ */
+static constexpr inline char dtoh(s32 v) noexcept
 {
    if (v >= 0 && v < 10)
        return '0' + v;
@@ -208,7 +137,12 @@ static char dtoh(s32 v)
        return 'a' + v - 10;
 }
 
-static void print_ptr(u64 p)
+/**
+ * @brief %p option (pointer).
+ * 
+ * @param [in] p - given pointer to convert.
+ */
+static void print_ptr(u64 p) noexcept
 {
 	s32 count, i;
 		
@@ -229,7 +163,7 @@ static void print_ptr(u64 p)
 	i     = (sizeof(p) << 3) - 4;	
 	count = 0;
 
-	/* skip first zeros */
+	// skip first zeros
 	while(i >= 0 && ((dtoh((p >> i) & 0xf) == '0')))
 		i -= 4;
 	
@@ -240,12 +174,17 @@ static void print_ptr(u64 p)
 	}
 }
 
-/* kprintf s32 */
-static usize itoa_len(s32 n)
-{
-	usize len;
+// Print int ----------------------------------------------------------------------------------
 
-	len = 0;
+/**
+ * @brief Integer to alphanumeric length.
+ * 
+ * @param [in] n - given number.
+ * @return length of int string representation of @a n.
+ */
+static constexpr usize itoa_len(s32 n) noexcept
+{
+	usize len = 0;
 
 	if (n == 0)
 		return 1;
@@ -263,12 +202,15 @@ static usize itoa_len(s32 n)
 	return len;
 }
 
-static void print_int(s32 n)
+/**
+ * @brief %i %d options (int)
+ * 
+ * @param [in] n - given number to convert.
+ */
+static void print_int(s32 n) noexcept
 {
-	usize length, i;
-
-	i      = itoa_len(n);
-	length = i;
+	usize i      = itoa_len(n);
+	usize length = i;
 
 	char int_buffer[length];
 	i--;
@@ -295,16 +237,29 @@ static void print_int(s32 n)
 	}
 }
 
-/* kprintf hex */
-static s32 xtoa_len(u32 n)
+// Printf hex -----------------------------------------------------------------------------------
+
+/**
+ * @brief Hexadecimal to alphanumeric length.
+ * 
+ * @param [in] n - given number.
+ * @return length of hex string representation of @a n.
+ */
+static constexpr inline s32 xtoa_len(u32 n) noexcept
 {
 	if (n == 0)
 	   return 1;
 	
-	return (s32)(log(n) / log(16)) + 1;
+	return static_cast<s32>(log(n) / log(16)) + 1;
 }
 
-static void print_hex(u64 n, s32 is_upper)
+/**
+ * @brief %x %X options (hexadecimal).
+ * 
+ * @param [in] n - given number to convert.
+ * @param [in] is_upper - given is uppercase/lowercase flag.
+ */
+static void print_hex(u64 n, s32 is_upper) noexcept
 {
 	static const char digits_lower[] = "0123456789abcdef";
 	static const char digits_upper[] = "0123456789ABCDEF";
@@ -350,7 +305,15 @@ static void print_hex(u64 n, s32 is_upper)
 	}
 }
 
-static void print_args(char type, va_list *args)
+// Argument Parsing ----------------------------------------------------------------------- 
+
+/**
+ * @brief Print vsnprintk arguments.
+ * 
+ * @param [in] type - given type of argument.
+ * @param [in] args - given list of arguments.
+ */
+static void print_args(char type, va_list *args) noexcept
 {
 	char *str = nullptr;
 	s32 i 	  = 0;
@@ -374,7 +337,7 @@ static void print_args(char type, va_list *args)
 			break;
 
 		case 'p':
-			print_ptr((u64)va_arg(*args, void *));
+			print_ptr(reinterpret_cast<u64>(va_arg(*args, void *)));
 			break;
 
 		case 'd': case 'i':
@@ -391,7 +354,13 @@ static void print_args(char type, va_list *args)
 	};
 }
 
-static void parse(const char *str, va_list *args)
+/**
+ * @brief Parse printk arguments.
+ * 
+ * @param [in] str - given format string.
+ * @param [in] args - given list of arguments.
+ */
+static void parse(const char *str, va_list *args) noexcept
 {
     s32 i = -1;
 
@@ -413,7 +382,7 @@ static void parse(const char *str, va_list *args)
     }
 }
 
-void vsnprintk(char *buf, usize size, const char *fmt, va_list args)
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args) noexcept
 {
     va_list args_copy;
 
