@@ -29,9 +29,6 @@ set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
 
 # List of kernel standard library source files
 set(KSTD_SOURCES
-    # math
-    "${KSTD_DIR}/math/math.cpp"
-    
     # stdio
     "${KSTD_DIR}/stdio/cstdio.cpp"
     "${KSTD_DIR}/stdio/vsnprintk.cpp"
