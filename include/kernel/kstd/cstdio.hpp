@@ -28,7 +28,7 @@
 #define _KERNEL_KSTD_CSTDIO_HPP_
 
 #include <kernel/kstd/stdarg.hpp>
-#include <kernel/kstd/types.hpp>
+#include <kernel/terminal.hpp>
 #include <kernel/gfx/rgb.hpp>
 
 
@@ -41,7 +41,7 @@ namespace kstd {
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void printk(const char *fmt, ...);
+void printk(const char *fmt, ...) noexcept;
 
 /**
  * @brief Auxilar function for formating and printing data.
@@ -49,7 +49,7 @@ void printk(const char *fmt, ...);
  * @param [in] fmt - given format string.
  * @param [in] args - given variable number of arguments.
  */
-void vprintk(const char *fmt, va_list args);
+void vprintk(const char *fmt, va_list args) noexcept;
 
 /**
  * @brief Formats and prints data to buffer.
@@ -59,14 +59,14 @@ void vprintk(const char *fmt, va_list args);
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
-void vsnprintk(char *buf, usize size, const char *fmt, va_list args);
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args) noexcept;
 
 /**
  * @brief Print given string on the same line.
  * 
  * @param [in] str - given null terminated string
  */
-void putk(const char *str);
+void putk(const char *str) noexcept;
 
 /**
  * @brief Print colored string and a trailing newline.
@@ -75,7 +75,7 @@ void putk(const char *str);
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void putk(const char *str, gfx::rgb fg, gfx::rgb bg);
+void putk(const char *str, gfx::rgb fg, gfx::rgb bg) noexcept;
 
 /**
  * @brief Macro for kernel panic (detecting an internal fatal error).
@@ -99,7 +99,7 @@ void putk(const char *str, gfx::rgb fg, gfx::rgb bg);
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void __panic(const char *file, const char *func, u32 line, const char *fmt, ...);
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...) noexcept;
     
 /**
  * @brief Print colored string to the screen.
@@ -108,14 +108,17 @@ void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void printc(const char *str, gfx::rgb fg, gfx::rgb bg);
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg) noexcept;
 
 /**
  * @brief Print character to screen.
  * 
  * @param [in] c - given character to print.
  */
-void kputchar(const s32 c);
+inline void kputchar(const s32 c) noexcept
+{
+	tty::terminal.put_c(c, tty::terminal.fg(), tty::terminal.bg());
+}
 
 } // namespace kstd
 } // namespace kernel

@@ -18,7 +18,6 @@
 
 #include <kernel/kstd/cstdlib.hpp>
 #include <kernel/kstd/cstdio.hpp>
-#include <kernel/terminal.hpp>
 
 
 namespace kernel {
@@ -28,7 +27,7 @@ static constexpr u32 BUF_SIZE {1024};
 static char buf[BUF_SIZE];
 
 
-void vprintk(const char *fmt, va_list args)
+void vprintk(const char *fmt, va_list args) noexcept
 {
     va_list args_copy;
 
@@ -39,7 +38,7 @@ void vprintk(const char *fmt, va_list args)
 	putk(buf);
 }
 
-void printk(const char *fmt, ...)
+void printk(const char *fmt, ...) noexcept
 {
     va_list args;
 
@@ -50,7 +49,7 @@ void printk(const char *fmt, ...)
     putk(buf);
 }
 
-void putk(const char *str)
+void putk(const char *str) noexcept
 {
     u32 i = 0;
 
@@ -60,7 +59,7 @@ void putk(const char *str)
 	}
 }
 
-void putk(const char *str, gfx::rgb fg, gfx::rgb bg)
+void putk(const char *str, gfx::rgb fg, gfx::rgb bg) noexcept
 {
 	s32 i = 0;
 
@@ -70,7 +69,7 @@ void putk(const char *str, gfx::rgb fg, gfx::rgb bg)
 	}
 }
 	
-void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
+void __panic(const char *file, const char *func, u32 line, const char *fmt, ...) noexcept
 {
 	va_list args;
 	
@@ -82,7 +81,7 @@ void __panic(const char *file, const char *func, u32 line, const char *fmt, ...)
 	khalt();
 }
 
-void printc(const char *str, gfx::rgb fg, gfx::rgb bg)
+void printc(const char *str, gfx::rgb fg, gfx::rgb bg) noexcept
 {
     u32 i = 0;
 
@@ -90,11 +89,6 @@ void printc(const char *str, gfx::rgb fg, gfx::rgb bg)
         tty::terminal.put_c(str[i], fg, bg);
         i++;
 	}
-}
-
-void kputchar(const s32 c)
-{
-	tty::terminal.put_c(c, tty::terminal.fg(), tty::terminal.bg());
 }
 
 } // namespace kstd
