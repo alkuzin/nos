@@ -16,12 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/kstd/cstdlib.hpp>
-#include <kernel/kstd/cstring.hpp>
-#include <kernel/fs/initrd.hpp>
+#include <kernel/kstd/kmalloc.hpp>
 #include <kernel/kstd/cstdio.hpp>
-#include <kernel/kstd/types.hpp>
-#include <kernel/fs/vfs.hpp>
+#include <kernel/fs/initrd.hpp>
 
 
 namespace kernel {

@@ -30,6 +30,7 @@
 #ifndef _KERNEL_KSTD_CSTDLIB_HPP_
 #define _KERNEL_KSTD_CSTDLIB_HPP_
 
+#include <kernel/arch/x86/system.hpp>
 #include <kernel/kstd/stdarg.hpp>
 #include <kernel/kstd/types.hpp>
 
@@ -43,13 +44,36 @@ constexpr u32 RAND_MAX {32767};
 /** @brief Threshold of size of array to sort, below which insertion sort is used.*/
 constexpr u32 QSORT_THRESHOLD {16};
 
+// Convertion Functions ---------------------------------------------
+
 /**
  * @brief Convert string to integer. 
  * 
  * @param [in] str - given string to convert. 
  * @return integer converted from string.
  */
-s32 atoi(const char *str);
+constexpr s32 atoi(const char *str) noexcept
+{
+    s32 i           = 0;
+    s32 res         = 0;
+    s32 is_negative = 0;
+    
+    if(str[i] == '-') {
+        is_negative = 1;
+        i++;
+    }
+    
+    while(str[i] && (str[i] >= '0' && str[i] <= '9')) {
+        res *= 10;
+        res += (static_cast<int>(str[i]) - '0');
+        i++;
+    }
+
+    if(is_negative)
+        return -res;
+    
+    return res;
+}
 
 /**
  * @brief Convert string to double. 
@@ -57,7 +81,45 @@ s32 atoi(const char *str);
  * @param [in] str - given string to convert. 
  * @return double converted from string.
  */
-f64 atof(const char *str);
+constexpr f64 atof(const char *str) noexcept
+{
+    f64 res      = 0;
+    f64 fraction = 1;
+    s32 sign     = 1;
+    s32 decimal  = 0;
+
+    while (*str == ' ')
+        str++;
+
+    if (*str == '-') {
+        sign = -1;
+        str++;
+    } 
+    else if (*str == '+')
+        str++;
+
+    while (*str != '\0') {
+
+        if (*str >= '0' && *str <= '9') {
+            res = res * 10 + (*str - '0');
+
+            if (decimal)
+                fraction *= 10;
+        } 
+        else if (*str == '.')
+            decimal = 1;
+        else
+            break;
+
+        str++;
+    }
+    
+    return (sign * res) / fraction;
+}
+
+// Pseudo-random Functions ---------------------------------------------
+
+static u64 next = 1;
 
 /**
  * @brief Calculates the sequence of pseudo random numbers
@@ -65,14 +127,53 @@ f64 atof(const char *str);
  * 
  * @return pseudo random number. 
  */
-s32 rand(void);
+constexpr inline s32 rand(void) noexcept
+{
+    next = next * 1103515245 + 12345;
+    return static_cast<u32>(next / 65536) % RAND_MAX;
+}
 
 /**
  * @brief Set seed for the sequence of pseudo random numbers.
  * 
  * @param [in] seed - given new beginning of the sequence of pseudo random numbers.
  */
-void srand(u32 seed);
+constexpr inline void srand(u32 seed) noexcept
+{
+    next = seed;
+}
+
+//** @brief Halt kernel.*/ 
+inline void khalt(void) noexcept
+{
+	arch::x86::cli();
+	for(;;);
+}
+
+/**
+ * @brief Time delay.
+ * 
+ * @param [in] microsec - given time to delay.
+ */
+static inline void __ksleep(u32 microsec) noexcept
+{
+	u32 i;
+
+	for (i = 0; i < microsec * 10000; i++) {
+		for (i = 0; i < microsec * 10000; i++)
+			arch::x86::nop();
+	}
+}
+
+/**
+ * @brief Time delay.
+ * 
+ * @param [in] microsec - given time to delay in seconds.
+ */
+inline void ksleep(u32 sec) noexcept
+{
+	__ksleep(sec * 10000);
+}
 
 /**
  * @brief Sorts an array with @a nmemb elements of size @a size.
@@ -86,30 +187,6 @@ void srand(u32 seed);
  * @param [in] cmp - given comparison function pointer.
  */
 void qsort(void *base, usize nmemb, usize size, s32 (*cmp)(const void *, const void *));
-
-//** @brief Halt kernel.*/ 
-void khalt(void); 
-
-/**
- * @brief Allocates n bytes and returns a pointer
- * to the allocated memory.
- * 
- * @param [in] n - given number of bytes to allocate.
- * @return pointer to allocated memory in case of success.
- * @return null pointer otherwise.
- */
-void *kmalloc(usize n);
-
-/**
- * @brief Frees the memory space pointed to by ptr, 
- * which must have been returned by a previous call to kmalloc()
- * or related functions. Otherwise, or if ptr has already 
- * been freed, undefined behavior occurs. 
- * If ptr is null pointer, no operation is performed.
- * 
- * @param [in] ptr - given pointer to allocated memory.
- */
-void kfree(void *ptr);
 
 } // namespace kstd
 } // namespace kernel

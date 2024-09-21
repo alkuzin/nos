@@ -34,7 +34,6 @@ set(KSTD_SOURCES
     "${KSTD_DIR}/stdio/vsnprintk.cpp"
     
     # stdlib
-    "${KSTD_DIR}/stdlib/cstdlib.cpp"
     "${KSTD_DIR}/stdlib/sort.cpp"
 )
 
