@@ -36,9 +36,6 @@ set(KSTD_SOURCES
     # stdlib
     "${KSTD_DIR}/stdlib/cstdlib.cpp"
     "${KSTD_DIR}/stdlib/sort.cpp"
-    
-    # string
-    "${KSTD_DIR}/string/cstring.cpp"
 )
 
 # List of kernel drivers source files
