@@ -132,7 +132,7 @@ string::string(const char *str) noexcept
 
 constexpr char string::at(usize pos) const noexcept
 {
-    if (pos >= static_cast<usize>(kstd::strlen(m_data)))
+    if (pos >= static_cast<usize>(strlen(m_data)))
         log::error("%s\n", "given position out of range");
     
     return m_data[pos];
@@ -153,7 +153,7 @@ constexpr usize string::size(void) const noexcept
     if (!m_data)
         return 0;
     
-    return kstd::strlen(m_data);
+    return strlen(m_data);
 }
 
 constexpr char string::operator[](usize pos) const noexcept
@@ -173,7 +173,7 @@ constexpr const char* string::end(void) noexcept
 
 constexpr s32 string::compare(const string& other, usize n) const noexcept
 {
-    return kstd::strncmp(m_data, other.m_data, n);
+    return strncmp(m_data, other.m_data, n);
 }
 
 constexpr string& string::operator=(const char *str) noexcept
