@@ -40,10 +40,15 @@ class array
     T m_data[N];
 
 public:
-    // TODO: implement initializer list
-    // TODO: implement assignment operator
     array(void)          = default;
     virtual ~array(void) = default;
+
+    /**
+     * @brief Construct a new array object.
+     * 
+     * @param [in] arr - given C-style array.
+     */
+    constexpr array(const T (&arr)[N]) noexcept;
 
     /**
      * @brief Get elelment at specified position.
@@ -128,6 +133,13 @@ public:
 };
 
 template <typename T, usize N>
+constexpr array<T, N>::array(const T (&arr)[N]) noexcept
+{
+    for (usize i = 0; i < N; i++)
+        m_data[i] = arr[i];
+}
+
+template <typename T, usize N>
 constexpr T array<T, N>::at(usize pos) const noexcept
 {
     if (pos >= N)
@@ -141,7 +153,6 @@ constexpr T *array<T, N>::data(void) const noexcept
 {
     return m_data;
 }
-
 
 template <typename T, usize N>
 constexpr bool array<T, N>::empty(void) const noexcept
