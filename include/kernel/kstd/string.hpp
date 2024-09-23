@@ -37,19 +37,23 @@ namespace kstd {
 class string
 {
     const char *m_data;
+    usize       m_size;
 
 public:
-    string(void) noexcept = default;
+    /** @brief Construct new string object.*/
+    constexpr string(void) noexcept;
+
+    /** @brief Construct new string object.*/
+    constexpr string(const string& other) noexcept;
+
     virtual ~string(void) noexcept = default;
-    string(const string& other) noexcept = default;
-    constexpr string& operator=(const string& other) noexcept = default;
     
     /**
      * @brief Construct new string object.
      * 
      * @param [in] str - given C-like string.
      */
-    string(const char *str) noexcept;
+    constexpr string(const char *str) noexcept;
     
     /**
      * @brief Get elelment at specified position.
@@ -121,18 +125,27 @@ public:
      * @return new string object.
      */
     constexpr string& operator=(const char *str) noexcept;
+    
+    /**
+     * @brief Assignment operator overloading.
+     * 
+     * @param [in] other - given other string object.
+     * @return new string object.
+     */
+    constexpr string& operator=(const string& other) noexcept;
 };
 
 // --------------------------------------------------------------------------------------
 
-string::string(const char *str) noexcept
-{
-    m_data = str;
-}
+constexpr string::string(void) noexcept : m_data(nullptr), m_size(0) {}
+
+constexpr string::string(const char *str) noexcept : m_data(str), m_size(str ? strlen(str) : 0) {}
+
+constexpr string::string(const string& other) noexcept : m_data(other.m_data), m_size(other.m_size) {}
 
 constexpr char string::at(usize pos) const noexcept
 {
-    if (pos >= static_cast<usize>(strlen(m_data)))
+    if (pos >= m_size)
         log::error("%s\n", "given position out of range");
     
     return m_data[pos];
@@ -150,10 +163,7 @@ constexpr bool string::empty(void) const noexcept
 
 constexpr usize string::size(void) const noexcept
 {
-    if (!m_data)
-        return 0;
-    
-    return strlen(m_data);
+    return m_size == 0;
 }
 
 constexpr char string::operator[](usize pos) const noexcept
@@ -163,12 +173,12 @@ constexpr char string::operator[](usize pos) const noexcept
 
 constexpr const char* string::begin(void) const noexcept
 {
-    return &m_data[0];
+    return m_data;
 }
     
 constexpr const char* string::end(void) noexcept
 {
-    return &m_data[size()];
+    return m_data + m_size;
 }
 
 constexpr s32 string::compare(const string& other, usize n) const noexcept
@@ -176,9 +186,21 @@ constexpr s32 string::compare(const string& other, usize n) const noexcept
     return strncmp(m_data, other.m_data, n);
 }
 
+constexpr string& string::operator=(const string& other) noexcept
+{
+    if (this != &other) {
+        m_data = other.m_data;
+        m_size = other.m_size;
+    }
+
+    return *this;
+}
+
 constexpr string& string::operator=(const char *str) noexcept
 {
     m_data = str;
+    m_size = strlen(str);
+
     return *this;
 }
 
