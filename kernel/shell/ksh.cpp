@@ -27,7 +27,7 @@
 #include <kernel/version.hpp>
 #include <kernel/kernel.hpp>
 #include <kernel/login.hpp>
-#include <kernel/mm.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {

@@ -22,7 +22,7 @@
 #include <kernel/shell/ksh.hpp>
 #include <kernel/fs/initrd.hpp> 
 #include <kernel/terminal.hpp>
-#include <kernel/mm.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {
@@ -57,14 +57,14 @@ void clear(void)
 
 void free(void)
 {
-    u32 max_blocks     = core::memory::pmm::get_max_blocks();
-    u32 used_blocks    = core::memory::pmm::get_used_blocks();
-    u32 phys_mem_total = core::memory::pmm::get_phys_mem_total();
-    u32 phys_mem_free  = core::memory::pmm::get_phys_mem_free();
+    u32 max_blocks     = core::memory::pmm.get_max_blocks();
+    u32 used_blocks    = core::memory::pmm.get_used_blocks();
+    u32 phys_mem_total = core::memory::pmm.get_total_memory();
+    u32 phys_mem_free  = core::memory::pmm.get_free_memory();
     u32 free_blocks    = max_blocks - used_blocks;
-    u32 total_bytes    = max_blocks  * core::memory::pmm::BLOCK_SIZE;
-    u32 used_bytes     = used_blocks * core::memory::pmm::BLOCK_SIZE;
-    u32 free_bytes     = free_blocks * core::memory::pmm::BLOCK_SIZE;
+    u32 total_bytes    = max_blocks  * core::memory::BLOCK_SIZE;
+    u32 used_bytes     = used_blocks * core::memory::BLOCK_SIZE;
+    u32 free_bytes     = free_blocks * core::memory::BLOCK_SIZE;
 
     kstd::printk("\nMem: \n\t total: %u KB   free: %u KB   used: %u KB\n\n", phys_mem_total >> 10, 
     phys_mem_free >> 10, (phys_mem_total - phys_mem_free) >> 10);

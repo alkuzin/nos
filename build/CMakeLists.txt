@@ -74,7 +74,6 @@ set(KERNEL_SOURCES
     
     # Kernel mm directory:
     "${KERNEL_MM_DIR}/kheap.cpp"
-    "${KERNEL_MM_DIR}/mm.cpp"
     "${KERNEL_MM_DIR}/pmm.cpp"
     "${KERNEL_MM_DIR}/vmm.cpp"
 

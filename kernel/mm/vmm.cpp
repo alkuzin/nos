@@ -63,7 +63,7 @@ u32 *get_page(const u32 vaddr)
 
 void *page_alloc(u32 *page) 
 {
-    void *block = pmm::blocks_alloc(1);
+    void *block = pmm.blocks_alloc(1);
 
     if(block) {
         SET_FRAME(page, reinterpret_cast<u32>(block));
@@ -78,7 +78,7 @@ void free_page(u32 *page)
     void *addr = reinterpret_cast<void*>(PAGE_PADDRESS(page));
 
     if(addr)
-        pmm::free_blocks(reinterpret_cast<u32*>(addr), 1);
+        pmm.free_blocks(reinterpret_cast<u32*>(addr), 1);
 
     CLEAR_ATTRIBUTE(page, PTE_PRESENT);
 }
@@ -111,7 +111,7 @@ bool map_page(void *paddr, void *vaddr)
    u32 *entry     = &pd->entries[PD_INDEX(reinterpret_cast<u32>(vaddr))];
 
    if((*entry & PTE_PRESENT) != PTE_PRESENT) {
-        table = reinterpret_cast<page_table_t*>(pmm::blocks_alloc(1));
+        table = reinterpret_cast<page_table_t*>(pmm.blocks_alloc(1));
 
         if(!table)
             return false;
@@ -154,7 +154,7 @@ bool vmm_init(void)
 
 
     // default page directory
-    page_dir_t *dir = reinterpret_cast<page_dir_t*>(pmm::blocks_alloc(3));
+    page_dir_t *dir = reinterpret_cast<page_dir_t*>(pmm.blocks_alloc(3));
 
     // out of memory
     if(!dir)
@@ -167,13 +167,13 @@ bool vmm_init(void)
         dir->entries[i] = 0x02;
     
     // default page table
-    table = reinterpret_cast<page_table_t*>(pmm::blocks_alloc(1));
+    table = reinterpret_cast<page_table_t*>(pmm.blocks_alloc(1));
 
     // out of memory
     if(!table)
         return false;
 
-    table3G = reinterpret_cast<page_table_t*>(pmm::blocks_alloc(1));
+    table3G = reinterpret_cast<page_table_t*>(pmm.blocks_alloc(1));
 
     // out of memory
     if(!table3G)

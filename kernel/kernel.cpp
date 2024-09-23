@@ -37,7 +37,7 @@
 #include <kernel/kernel.hpp>
 // #include <kernel/login.hpp> // Disabled for debugging
 #include <kernel/klog.hpp>
-#include <kernel/mm.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {
@@ -90,7 +90,7 @@ void kboot(u32 magic, const multiboot_t& mboot)
     log::success("%s\n", "initialized Interrupt Descriptor Table");	
     
     // initializing memory management
-    memory::init(mboot);
+    core::memory::pmm.initialize(mboot);
     log::success("%s\n", "initialized memory management");
 
     // initializing initial ramdisk

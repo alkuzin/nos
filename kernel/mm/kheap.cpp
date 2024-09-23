@@ -43,7 +43,7 @@ void init(const usize n)
     if(n % PAGE_SIZE > 0)
         kmalloc_pages++;
 
-    kmalloc_paddr = reinterpret_cast<u32>(pmm::blocks_alloc(kmalloc_pages));
+    kmalloc_paddr = reinterpret_cast<u32>(pmm.blocks_alloc(kmalloc_pages));
     kmalloc_head  = reinterpret_cast<block_t*>(kmalloc_vaddr);
 
     // map in pages

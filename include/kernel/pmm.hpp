@@ -37,121 +37,135 @@
 namespace kernel {
 namespace core {
 namespace memory {
-namespace pmm {
 
 constexpr u32 BLOCK_SIZE     {4096}; // 4KB
 constexpr u32 BITS_PER_BYTE  {8};
 
-/**
- * @brief Set block in the memory map.
- * 
- * @param [in] bit - given block to set.
- */
-void set_block(u32 bit);
 
-/**
- * @brief Unset block in the memory map.
- * 
- * @param [in] bit - given block to unset.
- */
-void unset_block(u32 bit);
+class PhysicalMemoryManager
+{
+    u32 *m_memory_map;
+    u32 m_max_blocks;
+    u32 m_used_blocks;
+    u32 m_mem_total;
+    u32 m_mem_free;
+    u32 m_start_addr;
+    u32 m_size;
 
-/**
- * @brief Test if a block in the memory map is set/used.
- * 
- * @param [in] bit - given block to test.
- * @return true - block is set;
- * @return false - otherwise.
- */
-bool test_block(u32 bit);
+private:
+    /**
+     * @brief Set block in the memory map.
+     * 
+     * @param [in] bit - given block to set.
+     */
+    void set_block(u32 bit) noexcept;
 
-/**
- * @brief Find the first free blocks in the memory map.
- * 
- * @param [in] n - given number of blocks to find.
- * @return the index of the first free block, or -1 if not found. 
- */
-s32 find_first_free_blocks(u32 n);
+    /**
+     * @brief Unset block in the memory map.
+     * 
+     * @param [in] bit - given block to unset.
+     */
+    void unset_block(u32 bit) noexcept;
 
-/**
- * @brief Initialize the physical memory manager.
- * 
- * @param [in] start_addr - given starting address of the memory map.
- * @param [in] size - given size of the memory map.
- */
-void init(u32 start_addr, u32 size);
+    /**
+     * @brief Test if a block in the memory map is set/used.
+     * 
+     * @param [in] bit - given block to test.
+     * @return true - block is set;
+     * @return false - otherwise.
+     */
+    bool test_block(u32 bit) noexcept;
 
-/**
- * @brief Get information about memory regions.
- * Get largest free area of RAM & get free and total physical memory.
- * 
- * @param [in] mboot - given multiboot information structure.
- * @param [in] start_addr - given starting address of memory.
- * @param [in] size - given pointer to store the size of memory.
- */
-void get_memory(const multiboot_t& mboot, u32 *start_addr, u32 *size);
+    /**
+     * @brief Find the first free blocks in the memory map.
+     * 
+     * @param [in] n - given number of blocks to find.
+     * @return the index of the first free block, or -1 if not found. 
+     */
+    s32 find_first_free_blocks(u32 n) noexcept;
 
-/**
- * @brief Initialize a memory region.
- * 
- * @param [in] base_addr - given base address of the region.
- * @param [in] size - given size of the region.
- */
-void region_init(u32 base_addr, u32 size);
+    /**
+     * @brief Get information about memory regions.
+     * Get largest free area of RAM & get free and total physical memory.
+     * 
+     * @param [in] mboot - given multiboot information structure.
+     */
+    void get_memory(const multiboot_t& mboot) noexcept;
 
-/**
- * @brief Deinitialize a memory region.
- * 
- * @param [in] base_addr - given base address of the region.
- * @param [in] size - given size of the region.
- */
-void region_deinit(u32 base_addr, u32 size);
+public:
+    /** @brief Construct a new Physical Memory Manager object.*/
+    PhysicalMemoryManager(void) noexcept;
+    
+    /**
+     * @brief Initialize the physical memory manager.
+     * 
+     * @param [in] mboot - given multiboot information structure.
+     */
+    void initialize(const multiboot_t& mboot) noexcept;
 
-/**
- * @brief Allocate a block of memory.
- * 
- * @param [in] n - given number of blocks to allocate.
- * @return pointer to the allocated memory block.
- */
-u32 *blocks_alloc(u32 n);
+    /**
+     * @brief Initialize a memory region.
+     * 
+     * @param [in] base_addr - given base address of the region.
+     * @param [in] size - given size of the region.
+     */
+    void region_init(u32 base_addr, u32 size) noexcept;
 
-/**
- * @brief Free a block of memory.
- * 
- * @param [in] addr - given pointer to the memory block to free.
- * @param [in] n - given number of blocks to free.
- */
-void free_blocks(u32 *addr, u32 n);
+    /**
+     * @brief Deinitialize a memory region.
+     * 
+     * @param [in] base_addr - given base address of the region.
+     * @param [in] size - given size of the region.
+     */
+    void region_deinit(u32 base_addr, u32 size) noexcept;
 
-/**
- * @brief Get max possible number of blocks.
- * 
- * @return max number of blocks. 
- */
-u32 get_max_blocks(void);
+    /**
+     * @brief Allocate a block of memory.
+     * 
+     * @param [in] n - given number of blocks to allocate.
+     * @return pointer to the allocated memory block.
+     */
+    u32 *blocks_alloc(u32 n) noexcept;
 
-/**
- * @brief Get number of used physical memory blocks.
- * 
- * @return number of used blocks. 
- */
-u32 get_used_blocks(void);
+    /**
+     * @brief Free a block of memory.
+     * 
+     * @param [in] addr - given pointer to the memory block to free.
+     * @param [in] n - given number of blocks to free.
+     */
+    void free_blocks(u32 *addr, u32 n) noexcept;
 
-/**
- * @brief Get RAM size.
- * 
- * @return total amount of physical memory in bytes.
- */
-u32 get_phys_mem_total(void);
+    /**
+     * @brief Get max possible number of blocks.
+     * 
+     * @return max number of blocks. 
+     */
+    u32 get_max_blocks(void) const noexcept;
 
-/**
- * @brief Get free RAM size.
- * 
- * @return amount of available physical memory in bytes.
- */
-u32 get_phys_mem_free(void);
+    /**
+     * @brief Get number of used physical memory blocks.
+     * 
+     * @return number of used blocks. 
+     */
+    u32 get_used_blocks(void) const noexcept;
 
-} // namespace pmm    
+    /**
+     * @brief Get RAM size.
+     * 
+     * @return total amount of physical memory in bytes.
+     */
+    u32 get_total_memory(void) const noexcept;
+
+    /**
+     * @brief Get free RAM size.
+     * 
+     * @return amount of available physical memory in bytes.
+     */
+    u32 get_free_memory(void) const noexcept;
+};
+
+extern PhysicalMemoryManager pmm;
+
 } // namespace memory
 } // namespace core
 } // namespace kernel
