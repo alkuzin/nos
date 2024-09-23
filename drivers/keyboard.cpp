@@ -17,6 +17,7 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
+#include <kernel/arch/x86/irq.hpp>
 #include <kernel/arch/x86/io.hpp>
 #include <kernel/kstd/ctype.hpp>
 #include <kernel/klog.hpp>
@@ -97,12 +98,12 @@ Keyboard::Keyboard(void) noexcept
 
 void Keyboard::initialize(void) noexcept
 {
-    log::debug("%s", "Initialized keyboard\n");
+    log::debug("%s\n", "initialized keyboard driver");
 }
 
 void Keyboard::shutdown(void) noexcept
 {
-    log::debug("%s", "Shutdown keyboard\n");
+    log::debug("%s\n", "shutdown keyboard driver");
 }
 
 kstd::string Keyboard::name(void) const noexcept

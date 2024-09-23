@@ -29,7 +29,6 @@
 #ifndef _KERNEL_DRIVER_HPP_
 #define _KERNEL_DRIVER_HPP_
 
-#include <kernel/arch/x86/irq.hpp>
 #include <kernel/kstd/string.hpp>
 
 

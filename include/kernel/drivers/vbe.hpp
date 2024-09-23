@@ -30,13 +30,12 @@
 #ifndef _KERNEL_DRIVER_VBE_HPP_
 #define _KERNEL_DRIVER_VBE_HPP_
 
-#include <kernel/kstd/types.hpp>
+#include <kernel/drivers/driver.hpp>
 #include <kernel/multiboot.hpp>
 
 
 namespace kernel {
 namespace driver {
-namespace vbe {
 
 // VBE ports
 constexpr u32 VBE_DISPI_IOPORT_INDEX {0x01CE};
@@ -46,14 +45,48 @@ constexpr u32 VBE_DISPI_IOPORT_DATA  {0x01CF};
 constexpr u32 VBE_DISPI_ENABLED      {0x01};
 constexpr u32 VBE_DISPI_LFB_ENABLED  {0x40};
 
-/**
- * @brief Initialize VBE mode. 
- * 
- * @param [in] mboot - given multiboot information structure.
- */
-void init(const multiboot_info_t& mboot) noexcept;
 
-} // namespace vbe
+class VBE : public Driver
+{
+    const multiboot_info_t *m_mboot;
+
+public:
+    VBE(void) noexcept = default;
+    virtual ~VBE(void) = default;
+    
+    /** @brief Enable driver.*/
+    void initialize(void) noexcept override;
+    
+    /** @brief Disable driver.*/
+    void shutdown(void) noexcept override;
+
+    /**
+     * @brief Get driver name.
+     * 
+     * @return driver name.
+     */
+    kstd::string name(void) const noexcept override;
+
+    /**
+     * @brief Driver type.
+     * 
+     * @return driver type. 
+     */
+    dtype type(void) const noexcept override;
+
+    /** @brief Handle driver interrupt.*/
+    void handle_interrupt(void) const noexcept override;
+    
+    /**
+     * @brief Set VBE object.
+     * 
+     * @param [in] mboot - given multiboot information structure.
+     */
+    void set(const multiboot_info_t& mboot) noexcept;
+};
+
+extern VBE vbe;
+
 } // namespace driver
 } // namespace kernel
 

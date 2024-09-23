@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/io.hpp>
 #include <kernel/drivers/vbe.hpp>
+#include <kernel/arch/x86/io.hpp>
+#include <kernel/klog.hpp>
 
 
 namespace kernel {
 namespace driver {
-namespace vbe {
 
 /**
  * @brief Set VBE params.
@@ -36,15 +36,43 @@ static constexpr inline void write(u16 index, u16 data) noexcept
     arch::x86::outw(VBE_DISPI_IOPORT_DATA, data);
 }
 
-void init(const multiboot_info_t& mboot) noexcept
+void VBE::initialize(void) noexcept
 {
     write(0x00, 0x4F02); // set VBE mode
-    write(0x01, mboot.framebuffer_width);
-    write(0x02, mboot.framebuffer_height);
-    write(0x03, mboot.framebuffer_bpp);
+    write(0x01, m_mboot->framebuffer_width);
+    write(0x02, m_mboot->framebuffer_height);
+    write(0x03, m_mboot->framebuffer_bpp);
     write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); // enable LFB mode
+    
+    log::debug("%s\n", "initialized VBE driver");
 }
 
-} // namespace vbe
+void VBE::shutdown(void) noexcept
+{
+    log::debug("%s\n", "shutdown VBE driver");
+}
+
+kstd::string VBE::name(void) const noexcept
+{
+    return "VESA BIOS Extentions Driver";
+}
+
+dtype VBE::type(void) const noexcept
+{
+    return driver::dtype::graphics;
+}
+
+void VBE::handle_interrupt(void) const noexcept
+{
+    // do nothing
+}
+
+void VBE::set(const multiboot_info_t& mboot) noexcept
+{
+    m_mboot = &mboot;
+}
+
+VBE vbe;
+
 } // namespace driver
 } // namespace kernel
