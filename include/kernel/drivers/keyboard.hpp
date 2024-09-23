@@ -30,13 +30,12 @@
 #ifndef _KERNEL_DRIVER_KEYBOARD_HPP_
 #define _KERNEL_DRIVER_KEYBOARD_HPP_
 
-#include <kernel/arch/x86/irq.hpp>
+#include <kernel/drivers/driver.hpp>
 #include <kernel/arch/x86/io.hpp>
 
 
 namespace kernel {
 namespace driver {
-namespace keyboard {
 
 constexpr u32 INPUT_BUFFER_SIZE {256};
 
@@ -58,27 +57,58 @@ enum class key : u8 {
     down_arrow  = 0x50
 };
 
-/** @brief keyboard initialization.*/
-void init(void) noexcept;
+class Keyboard : public Driver
+{
+    mutable bool m_is_caps;
+    mutable bool m_is_caps_lock;
 
-/**
- * @brief Keyboard key press handler.
- * 
- * @param [in] regs - given pointer to interrupt register state.
- */
-void handler(arch::x86::int_reg_t *regs) noexcept;
+private:
+    /** @brief Keyboard wait for user to press a key.*/
+    void wait(void) const noexcept;
 
-/** @brief Keyboard wait for user to press a key.*/
-void wait(void) noexcept;
+public:
+    virtual ~Keyboard(void) noexcept = default;
 
-/**
- * @brief Keyboard get character on key press.
- * 
- * @return Character read from the keyboard.
- */
-u8 getchar(void) noexcept;
+    /** @brief Construct a new Keyboard object.*/
+    Keyboard(void) noexcept;
+    
+    /** @brief Enable driver.*/
+    void initialize(void) noexcept override;
+    
+    /** @brief Disable driver.*/
+    void shutdown(void) noexcept override;
 
-} // namespace keyboard
+    /**
+     * @brief Get driver name.
+     * 
+     * @return driver name.
+     */
+    kstd::string name(void) const noexcept override;
+
+    /**
+     * @brief Driver type.
+     * 
+     * @return driver type. 
+     */
+    driver::dtype type(void) const noexcept override;
+
+    /**
+     * @brief Handle driver interrupt.
+     * 
+     * @param [in] regs - given pointer to interrupt register state. 
+     */
+    void handle_interrupt(void) const noexcept override;
+    
+    /**
+     * @brief Keyboard get character on key press.
+     * 
+     * @return Character read from the keyboard.
+     */
+    u8 getchar(void) const noexcept;
+};
+
+extern Keyboard keyboard;
+
 } // namespace driver
 } // namespace kernel
 
