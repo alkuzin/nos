@@ -40,7 +40,7 @@ set(KSTD_SOURCES
 # List of kernel drivers source files
 set(DRIVERS_SOURCES
     "${DRIVERS_DIR}/keyboard.cpp"
-    "${DRIVERS_DIR}/timer.cpp"
+    "${DRIVERS_DIR}/pit.cpp"
     "${DRIVERS_DIR}/vbe.cpp"
 )
 

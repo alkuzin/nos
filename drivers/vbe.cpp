@@ -44,12 +44,12 @@ void VBE::initialize(void) noexcept
     write(0x03, m_mboot->framebuffer_bpp);
     write(0x04, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED); // enable LFB mode
     
-    log::debug("%s\n", "initialized VBE driver");
+    log::success("%s\n", "initialized VBE driver");
 }
 
 void VBE::shutdown(void) noexcept
 {
-    log::debug("%s\n", "shutdown VBE driver");
+    log::success("%s\n", "shutdown VBE driver");
 }
 
 kstd::string VBE::name(void) const noexcept

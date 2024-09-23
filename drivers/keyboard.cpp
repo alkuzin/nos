@@ -84,7 +84,11 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN 
 };
 
-
+/**
+ * @brief Inerrupt handler.
+ * 
+ * @param [in] regs - given pointer to interrupt register state.
+ */
 static void handler(arch::x86::int_reg_t *regs) noexcept
 {
     (void)regs; // do nothing
@@ -98,12 +102,12 @@ Keyboard::Keyboard(void) noexcept
 
 void Keyboard::initialize(void) noexcept
 {
-    log::debug("%s\n", "initialized keyboard driver");
+    log::success("%s\n", "initialized keyboard driver");
 }
 
 void Keyboard::shutdown(void) noexcept
 {
-    log::debug("%s\n", "shutdown keyboard driver");
+    log::success("%s\n", "shutdown keyboard driver");
 }
 
 kstd::string Keyboard::name(void) const noexcept
