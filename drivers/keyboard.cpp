@@ -94,31 +94,12 @@ static void handler(arch::x86::int_reg_t *regs) noexcept
     (void)regs; // do nothing
 }
 
-Keyboard::Keyboard(void) noexcept
+Keyboard::Keyboard(void) noexcept : m_is_caps(false), m_is_caps_lock(false)
 {
-    m_is_caps      = false;
-    m_is_caps_lock = false;
+    m_name = "PS/2 Keyboard Driver";
 }
 
-void Keyboard::initialize(void) noexcept
-{
-    log::success("%s\n", "initialized keyboard driver");
-}
-
-void Keyboard::shutdown(void) noexcept
-{
-    log::success("%s\n", "shutdown keyboard driver");
-}
-
-kstd::string Keyboard::name(void) const noexcept
-{
-    return "PS/2 Keyboard Driver";
-}
-
-driver::dtype Keyboard::type(void) const noexcept
-{
-    return driver::dtype::device;
-}
+void Keyboard::initialize(void) noexcept {}
 
 void Keyboard::wait(void) const noexcept
 {

@@ -67,30 +67,11 @@ private:
     void wait(void) const noexcept;
 
 public:
-    virtual ~Keyboard(void) noexcept = default;
-
     /** @brief Construct a new Keyboard object.*/
     Keyboard(void) noexcept;
     
     /** @brief Enable driver.*/
     void initialize(void) noexcept override;
-    
-    /** @brief Disable driver.*/
-    void shutdown(void) noexcept override;
-
-    /**
-     * @brief Get driver name.
-     * 
-     * @return driver name.
-     */
-    kstd::string name(void) const noexcept override;
-
-    /**
-     * @brief Driver type.
-     * 
-     * @return driver type. 
-     */
-    driver::dtype type(void) const noexcept override;
 
     /**
      * @brief Handle driver interrupt.

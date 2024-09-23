@@ -42,32 +42,42 @@ enum class dtype {
 
 class Driver
 {
+protected:
+    kstd::string m_name;
+    dtype        m_type;
 public:
     virtual ~Driver(void) = default;
 
     /** @brief Enable driver.*/
     virtual void initialize(void) noexcept = 0;
     
-    /** @brief Disable driver.*/
-    virtual void shutdown(void) noexcept = 0;
-
     /**
      * @brief Get driver name.
      * 
      * @return driver name.
      */
-    virtual kstd::string name(void) const noexcept = 0;
+    constexpr kstd::string name(void) const noexcept;
 
     /**
      * @brief Driver type.
      * 
      * @return driver type. 
      */
-    virtual dtype type(void) const noexcept = 0;
+    constexpr dtype type(void) const noexcept;
 
     /** @brief Handle driver interrupt.*/
-    virtual void handle_interrupt(void) const noexcept = 0;
+    virtual void handle_interrupt(void) const noexcept;
 };
+
+constexpr kstd::string Driver::name(void) const noexcept
+{
+    return m_name;
+}
+
+constexpr dtype Driver::type(void) const noexcept
+{
+    return m_type;
+}
 
 } // namespace driver
 } // namespace kernel

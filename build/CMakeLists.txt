@@ -41,7 +41,6 @@ set(KSTD_SOURCES
 set(DRIVERS_SOURCES
     "${DRIVERS_DIR}/keyboard.cpp"
     "${DRIVERS_DIR}/pit.cpp"
-    "${DRIVERS_DIR}/vbe.cpp"
 )
 
 # List of kernel filesystem source files

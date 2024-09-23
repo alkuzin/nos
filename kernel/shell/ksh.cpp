@@ -66,12 +66,9 @@ static inline s32 is_valid(const char *cmd, const s32 cmd_len, const char *input
 
 void init(void)
 {
-    char input_buffer[driver::keyboard::INPUT_BUFFER_SIZE];
+    char input_buffer[driver::INPUT_BUFFER_SIZE];
     u32  buf_pos = 0;
     char cc;
-
-    // initializing keyboard
-    driver::keyboard::init();
 
     // clear user input buffer
     kstd::bzero(input_buffer, sizeof(input_buffer));
@@ -81,7 +78,7 @@ void init(void)
         display_prompt();
         
         do {
-            cc = static_cast<char>(driver::keyboard::getchar());
+            cc = static_cast<char>(driver::keyboard.getchar());
 
             if(cc != 0 && cc != '\n') {
 
@@ -95,7 +92,7 @@ void init(void)
             
                 kstd::kputchar(cc);
 
-                if(buf_pos < driver::keyboard::INPUT_BUFFER_SIZE && kstd::isprint(cc)) {
+                if(buf_pos < driver::INPUT_BUFFER_SIZE && kstd::isprint(cc)) {
                     input_buffer[buf_pos] = cc;
                     buf_pos++;
                 }

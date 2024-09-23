@@ -38,28 +38,12 @@ static void handler(arch::x86::int_reg_t *regs)
     _ticks++;
 }
 
-void PIT::initialize(void) noexcept
+PIT::PIT(void) noexcept : m_frequency(100), m_divisor(11931180 / m_frequency /* MHz */)
 {
-    m_frequency = 100;
-    m_divisor   = 11931180 / m_frequency; // MHz
-
-    log::success("%s\n", "initialized PIT driver");
+    m_name = "Programmable Interval Timer";
 }
 
-void PIT::shutdown(void) noexcept
-{
-    log::success("%s\n", "shutdown PIT driver");
-}
-
-kstd::string PIT::name(void) const noexcept
-{
-    return "Programmable Interval Timer";
-}
-
-dtype PIT::type(void) const noexcept
-{
-    return driver::dtype::device;
-}
+void PIT::initialize(void) noexcept {}
 
 void PIT::handle_interrupt(void) const noexcept
 {

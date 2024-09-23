@@ -39,29 +39,11 @@ class PIT : public Driver
     u32 m_divisor;
 
 public:
-    PIT(void) noexcept = default;
-    virtual ~PIT(void) = default;
+    PIT(void) noexcept;
 
     /** @brief Enable driver.*/
     void initialize(void) noexcept override;
     
-    /** @brief Disable driver.*/
-    void shutdown(void) noexcept override;
-
-    /**
-     * @brief Get driver name.
-     * 
-     * @return driver name.
-     */
-    kstd::string name(void) const noexcept override;
-
-    /**
-     * @brief Driver type.
-     * 
-     * @return driver type. 
-     */
-    dtype type(void) const noexcept override;
-
     /** @brief Handle driver interrupt.*/
     void handle_interrupt(void) const noexcept override;
 
