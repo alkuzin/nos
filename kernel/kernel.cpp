@@ -16,11 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// drivers
-#include <kernel/drivers/keyboard.hpp>
-#include <kernel/drivers/timer.hpp>
-#include <kernel/drivers/vbe.hpp>
-
 // x86 architecture
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/arch/x86/idt.hpp>
@@ -67,23 +62,12 @@ static void test_initrd(void)
 }
 
 void kboot(u32 magic, const multiboot_t& mboot)
-{
-    driver::vbe::init(mboot);
+{   
     gfx::Framebuffer framebuffer(mboot);
     gfx::graphics.init(framebuffer);
     tty::terminal.init(framebuffer);
-
-    tty::terminal.set_color(
-        gfx::color::white,
-        gfx::color::black,
-        gfx::color::gray,
-        gfx::color::black
-    );
-    tty::terminal.clear();
-
-    log::success("%s\n", "initialized VBE mode");
     log::success("%s\n", "initialized TTY");
-    
+
     log::debug("framebuffer address: <%p>\n", framebuffer.addr());
     log::debug("framebuffer pitch:   %u\n", framebuffer.pitch());
     log::debug("framebuffer width:   %u\n", framebuffer.width());
@@ -95,6 +79,8 @@ void kboot(u32 magic, const multiboot_t& mboot)
         return;
     }
     
+    log::debug("magic: %#X\n", magic);
+
     // initializing Global Descriptor Table
     arch::x86::gdt_init();
     log::success("%s\n", "initialized Global Descriptor Table");
@@ -103,10 +89,6 @@ void kboot(u32 magic, const multiboot_t& mboot)
     arch::x86::idt_init();
     log::success("%s\n", "initialized Interrupt Descriptor Table");	
     
-    // initializing timer
-    driver::timer::init();
-    log::success("%s\n", "initialized timer");	
-
     // initializing memory management
     memory::init(mboot);
     log::success("%s\n", "initialized memory management");
@@ -122,7 +104,7 @@ void kboot(u32 magic, const multiboot_t& mboot)
     log::success("%s\n", "initialized Virtual File System");
 
     test_initrd();
-
+    
     // Disabled for debugging
     // login::init();
 

@@ -29,9 +29,13 @@ constexpr s32 TAB_WIDTH {4};
 
 void Terminal::init(gfx::Framebuffer& fb) noexcept
 {
-    m_fb     = fb;
-    m_width  = m_fb.width();
-    m_height = m_fb.height();
+    m_fb     		  = fb;
+    m_width  		  = m_fb.width();
+    m_height 		  = m_fb.height();
+    m_fg 			  = gfx::color::white;
+    m_bg 			  = gfx::color::black;
+    m_primary_color   = gfx::color::gray;
+    m_secondary_color = gfx::color::black;
 }
 
 gfx::rgb Terminal::fg(void) noexcept
