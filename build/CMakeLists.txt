@@ -191,6 +191,9 @@ add_custom_target(init-iso
     COMMENT "Initializing ISO with QEMU"
 )
 
+# Prevent extra linker flags
+set(CMAKE_LINK_DEPENDS_USE_LINKER FALSE)
+
 # Custom command to initialize the build
 add_custom_target(init DEPENDS init-iso)
 
