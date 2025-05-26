@@ -131,14 +131,14 @@ macro_rules! test {
 #[allow(unused_imports)]
 pub(crate) use custom;
 #[allow(unused_imports)]
-pub(crate) use info;
-#[allow(unused_imports)]
 pub(crate) use debug;
-#[allow(unused_imports)]
-pub(crate) use success;
 #[allow(unused_imports)]
 pub(crate) use fail;
 #[allow(unused_imports)]
+pub(crate) use info;
+#[allow(unused_imports)]
 pub(crate) use panic;
+#[allow(unused_imports)]
+pub(crate) use success;
 #[allow(unused_imports)]
 pub(crate) use test;
