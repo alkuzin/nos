@@ -6,6 +6,7 @@
 //! Kernel graphics subsystem.
 
 mod font;
+pub mod terminal;
 
 use crate::{drivers::vbe::Framebuffer, log, multiboot::MultibootInfo};
 use core::ptr;
@@ -156,14 +157,17 @@ pub fn draw_char(
 ///
 /// # Parameters
 /// - `boot_info` - given multiboot info structure.
-pub fn init(boot_info: &MultibootInfo) {
+///
+/// # Returns
+/// - Framebuffer info struct.
+pub fn init(boot_info: &MultibootInfo) -> Framebuffer {
     let fb = get_framebuffer(boot_info);
-
-    // TODO: init terminal.
 
     log::debug!("Bootloader provided framebuffer:");
     log::debug!("Address: <{:#010x}>", fb.addr);
     log::debug!("Pitch: {}", fb.pitch);
     log::debug!("Resolution: {}x{}", fb.width, fb.height);
     log::debug!("Bytes per pixel: {}", fb.bpp);
+
+    fb
 }

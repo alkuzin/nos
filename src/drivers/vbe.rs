@@ -6,7 +6,7 @@
 //! VBE (VESA BIOS Extensions) driver.
 
 /// VESA framebuffer struct.
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct Framebuffer {
     /// Framebuffer physical address.
     pub addr: u32,
