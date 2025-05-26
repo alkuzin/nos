@@ -6,3 +6,4 @@
 //! HAL (Hardware Abstraction Layer) main module.
 
 pub mod uart;
+pub mod cpu;
