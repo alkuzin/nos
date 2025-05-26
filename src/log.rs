@@ -44,3 +44,101 @@ macro_rules! printk {
     // Default case for any other arguments.
     ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
 }
+
+/// Informational log title.
+pub const LOG_INFO: &str = "  INFO  ";
+
+/// Debug log title.
+pub const LOG_DEBUG: &str = " DEBUG  ";
+
+/// Success log title.
+pub const LOG_SUCCESS: &str = "   OK   ";
+
+/// Fail log title.
+pub const LOG_FAIL: &str = " FAILED ";
+
+/// Panic log title.
+pub const LOG_PANIC: &str = " PANIC  ";
+
+/// Test log title.
+pub const LOG_TEST: &str = "  TEST  ";
+
+/// Custom log output.
+///
+/// # Parameters
+/// - `title` - given custom log title.
+#[macro_export]
+macro_rules! custom {
+    // TODO: replace zeros in format string with timestamp:
+    // [<seconds since boot>.<milliseconds since the last full second>].
+    ($title:expr, $($arg:tt)*) => {{
+        $crate::print!("[{:0>5}.{:0>3}] [{}]: ", 0, 0, $title);
+        $crate::print!("{}\n", format_args!($($arg)*));
+    }};
+}
+
+/// Informational log output.
+#[macro_export]
+macro_rules! info {
+    ($($arg:tt)*) => {{
+        $crate::log::custom!($crate::log::LOG_INFO, $($arg)*)
+    }};
+}
+
+/// Debug log output.
+#[macro_export]
+macro_rules! debug {
+    ($($arg:tt)*) => {{
+        #[cfg(debug_assertions)]
+        $crate::log::custom!($crate::log::LOG_DEBUG, $($arg)*)
+    }};
+}
+
+/// Success log output.
+#[macro_export]
+macro_rules! success {
+    ($($arg:tt)*) => {{
+        $crate::log::custom!($crate::log::LOG_SUCCESS, $($arg)*)
+    }};
+}
+
+/// Failed log output.
+#[macro_export]
+macro_rules! fail {
+    ($($arg:tt)*) => {{
+        $crate::log::custom!($crate::log::LOG_FAIL, $($arg)*)
+    }};
+}
+
+/// Panic log output.
+#[macro_export]
+macro_rules! panic {
+    ($($arg:tt)*) => {{
+        $crate::log::custom!($crate::log::LOG_PANIC, $($arg)*)
+    }};
+}
+
+/// Log output for tests.
+#[macro_export]
+macro_rules! test {
+    ($($arg:tt)*) => {{
+        $crate::log::custom!($crate::log::LOG_TEST, $($arg)*)
+    }};
+}
+
+// Re-export log macro rules.
+
+#[allow(unused_imports)]
+pub(crate) use custom;
+#[allow(unused_imports)]
+pub(crate) use info;
+#[allow(unused_imports)]
+pub(crate) use debug;
+#[allow(unused_imports)]
+pub(crate) use success;
+#[allow(unused_imports)]
+pub(crate) use fail;
+#[allow(unused_imports)]
+pub(crate) use panic;
+#[allow(unused_imports)]
+pub(crate) use test;

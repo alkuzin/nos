@@ -14,4 +14,8 @@ use crate::{log, multiboot::MultibootInfo};
 pub fn init(_boot_info: &MultibootInfo) {
     // Initialize kernel logger.
     log::init();
+    log::success!("Initialized kernel logger.");
+
+    // TODO: implement CPU info struct.
+    // TODO: display CPU info + check whether OS running under hypervisor.
 }
