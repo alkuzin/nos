@@ -5,7 +5,10 @@
 
 //! Kernel logging related declarations.
 
-use crate::hal::uart::{Uart, UartInterface};
+use crate::{
+    hal::uart::{Uart, UartInterface},
+    kernel::gfx::terminal::Terminal,
+};
 use core::fmt::{Arguments, Write};
 use lazy_static::lazy_static;
 use spin::Mutex;
@@ -13,11 +16,24 @@ use spin::Mutex;
 lazy_static! {
     /// Global serial port writer.
     pub static ref SERIAL_WRITER: Mutex<Uart> = Mutex::new(Uart {});
+
+    /// Global mutable terminal writer.
+    pub static ref TERMINAL_WRITER: Mutex<Terminal> = Mutex::new(
+        Terminal::default()
+    );
 }
 
 /// Initialize global serial port writer.
-pub fn init() {
+pub fn init_serial_writer() {
     SERIAL_WRITER.lock().init();
+}
+
+/// Initialize global terminal port writer.
+///
+/// # Parameters
+/// - `fb`- given framebuffer info struct.
+pub fn init_terminal_writer(fb: Framebuffer) {
+    TERMINAL_WRITER.lock().init(fb);
 }
 
 /// Prints format string and it's arguments.
@@ -26,6 +42,7 @@ pub fn init() {
 /// - `args` - given precompiled version of a format string and it`s arguments.
 pub fn __print(args: Arguments) {
     let _ = SERIAL_WRITER.lock().write_fmt(args);
+    let _ = TERMINAL_WRITER.lock().write_fmt(args);
 }
 
 /// Formats and prints data.
@@ -128,6 +145,7 @@ macro_rules! test {
 
 // Re-export log macro rules.
 
+use crate::drivers::vbe::Framebuffer;
 #[allow(unused_imports)]
 pub(crate) use custom;
 #[allow(unused_imports)]
