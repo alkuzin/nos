@@ -19,6 +19,7 @@ mod hal;
 mod kernel;
 mod log;
 mod multiboot;
+mod drivers;
 
 use multiboot::{MULTIBOOT_BOOTLOADER_MAGIC, MultibootInfo};
 
