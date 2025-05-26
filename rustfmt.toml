@@ -1,0 +1,17 @@
+# Project name: NOS (Null Operating System).
+# Description: Monolithic UNIX-like operating system.
+# Licence: GPL-3.0.
+# Author: Alexander (@alkuzin).
+
+# Control the maximum width of a line.
+max_width = 80
+
+# Control the number of spaces for indentation.
+tab_spaces = 4
+
+# Control the indentation style.
+# Use spaces for indentation instead of hard tabs.
+hard_tabs = false
+
+# Control whether to use a trailing comma in arrays and structs.
+trailing_comma = "Vertical"

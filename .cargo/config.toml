@@ -1,0 +1,21 @@
+# Project name: NOS (Null Operating System).
+# Description: Monolithic UNIX-like operating system.
+# Licence: GPL-3.0.
+# Author: Alexander (@alkuzin).
+
+# Crate unstable features section.
+[unstable]
+
+# Feature that provides memory-related built-in functions.
+build-std-features = ["compiler-builtins-mem"]
+
+# Components of the standard library to build.
+# "core" - is the minimal subset of the Rust standard library,
+# suitable for no_std environments.
+# "compiler_builtins" - low-level built-in functions.
+build-std = ["core", "compiler_builtins"]
+
+# Build process configuration section.
+[build]
+# Target configuration file for the build process.
+target = "targets/x86/x86-unknown-none.json"

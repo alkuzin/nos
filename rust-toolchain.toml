@@ -1,0 +1,21 @@
+# Project name: NOS (Null Operating System).
+# Description: Monolithic UNIX-like operating system.
+# Licence: GPL-3.0.
+# Author: Alexander (@alkuzin).
+
+# This section defines the toolchain configuration for the project.
+[toolchain]
+
+# Specific nightly version of the Rust toolchain.
+channel = "nightly-2025-05-24"
+
+# List of additional components.
+components = [
+    "clippy",     # A standard Rust linter.
+    "llvm-tools", # Tools for working with LLVM.
+    "rust-docs",  # Documentation for the Rust std and other components.
+    "rustfmt"     # A tool for formatting Rust code.
+]
+
+# List of target architectures to support with this toolchain.
+targets = ["x86_64-unknown-none-softfloat"]
