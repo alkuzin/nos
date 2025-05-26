@@ -71,7 +71,7 @@ build-iso:
 	grub-mkrescue -o $(ISO_NAME) $(ISO_PATH)
 
 init:
-	qemu-system-i386 -m 256 -cdrom $(ISO_NAME) -serial stdio
+	qemu-system-i386 -enable-kvm -m 256 -cdrom $(ISO_NAME) -serial stdio
 
 compile_default:
 	cargo build --manifest-path $(KERNEL_PATH)/Cargo.toml
@@ -93,4 +93,4 @@ doc:
 	cargo doc --document-private-items --open --manifest-path $(KERNEL_PATH)/Cargo.toml
 
 debug:
-	qemu-system-i386 -s -S -m 256 -cdrom $(ISO_NAME) & gdb $(KERNEL_ELF) -ex "target remote localhost:1234" -tui
+	qemu-system-i386 -enable-kvm -s -S -m 256 -cdrom $(ISO_NAME) & gdb $(KERNEL_ELF) -ex "target remote localhost:1234" -tui
