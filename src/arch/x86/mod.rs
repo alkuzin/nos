@@ -6,4 +6,5 @@
 //! x86 architecture-specific code main module.
 
 pub mod drivers;
+pub mod cpu;
 pub mod io;
