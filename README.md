@@ -1,6 +1,11 @@
 # NOS (Null Operating System)
+
 Monolithic UNIX-like operating system.
 
+<img src="res/nos_banner.png">
+<hr>
+
+<img src="res/nos.png">
 <hr>
 
 ## License
