@@ -26,7 +26,7 @@ KERNEL_ELF 		  = $(ISO_PATH)/boot/$(NAME).elf
 KERNEL_STATIC_LIB = $(KERNEL_PATH)/target/$(SELECTED_TARGET)-unknown-none/debug/lib$(NAME).a
 BUILD_TARGET      = $(TARGETS_PATH)/$(SELECTED_TARGET)-unknown-none.json
 
-ASM_SRC  = $(ASM_PATH)/boot
+ASM_SRC  = $(ASM_PATH)/boot $(ASM_PATH)/gdt_flush
 ASM_SRCS = $(addsuffix .asm, $(ASM_SRC))
 ASM_OBJS = $(addsuffix .o,   $(ASM_SRC))
 
@@ -72,7 +72,7 @@ build-iso:
 	grub-mkrescue -o $(ISO_NAME) $(ISO_PATH)
 
 init:
-	qemu-system-i386 -enable-kvm -m $(MEMORY) -cdrom $(ISO_NAME) -serial file:serial.log
+	qemu-system-i386 -machine pc -cpu max -m $(MEMORY) -cdrom $(ISO_NAME) -serial file:serial.log
 
 compile_default:
 	cargo build --manifest-path $(KERNEL_PATH)/Cargo.toml
@@ -94,4 +94,4 @@ doc:
 	cargo doc --document-private-items --open --manifest-path $(KERNEL_PATH)/Cargo.toml
 
 debug:
-	qemu-system-i386 -enable-kvm -s -S -m $(MEMORY) -cdrom $(ISO_NAME) & gdb $(KERNEL_ELF) -ex "target remote localhost:1234" -tui
+	qemu-system-i386 -machine pc -cpu max -s -S -m $(MEMORY) -cdrom $(ISO_NAME) & gdb $(KERNEL_ELF) -ex "target remote localhost:1234" -tui

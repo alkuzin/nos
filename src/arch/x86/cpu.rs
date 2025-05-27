@@ -71,7 +71,7 @@ fn set_cpuid_processor_info(info: &mut CPUInfo) {
 
     let model = (cpu_info.eax >> 4) & 0x0F;
     let family = (cpu_info.eax >> 8) & 0x0F;
-    let ext_model  = (cpu_info.eax >> 16) & 0x0F;
+    let ext_model = (cpu_info.eax >> 16) & 0x0F;
     let ext_family = (cpu_info.eax >> 20) & 0xFF;
 
     info.stepping = cpu_info.eax & 0x0F;
@@ -80,8 +80,7 @@ fn set_cpuid_processor_info(info: &mut CPUInfo) {
     // Set actual CPU model.
     info.model = if family == 6 || family == 15 {
         (ext_model << 4) + model
-    }
-    else {
+    } else {
         model
     };
 
@@ -151,7 +150,7 @@ pub fn is_hypervisor_present() -> bool {
 pub fn get_hypervisor_id() -> Option<[u8; VENDOR_ID_SIZE]> {
     // Check whether OS running on real hardware.
     if !is_hypervisor_present() {
-        return None
+        return None;
     }
 
     // Get specific CPU info.
