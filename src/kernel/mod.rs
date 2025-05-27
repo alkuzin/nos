@@ -54,4 +54,5 @@ pub fn init(boot_info: &MultibootInfo) {
 
     display_cpu_info();
     hal::init();
+    log::success!("Initialized architecture-specific part of the kernel");
 }
