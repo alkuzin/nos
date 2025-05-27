@@ -5,6 +5,15 @@
 
 //! x86 architecture-specific code main module.
 
-pub mod drivers;
+use crate::log;
+
 pub mod cpu;
+pub mod drivers;
+pub mod gdt;
 pub mod io;
+
+/// Initialize x86 architecture-specific part of the kernel.
+pub fn init() {
+    gdt::init();
+    log::success!("Initialized Global Descriptor Table (GDT)");
+}

@@ -5,5 +5,16 @@
 
 //! HAL (Hardware Abstraction Layer) main module.
 
-pub mod uart;
+use crate::arch;
+use crate::log;
+
 pub mod cpu;
+pub mod uart;
+
+/// Initialize architecture-specific part of the kernel.
+pub fn init() {
+    #[cfg(target_arch = "x86")]
+    arch::x86::init();
+
+    log::success!("Initialized architecture-specific part of the kernel");
+}

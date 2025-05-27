@@ -7,7 +7,7 @@
 
 pub mod gfx;
 
-use crate::{log, multiboot::MultibootInfo, hal};
+use crate::{hal, log, multiboot::MultibootInfo};
 use core::str;
 
 /// Display CPU related info.
@@ -27,8 +27,7 @@ fn display_cpu_info() {
     // Display virtualization extension info.
     if hal::cpu::is_support_virtualization() {
         log::info!("Virtualization is supported");
-    }
-    else {
+    } else {
         log::info!("Virtualization is not supported");
     }
 
@@ -54,4 +53,5 @@ pub fn init(boot_info: &MultibootInfo) {
     log::success!("Initialized kernel terminal logger");
 
     display_cpu_info();
+    hal::init();
 }
