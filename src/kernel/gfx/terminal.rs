@@ -7,7 +7,7 @@
 
 use super::{Color, Rgb, draw_char, fill_screen, font};
 use crate::drivers::vbe::Framebuffer;
-use core::{fmt, ptr};
+use core::ptr;
 
 /// Default tabulation width.
 const TAB_WIDTH: u32 = 4;
@@ -131,36 +131,5 @@ impl Terminal {
                 self.y_pos -= rows * font::CHAR_HEIGHT as i32;
             }
         }
-    }
-}
-
-/// Global text output foreground color.
-pub static mut FOREGROUND_COLOR: Rgb = Color::White as Rgb;
-
-/// Global text output background color.
-pub static mut BACKGROUND_COLOR: Rgb = Color::Black as Rgb;
-
-/// Set current color of text output to the screen.
-///
-/// # Parameters
-/// - `fg` - given foreground color to set.
-/// - `bg` - given background color to set.
-pub fn set_color(fg: Rgb, bg: Rgb) {
-    unsafe {
-        FOREGROUND_COLOR = fg;
-        BACKGROUND_COLOR = bg;
-    }
-}
-
-/// This method should be implemented for Terminal in order to
-/// create println!() like macro rules for kernel needs.
-impl fmt::Write for Terminal {
-    fn write_str(&mut self, s: &str) -> fmt::Result {
-        unsafe {
-            for c in s.chars() {
-                self.put_char(c, FOREGROUND_COLOR, BACKGROUND_COLOR);
-            }
-        }
-        Ok(())
     }
 }
