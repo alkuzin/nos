@@ -6,6 +6,7 @@
 //! Main kernel module. Responsible for initializing kernel components.
 
 pub mod gfx;
+mod memlayout;
 
 use crate::{config, hal, log, multiboot::MultibootInfo, printk};
 use core::str;
@@ -36,6 +37,33 @@ fn display_cpu_info() {
         let id = str::from_utf8(&hypervisor_id).unwrap();
         log::info!("Running under hypervisor: {}", id);
     }
+}
+
+/// Display kernel memory layout related data.
+fn display_memory_layout() {
+    // Print kernel physical and virtual addresses info.
+    log::info!(
+        "Kernel physical addresses range: [{:#010X}-{:#010X}]",
+        memlayout::kernel_begin_paddr(),
+        memlayout::kernel_end_paddr()
+    );
+
+    log::info!(
+        "Kernel virtual addresses range:  [{:#010X}-{:#010X}]",
+        memlayout::kernel_begin_vaddr(),
+        memlayout::kernel_end_vaddr()
+    );
+
+    log::info!("Kernel virtual base address: <{:#010X}>", memlayout::base_vaddr());
+
+    // Print kernel stack related data.
+    let stack_bottom_address = memlayout::stack_bottom_vaddr();
+    let stack_top_address    = memlayout::stack_top_vaddr();
+    let stack_size           = memlayout::stack_size();
+
+    log::info!("Kernel stack bottom address: <{:#010X}>", stack_bottom_address);
+    log::info!("Kernel stack top address:    <{:#010X}>", stack_top_address);
+    log::info!("Stack size: {} bytes", stack_size);
 }
 
 /// Display OS related info.
@@ -72,6 +100,8 @@ pub fn init(boot_info: &MultibootInfo) {
     hal::init();
     log::success!("Initialized architecture-specific part of the kernel");
 
+    display_memory_layout();
     log::success!("Finished setting up OS");
+
     display_os_info();
 }

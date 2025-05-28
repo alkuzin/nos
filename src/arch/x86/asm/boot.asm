@@ -37,8 +37,11 @@
 
 .section .bss               # Stores uninitialized global and static variables.
 .align 16                   # Reserving space for the stack.
+                            # Setup stack.
+.global stack_bottom
+.global stack_top
 stack_bottom:
-    .skip 65536             # 64 KB.
+    .skip 65536
 stack_top:
 
 .section .text              # Contains executable instructions of a program.
