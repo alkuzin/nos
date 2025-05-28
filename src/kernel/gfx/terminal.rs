@@ -89,12 +89,12 @@ impl Terminal {
                     self.y_pos += font::CHAR_HEIGHT as i32;
                     self.x_pos = 0;
                 }
-                // Handle tab character
+                // Handle tab character.
                 '\t' => {
                     for _ in 0..TAB_WIDTH {
                         draw_char(
                             fb,
-                            c,
+                            ' ',
                             self.x_pos as usize,
                             self.y_pos as usize,
                             fg,
@@ -105,6 +105,26 @@ impl Terminal {
                         self.x_pos += font::CHAR_WIDTH as i32;
                     }
                 }
+                // Handle backspace character.
+                '\x08' => {
+                    self.x_pos -= font::CHAR_WIDTH as i32;
+
+                    if !(self.x_pos != 0 && self.y_pos != 0) {
+                        self.y_pos -= font::CHAR_HEIGHT as i32;
+                        self.x_pos = self.width;
+                    }
+
+                    draw_char(
+                        fb,
+                        ' ',
+                        self.x_pos as usize,
+                        self.y_pos as usize,
+                        fg,
+                        bg,
+                        true,
+                    );
+                }
+
                 // Handle other characters.
                 _ => {
                     if c == ' ' || c.is_ascii_graphic() {
