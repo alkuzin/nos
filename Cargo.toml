@@ -7,7 +7,7 @@
 [package]
 name        = "nos"
 description = "Monolithic UNIX-like operating system"
-version     = "0.0.0"
+version     = "0.1.0"
 authors     = ["Alexander (GitHub: @alkuzin)"]
 repository  = "https://github.com/alkuzin/nos"
 license     = "GPL-3"
