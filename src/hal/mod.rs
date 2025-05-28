@@ -9,6 +9,7 @@ use crate::arch;
 
 pub mod cpu;
 pub mod uart;
+pub mod keyboard;
 
 /// Initialize architecture-specific part of the kernel.
 pub fn init() {
