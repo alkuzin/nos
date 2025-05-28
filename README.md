@@ -1,6 +1,6 @@
 # NOS (Null Operating System)
 
-Monolithic UNIX-like operating system.
+Monolithic UNIX-like operating system. List of changes [here](CHANGELOG.md).
 
 <img src="res/nos_banner.png">
 <hr>
