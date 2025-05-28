@@ -5,4 +5,5 @@
 
 //! x86 architecture-specific drivers main module.
 
+pub mod keyboard;
 pub mod uart;

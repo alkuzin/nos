@@ -16,4 +16,7 @@ pub mod io;
 pub fn init() {
     gdt::init();
     log::success!("Initialized Global Descriptor Table (GDT)");
+
+    drivers::keyboard::init();
+    log::success!("Initialized PS/2 keyboard driver");
 }
