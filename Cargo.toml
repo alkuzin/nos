@@ -5,9 +5,13 @@
 
 # Project package info section.
 [package]
-name    = "nos"
-version = "0.0.0"
-edition = "2024"
+name        = "nos"
+description = "Monolithic UNIX-like operating system"
+version     = "0.0.0"
+authors     = ["Alexander (GitHub: @alkuzin)"]
+repository  = "https://github.com/alkuzin/nos"
+license     = "GPL-3"
+edition     = "2024"
 
 # Project library settings section.
 [lib]

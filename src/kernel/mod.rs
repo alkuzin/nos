@@ -7,7 +7,7 @@
 
 pub mod gfx;
 
-use crate::{hal, log, multiboot::MultibootInfo};
+use crate::{config, hal, log, multiboot::MultibootInfo, printk};
 use core::str;
 
 /// Display CPU related info.
@@ -38,6 +38,22 @@ fn display_cpu_info() {
     }
 }
 
+/// Display OS related info.
+fn display_os_info() {
+    let name = config::NAME;
+    let version = config::VERSION;
+    let description = config::DESCRIPTION;
+    let license = config::LICENSE;
+    let license_details = config::LICENSE_DETAILS;
+    let repository = config::REPOSITORY;
+    let authors = config::AUTHORS;
+
+    printk!("\n{} ({}) - {}", name, version, description);
+    printk!("Repository: {}", repository);
+    printk!("Created by {}", authors);
+    printk!("Running under {} license.\n{}", license, license_details);
+}
+
 /// Initialize kernel.
 ///
 /// # Parameters
@@ -55,4 +71,7 @@ pub fn init(boot_info: &MultibootInfo) {
     display_cpu_info();
     hal::init();
     log::success!("Initialized architecture-specific part of the kernel");
+
+    log::success!("Finished setting up OS");
+    display_os_info();
 }

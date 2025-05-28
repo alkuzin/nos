@@ -15,6 +15,7 @@
 #![allow(dead_code)]
 
 mod arch;
+mod config;
 mod drivers;
 mod hal;
 mod kernel;
