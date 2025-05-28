@@ -54,14 +54,20 @@ fn display_memory_layout() {
         memlayout::kernel_end_vaddr()
     );
 
-    log::info!("Kernel virtual base address: <{:#010X}>", memlayout::base_vaddr());
+    log::info!(
+        "Kernel virtual base address: <{:#010X}>",
+        memlayout::base_vaddr()
+    );
 
     // Print kernel stack related data.
     let stack_bottom_address = memlayout::stack_bottom_vaddr();
-    let stack_top_address    = memlayout::stack_top_vaddr();
-    let stack_size           = memlayout::stack_size();
+    let stack_top_address = memlayout::stack_top_vaddr();
+    let stack_size = memlayout::stack_size();
 
-    log::info!("Kernel stack bottom address: <{:#010X}>", stack_bottom_address);
+    log::info!(
+        "Kernel stack bottom address: <{:#010X}>",
+        stack_bottom_address
+    );
     log::info!("Kernel stack top address:    <{:#010X}>", stack_top_address);
     log::info!("Stack size: {} bytes", stack_size);
 }

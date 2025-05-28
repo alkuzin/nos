@@ -8,10 +8,10 @@
 // Kernel memory layout variables (declared in linker file).
 unsafe extern "C" {
     static kernel_phys_begin: u32;
-    static kernel_phys_end:   u32;
+    static kernel_phys_end: u32;
     static kernel_virt_begin: u32;
-    static kernel_virt_end:   u32;
-    static base_address:      u32;
+    static kernel_virt_end: u32;
+    static base_address: u32;
     static stack_bottom: u32;
     static stack_top: u32;
 }
@@ -25,9 +25,7 @@ pub const MEM_START_PADDR: u32 = 0x00000000;
 /// - Kernel begin physical address.
 #[inline(always)]
 pub fn kernel_begin_paddr() -> u32 {
-    unsafe {
-        (&kernel_phys_begin as *const _) as u32
-    }
+    unsafe { (&kernel_phys_begin as *const _) as u32 }
 }
 
 /// Get kernel end.
@@ -36,9 +34,7 @@ pub fn kernel_begin_paddr() -> u32 {
 /// - Kernel end physical address.
 #[inline(always)]
 pub fn kernel_end_paddr() -> u32 {
-    unsafe {
-        (&kernel_phys_end as *const _) as u32
-    }
+    unsafe { (&kernel_phys_end as *const _) as u32 }
 }
 
 /// Get kernel begin.
@@ -47,9 +43,7 @@ pub fn kernel_end_paddr() -> u32 {
 /// - Kernel begin virtual address.
 #[inline(always)]
 pub fn kernel_begin_vaddr() -> u32 {
-    unsafe {
-        (&kernel_virt_begin as *const _) as u32
-    }
+    unsafe { (&kernel_virt_begin as *const _) as u32 }
 }
 
 /// Get kernel end.
@@ -58,9 +52,7 @@ pub fn kernel_begin_vaddr() -> u32 {
 /// - Kernel end virtual address.
 #[inline(always)]
 pub fn kernel_end_vaddr() -> u32 {
-    unsafe {
-        (&kernel_virt_end as *const _) as u32
-    }
+    unsafe { (&kernel_virt_end as *const _) as u32 }
 }
 
 /// Get kernel base address.
@@ -69,9 +61,7 @@ pub fn kernel_end_vaddr() -> u32 {
 /// - Kernel virtual base address.
 #[inline(always)]
 pub fn base_vaddr() -> u32 {
-    unsafe {
-        (&base_address as *const _) as u32
-    }
+    unsafe { (&base_address as *const _) as u32 }
 }
 
 /// Get kernel size.
